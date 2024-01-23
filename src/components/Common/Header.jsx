@@ -4,7 +4,7 @@ import { CiSearch } from "react-icons/ci";
 import { FaTimes } from "react-icons/fa";
 import { BiSolidVideoPlus } from "react-icons/bi";
 import { IoMdNotifications } from "react-icons/io";
-import { BsChevronDown, BsChevronRight, BsGraphUpArrow } from "react-icons/bs";
+import { BsChevronDown, BsChevronUp, BsGraphUpArrow } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
 import { VscSignOut } from "react-icons/vsc";
 import { AiFillPlayCircle, AiFillSetting } from "react-icons/ai";
@@ -51,7 +51,7 @@ const Header = ({ searchQuery }) => {
           </section>
         </>
       )}
-      <section className="border-b-[1px] border-[#CACACA] py-2 md:px-0 px-3">
+      <section className="border-b border-[#e3e1e1] py-2 md:px-0 px-3">
         <header className="container mx-auto flex justify-between items-center">
           <Link to="/">
             <img
@@ -100,65 +100,46 @@ const Header = ({ searchQuery }) => {
                   className="flex items-center cursor-pointer"
                   onClick={() => setShowDropdown(!showDropdown)}
                 >
-                  <div className="rounded-full w-8 h-8 flex items-center justify-center bg-blue-900">
+                  <div className="rounded-full w-8 h-8 flex items-center justify-center bg-blue-900 mr-2">
                     <span className="text-white">U</span>
                   </div>
-                  {showDropdown ? <BsChevronRight /> : <BsChevronDown />}
+                  {showDropdown ? <BsChevronUp /> : <BsChevronDown />}
                 </div>
 
                 {showDropdown && (
                   <>
-                    <div className="shadow rounded-lg py-4 px-2 absolute right-0 top-10 w-40 z-20 bg-white">
-                      <span className="font-medium text-red-600">
+                    <div className="shadow rounded-lg py-3 px-2 absolute right-0 top-10 w-48 z-20 bg-white">
+                      <span className="font-medium text-xl text-red-600">
                         {currentUser.name}
                       </span>
                       <hr className="my-2" />
-
-                      <Link
-                        to={`/user/${currentUser?._id}/profile`}
-                        className="flex items-center gap-4 text-blue-900 text-sm mb-1"
-                      >
-                        <CgProfile className="text-[#C60C0D] text-md" />
-                        Profile
-                      </Link>
-                      <button
-                        className="flex items-center gap-4 text-blue-900 text-sm mb-1"
-                        onClick={() => logout({})}
-                      >
-                        <VscSignOut className="text-[#C60C0D] text-md" />
-                        Sign Out
-                      </button>
-
-                      <hr className="my-2" />
-
-                      <Link
-                        to={`/user/${currentUser?._id}/videos`}
-                        className="flex items-center gap-4 text-blue-900 text-sm mb-1"
-                      >
-                        <AiFillPlayCircle className="text-[#C60C0D] text-md" />
-                        My Videos
-                      </Link>
-                      <Link
-                        to={`/user/${currentUser?._id}/analytics`}
-                        className="flex items-center gap-4 text-blue-900 text-sm mb-1"
-                      >
-                        <BsGraphUpArrow className="text-[#C60C0D] text-md" />
-                        Analytics
-                      </Link>
-                      <Link
-                        to={`/user/${currentUser?._id}/promotion`}
-                        className="flex items-center gap-4 text-blue-900 text-sm mb-1"
-                      >
-                        <CgProfile className="text-[#C60C0D] text-md" />
-                        Promotion
-                      </Link>
-                      <Link
-                        to={`/user/${currentUser?._id}/settings`}
-                        className="flex items-center gap-4 text-blue-900 text-sm mb-1"
-                      >
-                        <AiFillSetting className="text-[#C60C0D] text-md" />
-                        Settings
-                      </Link>
+                      <div className="mx-1">
+                        <Link to={`/user/${currentUser?._id}/profile`} className="flex items-center gap-2 text-blue-900 text-sm mb-2">
+                          <CgProfile className="text-[#C60C0D] text-lg" />
+                          Profile
+                        </Link>
+                        <button className="flex items-center gap-2 text-blue-900 text-sm mb-2" onClick={() => logout({})}>
+                          <VscSignOut className="text-[#C60C0D] text-lg" />
+                          Sign Out
+                        </button>
+                        <hr className="my-3" />
+                        <Link to={`/user/${currentUser?._id}/videos`} className="flex items-center gap-2 text-blue-900 text-sm mb-1">
+                          <AiFillPlayCircle className="text-[#C60C0D] text-lg" />
+                          My Videos
+                        </Link>
+                        <Link to={`/user/${currentUser?._id}/analytics`} className="flex items-center gap-4 text-blue-900 text-sm mb-1">
+                          <BsGraphUpArrow className="text-[#C60C0D] text-md" />
+                          Analytics
+                        </Link>
+                        <Link to={`/user/${currentUser?._id}/promotion`} className="flex items-center gap-4 text-blue-900 text-sm mb-1">
+                          <CgProfile className="text-[#C60C0D] text-md" />
+                          Promotion
+                        </Link>
+                        <Link to={`/user/${currentUser?._id}/settings`} className="flex items-center gap-4 text-blue-900 text-sm mb-1">
+                          <AiFillSetting className="text-[#C60C0D] text-md" />
+                          Settings
+                        </Link>
+                      </div>
                     </div>
                   </>
                 )}

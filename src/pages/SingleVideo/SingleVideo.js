@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import NormalLayout from "../../components/Layouts/NormalLayout";
 import Banner from "../../components/SingleVideo/Banner";
 import MainBox from "../../components/SingleVideo/MainBox";
+import Categories from "../../components/Home/Categories";
 
 const SingleVideo = () => {
   const { id } = useParams();
@@ -10,6 +11,7 @@ const SingleVideo = () => {
   return (
     <>
       <NormalLayout>
+        <Categories />
         <Banner text="Animal Videos" />
         <MainBox />
       </NormalLayout>

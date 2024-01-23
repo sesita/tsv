@@ -36,19 +36,19 @@ const Comments = () => {
                 </p>
               </div>
             </div>
-            <div class="pl-[25px] mt-[15px] mb-[30px]">
-              <div class="flex items-center gap-3">
-                <div class="w-[35px] h-[35px] rounded-full flex items-center justify-center bg-[#ECECEC]">
-                  <span class="text-[14px] font-semibold text-[#0A2A8D]">
+            <div className="pl-[25px] mt-[15px] mb-[30px]">
+              <div className="flex items-center gap-3">
+                <div className="w-[35px] h-[35px] rounded-full flex items-center justify-center bg-[#ECECEC]">
+                  <span className="text-[14px] font-semibold text-[#0A2A8D]">
                     H
                   </span>
                 </div>
                 <div>
-                  <h4 class="flex items-center gap-2 font-bold text-xs">
+                  <h4 className="flex items-center gap-2 font-bold text-xs">
                     Harry Henz
-                    <span class="text-[10px] text-[#BCBCBC]">3 months ago</span>
+                    <span className="text-[10px] text-[#BCBCBC]">3 months ago</span>
                   </h4>
-                  <p class="text-[11px] text-[#000000]">
+                  <p className="text-[11px] text-[#000000]">
                     Lorem Ipsum is simply dummy text of the printing
                   </p>
                 </div>

@@ -45,7 +45,7 @@ const Signin = () => {
               onClick={() => navigate(-1)}
             />
             <Link to="/">
-              <img src={require("../../assets/img/logo.jpg")} alt="" />
+              <img src={require("../../assets/img/logo.jpg")} alt="" className="w-40 h-25 rounded-full" />
             </Link>
             <span></span>
           </div>

@@ -1,68 +1,18 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation  } from "react-router-dom";
 
 const Categories = () => {
+  const location = useLocation();
   return (
     <>
-      <section className="py-2 md:px-0 px-3">
+      <section className="mt-4 mb-1 px-3">
         <div className="container mx-auto overflow-x-scroll hide-scrollbar">
           <div className="flex gap-x-8">
-            <div className="min-w-fit">
+            <div className={location.search === '?q=plumbers' ? 'font-medium': ''}>
               <Link to={"/search?q=plumbers"}>Plumbers</Link>
             </div>
-            <div className="min-w-fit">
+            <div className={location.search === '?q=doctors' ? 'font-medium': ''}>
               <Link to={"/search?q=doctors"}>Doctors</Link>
-            </div>
-            <div className="min-w-fit">
-              <Link to={""}>Lorem ipsum</Link>
-            </div>
-            <div className="min-w-fit">
-              <Link to={""}>Lorem ipsum</Link>
-            </div>
-            <div className="min-w-fit">
-              <Link to={""}>Lorem ipsum</Link>
-            </div>
-            <div className="min-w-fit">
-              <Link to={""}>Lorem ipsum</Link>
-            </div>
-            <div className="min-w-fit">
-              <Link to={""}>Lorem ipsum</Link>
-            </div>
-            <div className="min-w-fit">
-              <Link to={""}>Lorem ipsum</Link>
-            </div>
-            <div className="min-w-fit">
-              <Link to={""}>Lorem ipsum</Link>
-            </div>
-            <div className="min-w-fit">
-              <Link to={""}>Lorem ipsum</Link>
-            </div>
-            <div className="min-w-fit">
-              <Link to={""}>Lorem ipsum</Link>
-            </div>
-            <div className="min-w-fit">
-              <Link to={""}>Lorem ipsum</Link>
-            </div>
-            <div className="min-w-fit">
-              <Link to={""}>Lorem ipsum</Link>
-            </div>
-            <div className="min-w-fit">
-              <Link to={""}>Lorem ipsum</Link>
-            </div>
-            <div className="min-w-fit">
-              <Link to={""}>Lorem ipsum</Link>
-            </div>
-            <div className="min-w-fit">
-              <Link to={""}>Lorem ipsum</Link>
-            </div>
-            <div className="min-w-fit">
-              <Link to={""}>Lorem ipsum</Link>
-            </div>
-            <div className="min-w-fit">
-              <Link to={""}>Lorem ipsum</Link>
-            </div>
-            <div className="min-w-fit">
-              <Link to={""}>Lorem ipsum</Link>
             </div>
           </div>
         </div>
