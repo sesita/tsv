@@ -7,7 +7,7 @@ const Categories = () => {
     <>
       <section className="mt-4 mb-1 px-3">
         <div className="container mx-auto overflow-x-scroll hide-scrollbar">
-          <div className="flex gap-x-8">
+          <div className="flex gap-x-8 text-lg">
             <div className={location.search === '?q=plumbers' ? 'font-medium': ''}>
               <Link to={"/search?q=plumbers"}>Plumbers</Link>
             </div>
