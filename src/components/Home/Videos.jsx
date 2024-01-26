@@ -6,10 +6,10 @@ const Videos = ({ hideShadow }) => {
     return (
         <>
             <section className="mb-16 md:px-0 px-3">
-                <div className={`container mx-auto ${hideShadow ? "" : "shadow-lg"} pt-6 px-8 rounded-2xl -mt-20 z-20 bg-white pb-10`}>
-                    <h2 className="text-3xl mb-6">
+                <div className={`mx-auto md:w-[88%] ${hideShadow ? "" : "shadow-[0px_0px_14px_0px_rgba(0,0,0,0.25)]"} md:pt-10 pt-6 px-12 rounded-[29px] -mt-24 z-20 bg-white pb-10`}>
+                    <h2 className="text-[40px] mb-10">
                         Songs{" "}
-                        <Link to={""} className="text-sm text-[#C60C0D]">
+                        <Link to={""} className="text-sm font-normal text-[#C60C0D]">
                             View All Songs
                         </Link>
                     </h2>
