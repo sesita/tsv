@@ -2,11 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Controller extends BaseController
 {
-    use AuthorizesRequests, ValidatesRequests;
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    public $templateFile = 'index.html';
+
+    public function firstLoader(Request $request)
+    {
+        if (!is_file($this->templateFile)) return '<h1>Something Went Wrong...</h1>';
+        $template = file_get_contents($this->templateFile);
+
+        $title = 'EBsell.com';
+        $description = 'ვიდეო თამაშების ონლაინ მაღაზია';
+        $keywords = 'თამაშები, აქაუნთები, ვიდეო თამაშები, მაღაზია, ონლაინ მაღაზია, ebsell, ებსელი';
+        $image = 'EBsell.com';
+
+        $placeHolders = '
+            <meta name="title" content="'.$title.'">
+            <meta name="description" content="'.$description.'">
+            <meta name="keywords" content="'.$keywords.'">
+            <meta name="og:image" content="'.$image.'">
+        ';
+        
+        $template = str_replace('<placeholder_meta></placeholder_meta>', $placeHolders, $template);
+        if (isset($title)) {
+            $template = str_replace("<title></title>", "<title>{$title}</title>", $template);
+        }
+
+        return $template;
+    }
 }
