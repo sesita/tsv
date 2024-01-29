@@ -1,12 +1,14 @@
 import Header from "../Common/Header";
+import { ScrollRestoration } from "react-router-dom";
 
 const NormalLayout = ({ children, searchQuery }) => {
-  return (
-    <>
-      <Header searchQuery={searchQuery} />
-      {children}
-    </>
-  );
+    return (
+        <>
+            <ScrollRestoration />
+            <Header searchQuery={searchQuery} />
+            {children}
+        </>
+    );
 };
 
 export default NormalLayout;
