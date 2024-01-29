@@ -61,8 +61,8 @@ const Header = ({ searchQuery }) => {
                         <>
                             <div className="flex gap-4 items-center relative">
                                 <BiSolidVideoPlus className="md:text-3xl text-xl cursor-pointer" />
-                                <div className="relative">
-                                    <span className="absolute border-[2px] border-white rounded-full w-4 h-4 flex justify-center items-center bg-[#C60C0D] text-white text-[8px] -top-1 -right-1">05</span>
+                                <div className="relative cursor-pointer">
+                                    <span className="absolute border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-[#C60C0D] text-white text-[11px] -top-1.5 -right-1.5">15</span>
                                     <IoMdNotifications className="md:text-3xl text-xl" />
                                 </div>
                                 <div className="flex items-center cursor-pointer" onClick={() => setShowDropdown(!showDropdown)}>
@@ -74,36 +74,34 @@ const Header = ({ searchQuery }) => {
 
                                 {showDropdown && (
                                     <>
-                                        <div className="shadow rounded-lg py-3 px-2 absolute right-0 top-10 w-48 z-20 bg-white">
-                                            <span className="font-medium text-xl text-red-600">{currentUser.name}</span>
-                                            <hr className="my-2" />
-                                            <div className="mx-1">
-                                                <Link to={`/user/${currentUser?._id}/profile`} className="flex items-center gap-2 text-blue-900 text-sm mb-2">
-                                                    <CgProfile className="text-[#C60C0D] text-lg" />
-                                                    Profile
-                                                </Link>
-                                                <button className="flex items-center gap-2 text-blue-900 text-sm mb-2" onClick={() => logout({})}>
-                                                    <VscSignOut className="text-[#C60C0D] text-lg" />
-                                                    Sign Out
-                                                </button>
-                                                <hr className="my-3" />
-                                                <Link to={`/user/${currentUser?._id}/videos`} className="flex items-center gap-2 text-blue-900 text-sm mb-1">
-                                                    <AiFillPlayCircle className="text-[#C60C0D] text-lg" />
-                                                    My Videos
-                                                </Link>
-                                                <Link to={`/user/${currentUser?._id}/analytics`} className="flex items-center gap-4 text-blue-900 text-sm mb-1">
-                                                    <BsGraphUpArrow className="text-[#C60C0D] text-md" />
-                                                    Analytics
-                                                </Link>
-                                                <Link to={`/user/${currentUser?._id}/promotion`} className="flex items-center gap-4 text-blue-900 text-sm mb-1">
-                                                    <CgProfile className="text-[#C60C0D] text-md" />
-                                                    Promotion
-                                                </Link>
-                                                <Link to={`/user/${currentUser?._id}/settings`} className="flex items-center gap-4 text-blue-900 text-sm mb-1">
-                                                    <AiFillSetting className="text-[#C60C0D] text-md" />
-                                                    Settings
-                                                </Link>
-                                            </div>
+                                        <div className="shadow-[0px_0px_14px_0px_rgba(0,0,0,0.2)] rounded-xl py-4 px-5 absolute right-0 top-12 w-48 z-20 bg-white">
+                                            <span className="font-medium text-xl text-red-600 capitalize">{currentUser.name}</span>
+                                            <hr className="my-2.5" />
+                                            <Link to={`/user/${currentUser?._id}/profile`} className="flex items-center gap-2 text-blue-900 text-sm mb-2">
+                                                <CgProfile className="text-[#C60C0D] text-lg" />
+                                                Profile
+                                            </Link>
+                                            <button className="flex items-center gap-2 text-blue-900 text-sm mb-2" onClick={() => logout({})}>
+                                                <VscSignOut className="text-[#C60C0D] text-lg" />
+                                                Sign Out
+                                            </button>
+                                            <hr className="my-3" />
+                                            <Link to={`/user/${currentUser?._id}/videos`} className="flex items-center gap-2 text-blue-900 text-sm mb-1">
+                                                <AiFillPlayCircle className="text-[#C60C0D] text-lg" />
+                                                My Videos
+                                            </Link>
+                                            <Link to={`/user/${currentUser?._id}/analytics`} className="flex items-center gap-4 text-blue-900 text-sm mb-1">
+                                                <BsGraphUpArrow className="text-[#C60C0D] text-md" />
+                                                Analytics
+                                            </Link>
+                                            <Link to={`/user/${currentUser?._id}/promotion`} className="flex items-center gap-4 text-blue-900 text-sm mb-1">
+                                                <CgProfile className="text-[#C60C0D] text-md" />
+                                                Promotion
+                                            </Link>
+                                            <Link to={`/user/${currentUser?._id}/settings`} className="flex items-center gap-4 text-blue-900 text-sm mb-1">
+                                                <AiFillSetting className="text-[#C60C0D] text-md" />
+                                                Settings
+                                            </Link>
                                         </div>
                                     </>
                                 )}

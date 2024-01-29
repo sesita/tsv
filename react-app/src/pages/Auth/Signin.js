@@ -13,15 +13,14 @@ const Signin = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        const name = e.target.name.value;
         const email = e.target.email.value;
         const password = e.target.password.value;
 
-        if (!name || !email || !password || name === "" || email === "" || password === "") {
+        if (!email || !password || email === "" || password === "") {
             toast.error("All field are required!");
         } else {
             toast.success("Login successfully");
-            await login({ _id: 1234, name, email, password });
+            await login({ _id: 1234, name: 'tester', email, password });
             setTimeout(() => {
                 navigate("/");
             }, 1000);

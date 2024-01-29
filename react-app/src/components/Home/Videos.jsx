@@ -6,14 +6,14 @@ const Videos = ({ hideShadow }) => {
     return (
         <>
             <section className="mb-16 md:px-0 px-3">
-                <div className={`mx-auto md:w-[88%] ${hideShadow ? "" : "shadow-[0px_0px_14px_0px_rgba(0,0,0,0.25)]"} md:pt-10 pt-6 px-12 rounded-[29px] -mt-24 z-20 bg-white pb-10`}>
-                    <h2 className="text-[40px] mb-10">
-                        Songs{" "}
+                <div className={`mx-auto md:w-[88%] ${hideShadow ? "" : "shadow-[0px_0px_14px_0px_rgba(0,0,0,0.25)]"} pt-8 px-12 rounded-[29px] -mt-24 z-20 bg-white pb-10`}>
+                    <h2 className="text-[40px] mb-8">
+                        Most Popular{" "}
                         <Link to={""} className="text-sm font-normal text-[#C60C0D]">
-                            View All Songs
+                            View All Videos
                         </Link>
                     </h2>
-                    <div className="grid gap-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 mb-16">
+                    <div className="grid gap-6 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 mb-12">
                         <VideoBox
                             info={{
                                 _id: 1,
@@ -44,13 +44,13 @@ const Videos = ({ hideShadow }) => {
                         />
                     </div>
 
-                    <h2 className="text-3xl mb-6">
-                        Movies{" "}
+                    <h2 className="text-[40px] mb-8">
+                        Recommended{" "}
                         <Link to={""} className="text-sm text-[#C60C0D]">
-                            View All Movies
+                            View All Videos
                         </Link>
                     </h2>
-                    <div className="grid gap-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 mb-16">
+                    <div className="grid gap-6 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 mb-16">
                         <VideoBox
                             info={{
                                 _id: 1,
