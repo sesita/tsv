@@ -1,31 +1,64 @@
-import { createContext, useEffect, useState } from "react";
-// import axios from "axios";
+import { createContext, useContext, useEffect, useState } from "react";
+import axios from "axios";
 
 export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(
-    JSON.parse(localStorage.getItem("mytsvUser")) || null
-  );
+    const [currentUser, setCurrentUser] = useState(false);
+    const [accessToken, setAccessToken] = useState(
+        localStorage.getItem("accessToken") || null
+    );
 
-  const login = async (inputs) => {
-    //   const res = await axios.post("/auth/login", inputs);
-    // setCurrentUser(res.data);
-    setCurrentUser(inputs);
-  };
+    const login = async (inputs) => {
+        try {
+            const res = await axios.post("Auth/Login", inputs);
+            localStorage.setItem("accessToken", res.data?.access_token);
+            setAccessToken(res.data?.access_token);
+            return res;
+        } catch (error) {
+            return error.response;
+        }
+    };
 
-  const logout = async (inputs) => {
-    //   await axios.post("/auth/logout");
-    setCurrentUser(null);
-  };
+    const logout = async (inputs) => {
+        //   await axios.post("/auth/logout");
+        setCurrentUser(null);
+    };
 
-  useEffect(() => {
-    localStorage.setItem("mytsvUser", JSON.stringify(currentUser));
-  }, [currentUser]);
+    const setUser = async () => {
+        try {
+            if(!accessToken) return;
+            const { data } = await axios.post("Auth/Me", {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                }
+            );
+            setCurrentUser(data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
-  return (
-    <AuthContext.Provider value={{ currentUser, logout, login }}>
-      {children}
-    </AuthContext.Provider>
-  );
+    useEffect(() => {
+        localStorage.setItem("accessToken", accessToken);
+    }, [accessToken]);
+
+    useEffect(() => {
+        setUser();
+    }, []);
+    
+    return (
+        <AuthContext.Provider value={{ currentUser, logout, login }}>
+            {children}
+        </AuthContext.Provider>
+    );
 };
+
+
+export const useAuth = () => {
+    const data = useContext(AuthContext);
+    return data
+
+}

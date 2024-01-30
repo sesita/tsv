@@ -8,7 +8,7 @@ import { BsChevronDown, BsChevronUp, BsGraphUpArrow } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
 import { VscSignOut } from "react-icons/vsc";
 import { AiFillPlayCircle, AiFillSetting } from "react-icons/ai";
-import { AuthContext } from "../../context/AuthContext";
+import {  useAuth } from "../../context/AuthContext";
 
 const Header = ({ searchQuery }) => {
     const [showDropdown, setShowDropdown] = useState(false);
@@ -20,7 +20,7 @@ const Header = ({ searchQuery }) => {
         navigate(`/search?q=${searchText}`);
     };
 
-    const { currentUser, logout } = useContext(AuthContext);
+    const { currentUser, logout } = useAuth();
 
     return (
         <>
@@ -30,6 +30,7 @@ const Header = ({ searchQuery }) => {
                         <button className="lg:hidden w-9 h-9 bg-[#C60C0D] flex justify-center items-center rounded-full text-white absolute top-5 right-5" onClick={() => setMobileSearch(!mobileSearch)}>
                             <FaTimes className="text-xl" />
                         </button>
+
                         <div className="w-full max-w-[450px] bg-white rounded-full py-2 px-5 shadow-lg flex items-center">
                             <input type="text" className="w-full outline-none border-none text-sm pl-2 flex-1" placeholder="Search..." value={searchQuery ? searchQuery : searchText} onChange={(e) => setSearchText(e.target.value)} />
                             <button className="lg:hidden w-9 h-9 bg-[#C60C0D] flex justify-center items-center rounded-full text-white" onClick={handleSearch}>
@@ -47,7 +48,7 @@ const Header = ({ searchQuery }) => {
 
                     <div>
                         <div className="w-[600px] rounded-full border-[1px] border-[#CACACA] py-1 px-1 lg:flex hidden">
-                            <input type="text" className="outline-none border-none text-sm pl-2 flex-1 rounded-lg" placeholder="Search..." value={searchQuery ? searchQuery : searchText} onChange={(e) => setSearchText(e.target.value)} />
+                            <input type="text" className="outline-none border-none text-sm pl-4 flex-1 rounded-lg" placeholder="Search..." value={searchQuery ? searchQuery : searchText} onChange={(e) => setSearchText(e.target.value)} />
                             <button className="w-9 h-9 bg-[#C60C0D] flex justify-center items-center rounded-full text-white" onClick={handleSearch}>
                                 <CiSearch className="text-xl" />
                             </button>
