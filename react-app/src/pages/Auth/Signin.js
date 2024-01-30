@@ -1,10 +1,10 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { AiFillInstagram } from "react-icons/ai";
 import { BsArrowLeft, BsGoogle, BsTwitter } from "react-icons/bs";
 import { FaFacebookF } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { AuthContext, useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
 const Signin = () => {
     const navigate = useNavigate();
