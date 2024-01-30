@@ -24,7 +24,7 @@ const Signin = () => {
 
         if (!email || !password || email === "" || password === "") {
             toast.error("All field are required!");
-        } else {
+        } else {   
             const res = await login({ email, password });
             if (res.data.status !== "error") {
                 toast.success("Login successfully");
