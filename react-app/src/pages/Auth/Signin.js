@@ -9,7 +9,7 @@ import { useAuth } from "../../context/AuthContext";
 const Signin = () => {
     const navigate = useNavigate();
 
-    const { login, currentUser } = useAuth();
+    const { login, currentUser, setUser } = useAuth();
 
     useEffect(() => {
         if (currentUser) {
@@ -24,7 +24,7 @@ const Signin = () => {
 
         if (!email || !password || email === "" || password === "") {
             toast.error("All field are required!");
-        } else {   
+        } else {
             const res = await login({ email, password });
             if (res.data.status !== "error") {
                 toast.success("Login successfully");
