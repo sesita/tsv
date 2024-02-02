@@ -14,7 +14,9 @@ export const AuthContextProvider = ({ children }) => {
             const res = await axios.post("Auth/Login", inputs);
             localStorage.setItem("accessToken", res.data?.access_token);
             setAccessToken(res.data?.access_token);
-            setUser();
+            setTimeout(() => {
+                setUser();
+            }, 500);
             return res;
         } catch (error) {
             return error.response;
@@ -22,7 +24,9 @@ export const AuthContextProvider = ({ children }) => {
     };
 
     const logout = async () => {
-        await axios.post("Auth/Logout", {},
+        await axios.post(
+            "Auth/Logout",
+            {},
             {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,

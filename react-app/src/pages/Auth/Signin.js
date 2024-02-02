@@ -9,7 +9,7 @@ import { useAuth } from "../../context/AuthContext";
 const Signin = () => {
     const navigate = useNavigate();
 
-    const { login, currentUser, setUser } = useAuth();
+    const { login, currentUser } = useAuth();
 
     useEffect(() => {
         if (currentUser) {
