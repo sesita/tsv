@@ -2,10 +2,9 @@ import axios from "axios";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { FaFacebookF } from "react-icons/fa";
-import { AiFillInstagram } from "react-icons/ai";
+import { BsArrowLeft, BsGoogle, BsTwitterX } from "react-icons/bs";
 import { useAuth } from "../../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
-import { BsArrowLeft, BsGoogle, BsTwitter } from "react-icons/bs";
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -93,20 +92,17 @@ const Signup = () => {
                                     Create a account
                                 </h2>
                                 <div className="flex gap-3 justify-center">
-                                    <button className="border-[1px] border-[#0A2A8D] rounded-full md:w-10 w-7 md:h-10 h-7 flex items-center justify-center">
+                                    <a href="https://tsv.test/api/Auth/Social/Google/Redirect" className="border-[1px] border-red-700 rounded-full md:w-11 w-8 md:h-11 h-8 flex items-center justify-center">
                                         <BsGoogle className="text-[#C60C0D] md:text-2xl text-md" />
-                                    </button>
-                                    <button className="border-[1px] border-[#0A2A8D] rounded-full md:w-10 w-7 md:h-10 h-7 flex items-center justify-center">
+                                    </a>
+                                    <a href="https://tsv.test/api/Auth/Social/Google/Redirect" className="border-[1px] border-red-700 rounded-full md:w-11 w-8 md:h-11 h-8 flex items-center justify-center">
                                         <FaFacebookF className="text-[#C60C0D] md:text-2xl text-md" />
-                                    </button>
-                                    <button className="border-[1px] border-[#0A2A8D] rounded-full md:w-10 w-7 md:h-10 h-7 flex items-center justify-center">
-                                        <BsTwitter className="text-[#C60C0D] md:text-2xl text-md" />
-                                    </button>
-                                    <button className="border-[1px] border-[#0A2A8D] rounded-full md:w-10 w-7 md:h-10 h-7 flex items-center justify-center">
-                                        <AiFillInstagram className="text-[#C60C0D] md:text-2xl text-md" />
-                                    </button>
+                                    </a>
+                                    <a href="https://tsv.test/api/Auth/Social/Google/Redirect" className="border-[1px] border-red-700 rounded-full md:w-11 w-8 md:h-11 h-8 flex items-center justify-center">
+                                        <BsTwitterX className="text-[#C60C0D] md:text-2xl text-md" />
+                                    </a>
                                 </div>
-                                <p className="text-center">
+                                <p className="text-center capitalize">
                                     or use your email for registration:
                                 </p>
                                 <form
