@@ -29,17 +29,20 @@ class AuthController extends Controller
     {
         $request->validate([
             'name' => 'required',
+            'channel_name' => 'required',
             'email' => 'required|unique:users',
-            'password' => 'required|min:3',
+            'password' => 'required|min:3|confirmed',
         ]);
 
-        User::create([
+        $userId = User::create([
             'name' => $request->name,
+            'channel_name' => $request->channel_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        return response(['status' => 'success', 'message' => 'Successfuly Registred.']);
+        $token = Auth::login($userId);
+        return response(['status' => 'success', 'token' => $token, 'message' => 'Successfuly Registred.']);
     }
     public function me()
     {

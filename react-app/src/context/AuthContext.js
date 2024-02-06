@@ -24,33 +24,27 @@ export const AuthContextProvider = ({ children }) => {
     };
 
     const logout = async () => {
-        await axios.post(
-            "Auth/Logout",
-            {},
-            {
+        await axios.post("Auth/Logout",{},{
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 },
             }
         );
+        localStorage.setItem("accessToken", null);
         setCurrentUser(null);
     };
 
-    const setUser = async () => {
+    const setUser = async (token) => {
         try {
-            if (!accessToken) return;
-            const { data } = await axios.post(
-                "Auth/Me",
-                {},
-                {
+            const { data } = await axios.post("Auth/Me", {}, {
                     headers: {
-                        Authorization: `Bearer ${accessToken}`,
+                        Authorization: `Bearer ${token || accessToken}`,
                     },
                 }
             );
             setCurrentUser(data);
         } catch (error) {
-            console.error(error);
+           console.log(error);
         }
     };
 
@@ -63,7 +57,7 @@ export const AuthContextProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ currentUser, logout, login }}>
+        <AuthContext.Provider value={{ currentUser, logout, login, setUser }}>
             {children}
         </AuthContext.Provider>
     );
