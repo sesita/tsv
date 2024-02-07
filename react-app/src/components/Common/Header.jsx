@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
 import { FaTimes } from "react-icons/fa";
