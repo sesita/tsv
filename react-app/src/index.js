@@ -8,7 +8,12 @@ import "react-toastify/dist/ReactToastify.css";
 import { AuthContextProvider } from "./context/AuthContext";
 import axios from "axios";
 
-axios.defaults.baseURL = "https://tsv.test/api/";
+let url = window.location.origin + "/api";
+if (process.env.NODE_ENV === "development"){
+    url =  "https://tsv.test/api/";
+}
+
+axios.defaults.baseURL = url;
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <AuthContextProvider>
