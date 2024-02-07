@@ -72,14 +72,8 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         return [];
     }
 
-    public function getAvatarAttribute($value)
+    public function getAdditionalInfoAttribute($value)
     {
-        $userEmail = md5(Auth::user()->email ?? null);
-        if (!$value) {
-            return "https://gravatar.com/avatar/$userEmail?d=retro";
-        } elseif (filter_var($value, FILTER_VALIDATE_URL)) {
-            return $value;
-        }
-        return Storage::url($value);
+        return json_decode($value);
     }
 }
