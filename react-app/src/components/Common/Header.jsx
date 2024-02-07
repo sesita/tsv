@@ -67,9 +67,7 @@ const Header = ({ searchQuery }) => {
                                     <IoMdNotifications className="md:text-3xl text-xl" />
                                 </div>
                                 <div className="flex items-center cursor-pointer" onClick={() => setShowDropdown(!showDropdown)}>
-                                    <div className="rounded-full w-8 h-8 flex items-center justify-center bg-blue-900 mr-2">
-                                        <span className="text-white">U</span>
-                                    </div>
+                                    <img src={currentUser.avatar} className="rounded-full w-8 h-8 mr-2" alt={currentUser.name} />
                                     {showDropdown ? <BsChevronUp /> : <BsChevronDown />}
                                 </div>
 
@@ -78,7 +76,7 @@ const Header = ({ searchQuery }) => {
                                         <div className="shadow-[0px_0px_14px_0px_rgba(0,0,0,0.2)] rounded-xl py-4 px-5 absolute right-0 top-12 w-48 z-20 bg-white">
                                             <span className="font-medium text-xl text-red-600 capitalize">{currentUser.name}</span>
                                             <hr className="my-2.5" />
-                                            <Link to={`/user/${currentUser?._id}/profile`} className="flex items-center gap-2 text-blue-900 text-sm mb-2">
+                                            <Link to={`/user/${currentUser?.id}/profile`} className="flex items-center gap-2 text-blue-900 text-sm mb-2">
                                                 <CgProfile className="text-[#C60C0D] text-lg" />
                                                 Profile
                                             </Link>

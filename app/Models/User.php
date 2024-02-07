@@ -3,17 +3,13 @@
 namespace App\Models;
 
 use Laravel\Sanctum\HasApiTokens;
-use App\Mail\SendVerificationCode;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
 
 class User extends Authenticatable implements MustVerifyEmail, JWTSubject
 {
@@ -75,5 +71,10 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     public function getAdditionalInfoAttribute($value)
     {
         return json_decode($value);
+    }
+    public function getAvatarAttribute($value)
+    {
+        $name = Auth::user()->name;
+        return "https://ui-avatars.com/api/?background=random&name={$name}&bold=true";
     }
 }
