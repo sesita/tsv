@@ -6,8 +6,10 @@ const VideosPage = () => {
     return (
         <>
             <UserLayout>
-                <FilterOptions />
-                <div className="mt-24">
+                <div className="flex justify-center">
+                    <FilterOptions />
+                </div>
+                <div className="mt-16">
                     <Videos hideShadow={true} />
                 </div>
             </UserLayout>
