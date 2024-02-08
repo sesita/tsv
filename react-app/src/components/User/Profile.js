@@ -1,4 +1,6 @@
-import ProfileInfoBox from "./ProfileInfoBox";
+import { FaFacebookF } from "react-icons/fa";
+import { AiFillInstagram } from "react-icons/ai";
+import { BsGoogle, BsTwitter } from "react-icons/bs";
 import { useAuth } from "../../context/AuthContext";
 
 const Profile = () => {
@@ -6,8 +8,28 @@ const Profile = () => {
 
     return (
         <>
-            <ProfileInfoBox />
-            <div className="flex gap-5 mt-7">
+            <div className="flex items-center gap-8 mb-6">
+                <img
+                        className="w-40 h-40 rounded-full border-4 border-red-500 object-cover"
+                        src={currentUser.avatar}
+                    alt=""
+                />
+                <div>
+                    <h2 className="text-3xl font-semibold">
+                        {currentUser.name}
+                    </h2>
+                    <p className="text-sm font-medium mb-4">
+                        Content Creator
+                    </p>
+                    <div className="flex items-center gap-4">
+                        <BsGoogle className="text-[#C60C0D] text-3xl" />
+                        <FaFacebookF className="text-[#C60C0D] text-3xl" />
+                        <BsTwitter className="text-[#C60C0D] text-3xl" />
+                        <AiFillInstagram className="text-[#C60C0D] text-3xl" />
+                    </div>
+                </div>
+            </div>
+            <div className="flex gap-5 mt-8">
                 <div className="w-[250px] h-auto rounded-[32px] bg-[#F2F2F2] px-8 py-6">
                     {currentUser.name}
                     <div className="mb-5">

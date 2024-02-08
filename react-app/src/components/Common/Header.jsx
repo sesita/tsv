@@ -85,19 +85,19 @@ const Header = ({ searchQuery }) => {
                                                 Sign Out
                                             </button>
                                             <hr className="my-3" />
-                                            <Link to={`/user/${currentUser?._id}/videos`} className="flex items-center gap-2 text-blue-900 text-sm mb-1">
+                                            <Link to={`/user/${currentUser?.id}/videos`} className="flex items-center gap-2 text-blue-900 text-sm mb-1">
                                                 <AiFillPlayCircle className="text-[#C60C0D] text-lg" />
                                                 My Videos
                                             </Link>
-                                            <Link to={`/user/${currentUser?._id}/analytics`} className="flex items-center gap-4 text-blue-900 text-sm mb-1">
+                                            <Link to={`/user/${currentUser?.id}/analytics`} className="flex items-center gap-4 text-blue-900 text-sm mb-1">
                                                 <BsGraphUpArrow className="text-[#C60C0D] text-md" />
                                                 Analytics
                                             </Link>
-                                            <Link to={`/user/${currentUser?._id}/promotion`} className="flex items-center gap-4 text-blue-900 text-sm mb-1">
+                                            <Link to={`/user/${currentUser?.id}/promotion`} className="flex items-center gap-4 text-blue-900 text-sm mb-1">
                                                 <CgProfile className="text-[#C60C0D] text-md" />
                                                 Promotion
                                             </Link>
-                                            <Link to={`/user/${currentUser?._id}/settings`} className="flex items-center gap-4 text-blue-900 text-sm mb-1">
+                                            <Link to={`/user/${currentUser?.id}/settings`} className="flex items-center gap-4 text-blue-900 text-sm mb-1">
                                                 <AiFillSetting className="text-[#C60C0D] text-md" />
                                                 Settings
                                             </Link>

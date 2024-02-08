@@ -4,7 +4,7 @@ import Profile from "../../components/User/Profile";
 const ProfilePage = () => {
   return (
     <>
-      <UserLayout pageTitle="Profile">
+      <UserLayout pageTitle={"Profile"}>
         <Profile />
       </UserLayout>
     </>

@@ -19,9 +19,9 @@ class DashboardController extends Controller
             'avatar'=>'mimes:jpg,png,webp,gif|max:2048'
         ]);
 
-        if (isset($request->avatarRaw)) {
+        if (isset($request->avatar)) {
             $name = 'avatars/' . Str::random() . time() . '.webp';
-            $request->avatarRaw->move(public_path('storage/avatars'), $name);
+            $request->avatar->move(public_path('storage/avatars'), $name);
             $avatar = $name;
         } else {
             $avatar = $request->avatar ?? null;
