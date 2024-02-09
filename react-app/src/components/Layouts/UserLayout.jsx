@@ -10,8 +10,6 @@ const UserLayout = ({ pageTitle, children }) => {
     const location = useLocation();
     const isProfilePage = location.pathname === `/user/${id}/videos`;
 
-    console.log(location)
-
     return (
         <>
             <NormalLayout>

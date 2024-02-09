@@ -15,6 +15,7 @@ class DashboardController extends Controller
         $userId = Auth::user()->id;
         $request->validate([
             'name' => 'required',
+            'channel_name' => 'required',
             'email' => 'required|email|unique:users,email,'.$userId,
             'avatar'=>'mimes:jpg,png,webp,gif|max:2048'
         ]);

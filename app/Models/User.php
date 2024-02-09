@@ -74,7 +74,7 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     }
     public function getAvatarAttribute($value)
     {
-        $name = Auth::user()->name;
-        return "https://ui-avatars.com/api/?background=random&name={$name}&bold=true";
+        if ($value) return 'storage/'.$value;
+        return "https://ui-avatars.com/api/?background=random&name={$this->name}&bold=true";
     }
 }

@@ -1,9 +1,9 @@
 <?php
 
+use App\Http\Controllers\Dashobard\DashboardController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\SocialController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,4 +26,8 @@ Route::group(['middleware' => 'api', 'prefix' => 'Auth'], function ($router) {
     Route::post('Register', [AuthController::class, 'register']);
     Route::post('Logout', [AuthController::class, 'logout']);
     Route::post('Me', [AuthController::class, 'me']);
+});
+
+Route::group(['middleware' => 'auth:api', 'prefix' => 'Dashboard'], function ($router) {
+    Route::post('Settings', [DashboardController::class, 'Settings']);
 });
