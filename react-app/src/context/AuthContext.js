@@ -22,7 +22,6 @@ export const AuthContextProvider = ({ children }) => {
             return error.response;
         }
     };
-
     const logout = async () => {
         await axios.post("Auth/Logout",{},{
                 headers: {
