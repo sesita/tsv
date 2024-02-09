@@ -74,7 +74,7 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     }
     public function getAvatarAttribute($value)
     {
-        if ($value) return 'storage/'.$value;
+        if($value) return asset('storage/'.$value);
         return "https://ui-avatars.com/api/?background=random&name={$this->name}&bold=true";
     }
 }
