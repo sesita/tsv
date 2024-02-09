@@ -14,6 +14,19 @@ if (process.env.NODE_ENV === "development"){
 }
 
 axios.defaults.baseURL = url;
+axios.interceptors.request.use(
+    (config) => {
+        const accessToken = localStorage.getItem('accessToken');
+        if (accessToken) {
+            config.headers.Authorization = `Bearer ${accessToken}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <AuthContextProvider>

@@ -1,6 +1,8 @@
+import axios from "axios";
 import { React, useState } from "react";
 import TagsInput from "react-tagsinput";
 import { useAuth } from "../../context/AuthContext";
+import { toast } from "react-toastify";
 
 export const Settings = () => {
     const { currentUser } = useAuth();
@@ -17,8 +19,24 @@ export const Settings = () => {
     const educationInput = (value) => {
         setEducations(value);
     };
-    const submit = (e) => {
+    const submit = async (e) => {
         e.preventDefault();
+
+        const data = {
+            additonal_info: {
+                skills,
+                languages,
+                educations,
+            },
+            name: e.target.name?.value,
+            email: e.target.email?.value,
+        };
+
+        try {
+            const res = await axios.post("Dashboard/Settings", data);
+        } catch (error) {
+            toast.error(error.response?.data?.message);
+        }
     };
 
     return (
