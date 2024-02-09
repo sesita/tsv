@@ -171,7 +171,7 @@ const Signup = () => {
                                     <span className="md:text-md text-xs">
                                         Already have an account?{" "}
                                         <Link
-                                            to="/signin"
+                                            to="/Auth/Login"
                                             className="text-[#C60C0D] font-semibold"
                                         >
                                             Login here.

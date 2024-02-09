@@ -12,67 +12,72 @@ import AnalyticsPage from "./pages/Analytics/AnalyticsPage";
 import AnalyticsSinglePage from "./pages/AnalyticsSingle/AnalyticsSinglePage";
 
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Home />,
-  },
-  {
-    path: "/search",
-    element: <Search />,
-  },
-  {
-    path: "/video/:id",
-    element: <SingleVideo />,
-  },
-  {
-    path: "/signin",
-    element: <Signin />,
-  },
-  {
-    path: "/signup",
-    element: <Signup />,
-  },
-  {
-    path: "/user/:id",
-    // element: <UserLayout />,
-    children: [
-      {
-        path: "/user/:id/profile",
-        name: 'profile',
-        element: <ProfilePage />,
-      },
-      {
-        path: "/user/:id/analytics",
-        element: <AnalyticsPage />,
-      },
-      {
-        path: "/user/:id/singleAnalytic",
-        element: <AnalyticsSinglePage />,
-      },
-      {
-        path: "/user/:id/videos",
-        element: <VideosPage />,
-      },
-      {
-        path: "/user/:id/promotion",
-        element: <ProfilePage />,
-      },
-      {
-        path: "/user/:id/settings",
-        element: <SettingsPage />,
-      },
-    ],
-  },
-  {
-    path: "/admin",
-    element: "",
-    children: [
-      {
+    {
+        path: "/",
+        element: <Home />,
+    },
+    {
+        path: "/search",
+        element: <Search />,
+    },
+    {
+        path: "/video/:id",
+        element: <SingleVideo />,
+    },
+    {
+        path: "/Auth",
+        children: [
+            {
+                path: "Login/:social?",
+                element: <Signin />,
+            },
+            {
+                path: "Register",
+                element: <Signup />,
+            },
+        ],
+    },
+    {
+        path: "/user/:id",
+        // element: <UserLayout />,
+        children: [
+            {
+                path: "/user/:id/profile",
+                name: "profile",
+                element: <ProfilePage />,
+            },
+            {
+                path: "/user/:id/analytics",
+                element: <AnalyticsPage />,
+            },
+            {
+                path: "/user/:id/singleAnalytic",
+                element: <AnalyticsSinglePage />,
+            },
+            {
+                path: "/user/:id/videos",
+                element: <VideosPage />,
+            },
+            {
+                path: "/user/:id/promotion",
+                element: <ProfilePage />,
+            },
+            {
+                path: "/user/:id/settings",
+                element: <SettingsPage />,
+            },
+        ],
+    },
+    {
         path: "/admin",
         element: "",
-      },
-    ],
-  },
+        children: [
+            {
+                path: "/admin",
+                element: "",
+            },
+        ],
+    },
 ]);
 
 export default router;

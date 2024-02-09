@@ -4,15 +4,29 @@ import { FaFacebookF } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthContext";
+import { useParams, useLocation } from "react-router-dom";
+import axios from "axios";
 
 const Signin = () => {
     const navigate = useNavigate();
+    const params = useParams();
+    const router = useLocation();
 
-    const { login, currentUser } = useAuth();
+    const { login, currentUser, setUser } = useAuth();
 
     useEffect(() => {
         if (currentUser) {
             navigate("/");
+        }
+        if (params?.social) {
+            axios.post(`/Auth/Social/${params.social}/Callback${router?.search}`).then((response) => {
+                if (response.data?.access_token) {
+                    localStorage.setItem("accessToken", response.data.access_token);
+                    setUser(response.data.access_token);
+                } else {
+                    toast.error(response.data.message);
+                }
+            });
         }
     }, []);
 
@@ -59,13 +73,22 @@ const Signin = () => {
                                     Account Login
                                 </h2>
                                 <div className="flex gap-3 justify-center">
-                                    <a href="https://mytsv.com/api/Auth/Social/Google/Redirect" className="border-[1px] border-red-700 rounded-full md:w-11 w-8 md:h-11 h-8 flex items-center justify-center">
+                                    <a
+                                        href="https://mytsv.com/api/Auth/Social/Google/Redirect"
+                                        className="border-[1px] border-red-700 rounded-full md:w-11 w-8 md:h-11 h-8 flex items-center justify-center"
+                                    >
                                         <BsGoogle className="text-[#C60C0D] md:text-2xl text-md" />
                                     </a>
-                                    <a href="https://mytsv.com/api/Auth/Social/Facebook/Redirect" className="border-[1px] border-red-700 rounded-full md:w-11 w-8 md:h-11 h-8 flex items-center justify-center">
+                                    <a
+                                        href="https://mytsv.com/api/Auth/Social/Facebook/Redirect"
+                                        className="border-[1px] border-red-700 rounded-full md:w-11 w-8 md:h-11 h-8 flex items-center justify-center"
+                                    >
                                         <FaFacebookF className="text-[#C60C0D] md:text-2xl text-md" />
                                     </a>
-                                    <a href="https://mytsv.com/api/Auth/Social/twitter/Redirect" className="border-[1px] border-red-700 rounded-full md:w-11 w-8 md:h-11 h-8 flex items-center justify-center">
+                                    <a
+                                        href="https://mytsv.com/api/Auth/Social/twitter/Redirect"
+                                        className="border-[1px] border-red-700 rounded-full md:w-11 w-8 md:h-11 h-8 flex items-center justify-center"
+                                    >
                                         <BsTwitterX className="text-[#C60C0D] md:text-2xl text-md" />
                                     </a>
                                 </div>
@@ -98,7 +121,7 @@ const Signin = () => {
                                     <span className="md:text-md text-xs">
                                         Need an account?{" "}
                                         <Link
-                                            to="/signup"
+                                            to="/Auth/Register"
                                             className="text-[#C60C0D] font-semibold"
                                         >
                                             Register here.

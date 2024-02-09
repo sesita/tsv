@@ -109,10 +109,10 @@ const Header = ({ searchQuery }) => {
                     ) : (
                         <>
                             <div className="flex md:gap-4 gap-1 items-center">
-                                <Link to="/signup" className="bg-[#C60C0D] text-white md:text-sm text-xs md:px-7 px-4 md:py-2 py-1 rounded-full">
+                                <Link to="/Auth/Register" className="bg-[#C60C0D] text-white md:text-sm text-xs md:px-7 px-4 md:py-2 py-1 rounded-full">
                                     Sign Up
                                 </Link>
-                                <Link to="/signin" className="text-[#0A2A8D] md:text-sm text-xs md:px-7 px-4 md:py-2 py-1 rounded-full border-[1px] border-[#CACACA]">
+                                <Link to="/Auth/Login" className="text-[#0A2A8D] md:text-sm text-xs md:px-7 px-4 md:py-2 py-1 rounded-full border-[1px] border-[#CACACA]">
                                     Sign In
                                 </Link>
                             </div>
