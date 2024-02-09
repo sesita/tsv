@@ -26,11 +26,6 @@ class SocialController extends Controller
             $currentUser = User::where('email', $user->email)->first();
 
             if ($currentUser) {
-                if($currentUser->email_verified_at == null){
-                    $user = new User;
-                    $user->sendEmailVerificationCode($currentUser->id, $currentUser->email);
-                    return response(['status' => 'verify_email', 'message' => 'საჭიროა ელ.ფოსტის ვერიფიკაცია'], 403);
-                }
                 $token = Auth::login($currentUser);
                 return $this->respondWithToken($token);
             } else {
@@ -51,14 +46,8 @@ class SocialController extends Controller
                     'email_verified_at' => $emailVerified
                 ]);
 
-                if ($emailVerified) {
-                    $token = Auth::login($user);
-                    return $this->respondWithToken($token);
-                } else {
-                    $user = new User;
-                    $user->sendEmailVerificationCode($user->id, $user->email);
-                    return response(['status' => 'verify_email', 'message' => 'საჭიროა ელ.ფოსტის ვერიფიკაცია'], 403);
-                }
+                $token = Auth::login($user);
+                return $this->respondWithToken($token);
             }
 
         } catch (Exception $e) {

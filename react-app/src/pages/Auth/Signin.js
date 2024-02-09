@@ -23,6 +23,7 @@ const Signin = () => {
                 if (response.data?.access_token) {
                     localStorage.setItem("accessToken", response.data.access_token);
                     setUser(response.data.access_token);
+                    navigate("/");
                 } else {
                     toast.error(response.data.message);
                 }

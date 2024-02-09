@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'api', 'prefix' => 'Auth'], function ($router) {
     Route::prefix('Social/{provider}')->group(function () {
         Route::get('Redirect', [SocialController::class, 'redirect']);
-        Route::post('Callback', [SocialController::class, 'redirect']);
+        Route::post('Callback', [SocialController::class, 'callback']);
     });
     Route::post('Login', [AuthController::class, 'login']);
     Route::post('Register', [AuthController::class, 'register']);
