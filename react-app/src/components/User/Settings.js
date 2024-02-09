@@ -5,11 +5,18 @@ import { useAuth } from "../../context/AuthContext";
 export const Settings = () => {
     const { currentUser } = useAuth();
     const [skills, setSkills] = useState([]);
+    const [languages, setLanguages] = useState([]);
+    const [educations, setEducations] = useState([]);
 
-    const skillInput = (skill) => {
-        setSkills(skill);
+    const skillInput = (value) => {
+        setSkills(value);
     };
-
+    const languageInput = (value) => {
+        setLanguages(value);
+    };
+    const educationInput = (value) => {
+        setEducations(value);
+    };
     const submit = (e) => {
         e.preventDefault();
     };
@@ -40,8 +47,8 @@ export const Settings = () => {
                 </div>
                 <div className="flex items-center gap-3 mt-5 mb-5">
                     <TagsInput
-                        value={skills}
-                        onChange={skillInput}
+                        value={educations}
+                        onChange={educationInput}
                         onlyUnique={true}
                         inputProps={{
                             placeholder: "Education",
@@ -49,8 +56,8 @@ export const Settings = () => {
                         className="flex-1 w-full rounded-lg pt-2 pb-1 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none"
                     />
                     <TagsInput
-                        value={skills}
-                        onChange={skillInput}
+                        value={languages}
+                        onChange={languageInput}
                         onlyUnique={true}
                         inputProps={{
                             placeholder: "Language",
