@@ -23,6 +23,7 @@ const Profile = () => {
             </div>
             <div className='flex gap-5 mt-8'>
                 <div className='w-[250px] h-auto rounded-[32px] bg-[#F2F2F2] px-8 py-6'>
+                    ({currentUser.additional_info?.language} :)
                     <div className='mb-5'>
                         <h4 className='font-semibold text-2xl text-[#232323] mb-1'>Language</h4>
                         <p className='text-md text-[#232323]'>English</p>

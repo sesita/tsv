@@ -5,19 +5,12 @@ import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 
 export const Settings = () => {
-    const { currentUser, setUser } = useAuth();
+    const { currentUser } = useAuth();
     const [skills, setSkills] = useState([]);
     const [languages, setLanguages] = useState([]);
     const [educations, setEducations] = useState([]);
 
-    const fetchUser = async () => {
-        await setUser();
-    };
-
-
     useEffect(() => {
-        fetchUser();
-
         setSkills(currentUser.additional_info?.skills ?? []);
         setLanguages(currentUser.additional_info?.languages ?? []);
         setEducations(currentUser.additional_info?.educations ?? []);
@@ -47,7 +40,7 @@ export const Settings = () => {
         };
 
         try {
-            const res = await axios.post("Dashboard/Settings", data);
+            await axios.post("Dashboard/Settings", data);
             toast.success("Successfully updated.");
         } catch (error) {
             toast.error(error.response?.data?.message);
