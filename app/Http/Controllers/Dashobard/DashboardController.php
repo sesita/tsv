@@ -15,7 +15,7 @@ class DashboardController extends Controller
         $userId = Auth::user()->id;
         $request->validate([
             'name' => 'required',
-            'channel_name' => 'required',
+            'full_name' => 'required',
             'email' => 'required|email|unique:users,email,'.$userId,
             'avatar'=>'mimes:jpg,png,webp,gif|max:2048'
         ]);
@@ -31,7 +31,8 @@ class DashboardController extends Controller
         User::where('id', $userId)->update([
             'name' => $request->name,
             'email' => $request->email,
-            'avatar' => $avatar
+            'additional_info' => json_encode($request->additional_info),
+            'avatar' => $avatar,
         ]);
 
         $user = User::where('id', $userId)->first();

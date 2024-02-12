@@ -1,14 +1,27 @@
 import axios from "axios";
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import TagsInput from "react-tagsinput";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 
 export const Settings = () => {
-    const { currentUser } = useAuth();
+    const { currentUser, setUser } = useAuth();
     const [skills, setSkills] = useState([]);
     const [languages, setLanguages] = useState([]);
     const [educations, setEducations] = useState([]);
+
+    const fetchUser = async () => {
+        await setUser();
+    };
+
+
+    useEffect(() => {
+        fetchUser();
+
+        setSkills(currentUser.additional_info?.skills ?? []);
+        setLanguages(currentUser.additional_info?.languages ?? []);
+        setEducations(currentUser.additional_info?.educations ?? []);
+    }, []);
 
     const skillInput = (value) => {
         setSkills(value);
@@ -23,17 +36,19 @@ export const Settings = () => {
         e.preventDefault();
 
         const data = {
-            additonal_info: {
+            additional_info: {
                 skills,
                 languages,
                 educations,
             },
             name: e.target.name?.value,
+            full_name: e.target.full_name?.value,
             email: e.target.email?.value,
         };
 
         try {
             const res = await axios.post("Dashboard/Settings", data);
+            toast.success("Successfully updated.");
         } catch (error) {
             toast.error(error.response?.data?.message);
         }
@@ -56,12 +71,12 @@ export const Settings = () => {
             </div>
             <form onSubmit={submit}>
                 <div className="flex items-center gap-3">
-                    <input type="text" name="name" className="flex-1 w-full rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" placeholder="Channel Name" />
-                    <input type="text" name="full_name" className="flex-1 w-full rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" placeholder="Full Name" />
+                    <input type="text" name="name" className="flex-1 w-full rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" placeholder="Channel Name" value={currentUser?.name} />
+                    <input type="text" name="full_name" className="flex-1 w-full rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" placeholder="Full Name" value={currentUser?.full_name} />
                 </div>
                 <div className="flex items-center gap-3 mt-5">
-                    <input type="email" name="email" className="flex-1 w-full rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" placeholder="Email" />
-                    <input type="text" name="phone_number" className="flex-1 w-full rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" placeholder="Phone Number" />
+                    <input type="email" name="email" className="flex-1 w-full rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" placeholder="Email" value={currentUser?.email} />
+                    <input type="text" name="phone_number" className="flex-1 w-full rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" placeholder="Phone Number" value={currentUser?.phone_number} />
                 </div>
                 <div className="flex items-center gap-3 mt-5 mb-5">
                     <TagsInput

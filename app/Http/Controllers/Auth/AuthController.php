@@ -29,14 +29,14 @@ class AuthController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'channel_name' => 'required',
+            'full_name' => 'required',
             'email' => 'required|unique:users',
             'password' => 'required|min:3|confirmed',
         ]);
 
         $userId = User::create([
             'name' => $request->name,
-            'channel_name' => $request->channel_name,
+            'full_name' => $request->full_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);

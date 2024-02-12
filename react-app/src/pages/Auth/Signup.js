@@ -33,8 +33,8 @@ const Signup = () => {
             if (checkbox) {
                 try {
                     const res = await axios.post("Auth/Register", {
-                        channel_name: channelName,
-                        name: name,
+                        name: channelName,
+                        full_name: name,
                         email: email,
                         password: password,
                         password_confirmation: confirmPassword,
@@ -84,7 +84,7 @@ const Signup = () => {
                                 <p className="text-center capitalize">or use your email for registration:</p>
                                 <form className="flex flex-col gap-3 md:w-[400px] w-full" method="post" onSubmit={(e) => handleSignup(e)}>
                                     <input type="text" className="rounded-full border-[1px] border-[#0A2A8D52] bg-[#E3EAFF52] outline-none py-3 md:px-4 px-2 md:text-md text-xs w-full" placeholder="Channel Name" name="channelName" />
-                                    <input type="text" className="rounded-full border-[1px] border-[#0A2A8D52] bg-[#E3EAFF52] outline-none py-3 md:px-4 px-2 md:text-md text-xs w-full" placeholder="Name" name="name" />
+                                    <input type="text" className="rounded-full border-[1px] border-[#0A2A8D52] bg-[#E3EAFF52] outline-none py-3 md:px-4 px-2 md:text-md text-xs w-full" placeholder="Full Name" name="name" />
                                     <input type="email" className="rounded-full border-[1px] border-[#0A2A8D52] bg-[#E3EAFF52] outline-none py-3 md:px-4 px-2 md:text-md text-xs w-full" placeholder="Email" name="email" />
                                     <div className="flex gap-3 md:flex-row flex-col">
                                         <input type="password" className="rounded-full border-[1px] border-[#0A2A8D52] bg-[#E3EAFF52] outline-none py-3 md:px-4 px-2 md:text-md text-xs w-full" placeholder="Password" name="password" />
