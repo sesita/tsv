@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Dashobard;
 
-use App\Models\User;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class DashboardController extends Controller
 {
@@ -16,11 +16,13 @@ class DashboardController extends Controller
         $request->validate([
             'name' => 'required',
             'full_name' => 'required',
-            'email' => 'required|email|unique:users,email,'.$userId,
-            'avatar'=>'mimes:jpg,png,webp,gif|max:2048'
+            'email' => 'required|email|unique:users,email,' . $userId,
         ]);
 
-        if (isset($request->avatar)) {
+        if ($request->hasFile('avatar')) {
+            $request->validate([
+                'avatar' => 'mimes:jpg,png,webp,gif|max:2048',
+            ]);
             $name = 'avatars/' . Str::random() . time() . '.webp';
             $request->avatar->move(public_path('storage/avatars'), $name);
             $avatar = $name;
@@ -36,7 +38,7 @@ class DashboardController extends Controller
         ]);
 
         $user = User::where('id', $userId)->first();
-        
+
         return response($user);
     }
 }
