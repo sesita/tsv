@@ -6,15 +6,17 @@ import { toast } from "react-toastify";
 
 export const Settings = () => {
     const { currentUser } = useAuth();
+    const [user, setUser] = useState({});
     const [skills, setSkills] = useState([]);
     const [languages, setLanguages] = useState([]);
     const [educations, setEducations] = useState([]);
 
     useEffect(() => {
+        setUser(currentUser);
         setSkills(currentUser.additional_info?.skills ?? []);
         setLanguages(currentUser.additional_info?.languages ?? []);
         setEducations(currentUser.additional_info?.educations ?? []);
-    }, []);
+    }, [currentUser]);
 
     const skillInput = (value) => {
         setSkills(value);
@@ -25,6 +27,13 @@ export const Settings = () => {
     const educationInput = (value) => {
         setEducations(value);
     };
+    const changeInput = (e) => {
+        setUser({
+            ...user,
+            [e.target.name]: e.target.value,
+        });
+        console.log(e);
+    };
     const submit = async (e) => {
         e.preventDefault();
 
@@ -33,6 +42,7 @@ export const Settings = () => {
                 skills,
                 languages,
                 educations,
+                bio: e.target.bio?.value,
             },
             name: e.target.name?.value,
             full_name: e.target.full_name?.value,
@@ -64,12 +74,12 @@ export const Settings = () => {
             </div>
             <form onSubmit={submit}>
                 <div className="flex items-center gap-3">
-                    <input type="text" name="name" className="flex-1 w-full rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" placeholder="Channel Name" value={currentUser?.name} />
-                    <input type="text" name="full_name" className="flex-1 w-full rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" placeholder="Full Name" value={currentUser?.full_name} />
+                    <input type="text" name="name" className="flex-1 w-full rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" placeholder="Channel Name" value={user?.name} onChange={(e) => changeInput(e)} />
+                    <input type="text" name="full_name" className="flex-1 w-full rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" placeholder="Full Name" value={user?.full_name} onChange={(e) => changeInput(e)} />
                 </div>
                 <div className="flex items-center gap-3 mt-5">
-                    <input type="email" name="email" className="flex-1 w-full rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" placeholder="Email" value={currentUser?.email} />
-                    <input type="text" name="phone_number" className="flex-1 w-full rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" placeholder="Phone Number" value={currentUser?.phone_number} />
+                    <input type="email" name="email" className="flex-1 w-full rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" placeholder="Email" value={user?.email} onChange={(e) => changeInput(e)}/>
+                    <input type="text" name="phone_number" className="flex-1 w-full rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" placeholder="Phone Number" value={user?.phone_number} onChange={(e) => changeInput(e)} />
                 </div>
                 <div className="flex items-center gap-3 mt-5 mb-5">
                     <TagsInput
@@ -100,7 +110,7 @@ export const Settings = () => {
                     }}
                     className="flex-1 w-full rounded-lg pt-2 pb-1 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none"
                 />
-                <textarea name="" id="" rows="4" className="w-full rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none mt-5" placeholder="Bio"></textarea>
+                <textarea name="bio" id="" rows="4" value={user.additional_info?.bio} className="w-full rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none mt-5" placeholder="Bio" onChange={(e) => setUser({...user, additional_info: {...user.additional_info, bio: e.target.value}})}></textarea>
                 <button type="submit" className="py-4 px-12 rounded-full bg-[#C60C0D] text-white mt-5 mx-auto block text-lg">
                     Save Profile
                 </button>

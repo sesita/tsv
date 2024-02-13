@@ -68,13 +68,29 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         return [];
     }
 
+    public $appends = ['following', 'followers', 'views'];
+
     public function getAdditionalInfoAttribute($value)
     {
         return json_decode($value);
     }
     public function getAvatarAttribute($value)
     {
+        if(filter_var($value, FILTER_VALIDATE_URL)) return $value;
         if($value) return asset('storage/'.$value);
+
         return "https://ui-avatars.com/api/?background=random&name={$this->name}&bold=true";
+    }
+    public function getFollowingAttribute($value)
+    {
+        return '1.2K';
+    }
+    public function getFollowersAttribute($value)
+    {
+        return '523K';
+    }
+    public function getViewsAttribute($value)
+    {
+        return '3.3M';
     }
 }
