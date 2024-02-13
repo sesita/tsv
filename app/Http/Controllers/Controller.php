@@ -19,10 +19,10 @@ class Controller extends BaseController
         if (!is_file($this->templateFile)) return '<h1>Something Went Wrong...</h1>';
         $template = file_get_contents($this->templateFile);
 
-        $title = 'EBsell.com';
-        $description = 'ვიდეო თამაშების ონლაინ მაღაზია';
-        $keywords = 'თამაშები, აქაუნთები, ვიდეო თამაშები, მაღაზია, ონლაინ მაღაზია, ebsell, ებსელი';
-        $image = 'EBsell.com';
+        $title = 'mytsv.com';
+        $description = 'Videos';
+        $keywords = 'videos';
+        $image = 'mytsv.com';
 
         $placeHolders = '
             <meta name="title" content="'.$title.'">
