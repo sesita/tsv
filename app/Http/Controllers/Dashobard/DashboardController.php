@@ -33,6 +33,8 @@ class DashboardController extends Controller
         User::where('id', $userId)->update([
             'name' => $request->name,
             'email' => $request->email,
+            'full_name' => $request->full_name,
+            'phone_number' => $request->phone_number,
             'additional_info' => json_encode($request->additional_info),
             'avatar' => $avatar,
         ]);

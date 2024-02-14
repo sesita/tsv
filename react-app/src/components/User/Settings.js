@@ -63,12 +63,13 @@ export const Settings = () => {
                 skills,
                 languages,
                 educations,
-                bio: user.bio,
+                bio: user.additional_info?.bio,
             },
             name: user.name,
             full_name: user.full_name,
             email: user.email,
             avatar: user.avatar,
+            phone_number: user.phone_number,
         };
 
         try {
