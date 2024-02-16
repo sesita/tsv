@@ -25,7 +25,7 @@ const VideoBox = ({ info, hidePlayBtn, analytics }) => {
                             backgroundSize: "cover",
                             cursor: "pointer",
                         }}
-                        className="h-[250px] w-full rounded-xl"
+                        className="sm:h-[250px] h-[160px] w-full rounded-xl"
                         onClick={() => {
                             analytics && navigate(`/user/1234/singleAnalytic`);
                         }}

@@ -79,8 +79,8 @@ const Header = ({ searchQuery }) => {
                         />
                     </Link>
 
-                    <div>
-                        <div className="w-[600px] rounded-full border-[1px] border-[#CACACA] py-1 px-1 lg:flex hidden">
+                    <div className="md:w-1/2 px-4">
+                        <div className="w-full rounded-full border-[1px] border-[#CACACA] py-1 px-1 md:flex hidden">
                             <input
                                 type="text"
                                 className="outline-none border-none text-sm pl-4 flex-1 rounded-lg"
@@ -96,7 +96,7 @@ const Header = ({ searchQuery }) => {
                             </button>
                         </div>
                         <button
-                            className="lg:hidden w-7 h-7 bg-[#C60C0D] flex justify-center items-center rounded-full text-white"
+                            className="md:hidden w-7 h-7 bg-[#C60C0D] flex justify-center items-center rounded-full text-white"
                             ref={searchButton}
                             onClick={() => setMobileSearch(!mobileSearch)}
                             name="searchButton"
@@ -118,7 +118,7 @@ const Header = ({ searchQuery }) => {
                                 <div ref={userRef}>
                                     <div
                                         className="flex items-center cursor-pointer"
-                                        onClick={() => setShowDropdown(true)}
+                                        onClick={() => setShowDropdown(!showDropdown)}
                                     >
                                         <img
                                             src={currentUser.avatar}
