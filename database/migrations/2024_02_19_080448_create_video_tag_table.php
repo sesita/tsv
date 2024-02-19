@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comments', function (Blueprint $table) {
+        Schema::create('video_tag', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->bigInteger('tag_id')->unsigned();
+            $table->foreign('tag_id')->references('id')->on('tags');
             $table->bigInteger('video_id')->unsigned();
             $table->foreign('video_id')->references('id')->on('videos');
-            $table->text('comment')->nullable();
-            $table->integer('parent_id')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('comments');
+        Schema::dropIfExists('video_tag');
     }
 };
