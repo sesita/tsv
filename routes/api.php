@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\Dashobard\DashboardController;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\SocialController;
+use App\Http\Controllers\Dashobard\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,9 @@ Route::group(['middleware' => 'api', 'prefix' => 'Auth'], function ($router) {
     Route::post('Me', [AuthController::class, 'me']);
 });
 
+Route::post('getVideos', [Controller::class, 'getVideos']);
+
 Route::group(['middleware' => 'auth:api', 'prefix' => 'Dashboard'], function ($router) {
     Route::post('Settings', [DashboardController::class, 'Settings']);
+    Route::post('Upload', [DashboardController::class, 'UploadVideo']);
 });

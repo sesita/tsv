@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Video;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
@@ -37,5 +38,23 @@ class Controller extends BaseController
         }
 
         return $template;
+    }
+    public function getVideos(Request $request){
+        $paginate = $request->paginate ?? 15;
+        $orderBy = $request->orderBy ?? 'id';
+
+        $query = Video::query();
+
+        if ($orderBy == 'views') {
+            $query->orderBy('views', 'desc');
+        } elseif($orderBy == 'likes') {
+            $query->orderBy('likes', 'desc');
+        } else {
+            $query->orderBy('id', 'desc');
+        }
+        
+        $list = $query->paginate($paginate);
+
+        return response($list);
     }
 }

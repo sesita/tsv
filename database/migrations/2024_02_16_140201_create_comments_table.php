@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreign('video_id')->references('id')->on('videos');
             $table->text('comment')->nullable();
             $table->integer('parent_id')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

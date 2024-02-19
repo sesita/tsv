@@ -23,36 +23,30 @@ const Profile = () => {
             </div>
             <div className="flex gap-5 mt-8">
                 <div className="w-[250px] h-auto rounded-[32px] bg-[#F2F2F2] px-8 py-6">
-                    {currentUser?.additional_info?.languages.length > 0 && (
-                        <div className="mb-5">
-                            <h4 className="font-semibold text-2xl text-[#232323] mb-1">Language</h4>
-                            {currentUser?.additional_info?.languages.map((language, index) => (
-                                <p key={index} className="text-md text-[#232323]">
-                                    {language}
-                                </p>
-                            ))}
-                        </div>
-                    )}
-                    {currentUser?.additional_info?.skills.length > 0 && (
-                        <div className="mb-5">
-                            <h4 className="font-semibold text-2xl text-[#232323] mb-1">Skills</h4>
-                            {currentUser?.additional_info?.skills.map((skill, index) => (
-                                <p key={index} className="text-md text-[#232323]">
-                                    {skill}
-                                </p>
-                            ))}
-                        </div>
-                    )}
-                    {currentUser?.additional_info?.educations.length > 0 && (
-                        <div className="mb-5">
-                            <h4 className="font-semibold text-2xl text-[#232323] mb-1">Educations</h4>
-                            {currentUser?.additional_info?.educations.map((education, index) => (
-                                <p key={index} className="text-md text-[#232323]">
-                                    {education}
-                                </p>
-                            ))}
-                        </div>
-                    )}
+                    <div className="mb-5">
+                        <h4 className="font-semibold text-2xl text-[#232323] mb-1">Language</h4>
+                        {currentUser?.additional_info?.languages.map((language, index) => (
+                            <p key={index} className="text-md text-[#232323]">
+                                {language}
+                            </p>
+                        ))}
+                    </div>
+                    <div className="mb-5">
+                        <h4 className="font-semibold text-2xl text-[#232323] mb-1">Skills</h4>
+                        {currentUser?.additional_info?.skills.map((skill, index) => (
+                            <p key={index} className="text-md text-[#232323]">
+                                {skill}
+                            </p>
+                        ))}
+                    </div>
+                    <div className="mb-5">
+                        <h4 className="font-semibold text-2xl text-[#232323] mb-1">Educations</h4>
+                        {currentUser?.additional_info?.educations.map((education, index) => (
+                            <p key={index} className="text-md text-[#232323]">
+                                {education}
+                            </p>
+                        ))}
+                    </div>
                 </div>
                 <div className="flex-1">
                     <div className="flex items-center justify-between gap-5 px-8 mb-6">
@@ -71,7 +65,7 @@ const Profile = () => {
                     </div>
                     <div className="bg-[#F2F2F2] py-6 px-8 rounded-[32px]">
                         <h2 className="text-2xl text-[#232323] font-semibold mb-2">About {currentUser.full_name}</h2>
-                        <div className="text-sm text-[#232323] whitespace-pre-wrap" dangerouslySetInnerHTML={{__html: currentUser?.additional_info?.bio}}></div>
+                        <div className="text-sm text-[#232323] whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: currentUser?.additional_info?.bio }}></div>
                     </div>
                 </div>
             </div>
