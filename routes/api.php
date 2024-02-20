@@ -30,6 +30,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'Auth'], function ($router) {
 });
 
 Route::post('getVideos', [Controller::class, 'getVideos']);
+Route::post('getUser', [Controller::class, 'getUser']);
 
 Route::group(['middleware' => 'auth:api', 'prefix' => 'Dashboard'], function ($router) {
     Route::post('Settings', [DashboardController::class, 'Settings']);

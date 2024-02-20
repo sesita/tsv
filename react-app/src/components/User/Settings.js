@@ -3,8 +3,10 @@ import { React, useEffect, useState } from "react";
 import TagsInput from "react-tagsinput";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export const Settings = () => {
+    const navigate = useNavigate();
     const { currentUser } = useAuth();
     const [user, setUser] = useState({});
     const [skills, setSkills] = useState([]);
@@ -76,6 +78,7 @@ export const Settings = () => {
             const res = await axios.post("Dashboard/Settings", data);
             setUser(res.data);
             toast.success("Successfully updated.");
+            navigate('/User/Profile/' + res.data.id);
         } catch (error) {
             toast.error(error.response?.data?.message);
         }

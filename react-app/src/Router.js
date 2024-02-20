@@ -17,11 +17,11 @@ const router = createBrowserRouter([
         element: <Home />,
     },
     {
-        path: "/search",
+        path: "/Search",
         element: <Search />,
     },
     {
-        path: "/video/:id",
+        path: "/Video/:id",
         element: <SingleVideo />,
     },
     {
@@ -38,42 +38,40 @@ const router = createBrowserRouter([
         ],
     },
     {
-        path: "/user/:id",
-        // element: <UserLayout />,
+        path: "/User",
         children: [
             {
-                path: "/user/:id/profile",
-                name: "profile",
+                path: "Profile/:id?",
                 element: <ProfilePage />,
             },
             {
-                path: "/user/:id/analytics",
+                path: "Analytics",
                 element: <AnalyticsPage />,
             },
             {
-                path: "/user/:id/singleAnalytic",
+                path: "singleAnalytic",
                 element: <AnalyticsSinglePage />,
             },
             {
-                path: "/user/:id/videos",
+                path: "Videos",
                 element: <VideosPage />,
             },
             {
-                path: "/user/:id/promotion",
+                path: "Promotion",
                 element: <ProfilePage />,
             },
             {
-                path: "/user/:id/settings",
+                path: "Settings",
                 element: <SettingsPage />,
             },
         ],
     },
     {
-        path: "/admin",
+        path: "/Admin",
         element: "",
         children: [
             {
-                path: "/admin",
+                path: "Dashboard",
                 element: "",
             },
         ],

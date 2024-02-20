@@ -140,7 +140,7 @@ const Header = ({ searchQuery }) => {
                                                 </span>
                                                 <hr className="my-2.5" />
                                                 <Link
-                                                    to={`/user/${currentUser?.id}/profile`}
+                                                    to={`/User/Profile`}
                                                     className="flex items-center gap-2 text-blue-900 text-sm mb-2"
                                                 >
                                                     <CgProfile className="text-[#C60C0D] text-lg" />
@@ -155,28 +155,28 @@ const Header = ({ searchQuery }) => {
                                                 </button>
                                                 <hr className="my-3" />
                                                 <Link
-                                                    to={`/user/${currentUser?.id}/videos`}
+                                                    to={`/User/Videos`}
                                                     className="flex items-center gap-2 text-blue-900 text-sm mb-1"
                                                 >
                                                     <AiFillPlayCircle className="text-[#C60C0D] text-lg" />
                                                     My Videos
                                                 </Link>
                                                 <Link
-                                                    to={`/user/${currentUser?.id}/analytics`}
+                                                    to={`/User/Analytics`}
                                                     className="flex items-center gap-4 text-blue-900 text-sm mb-1"
                                                 >
                                                     <BsGraphUpArrow className="text-[#C60C0D] text-md" />
                                                     Analytics
                                                 </Link>
                                                 <Link
-                                                    to={`/user/${currentUser?.id}/promotion`}
+                                                    to={`/User/Promotion`}
                                                     className="flex items-center gap-4 text-blue-900 text-sm mb-1"
                                                 >
                                                     <CgProfile className="text-[#C60C0D] text-md" />
                                                     Promotion
                                                 </Link>
                                                 <Link
-                                                    to={`/user/${currentUser?.id}/settings`}
+                                                    to={`/User/Settings`}
                                                     className="flex items-center gap-4 text-blue-900 text-sm mb-1"
                                                 >
                                                     <AiFillSetting className="text-[#C60C0D] text-md" />

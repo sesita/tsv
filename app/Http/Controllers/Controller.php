@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Video;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -56,5 +57,15 @@ class Controller extends BaseController
         $list = $query->paginate($paginate);
 
         return response($list);
+    }
+    public function getUser(Request $request){
+
+        $request->validate([
+            'id'=>'required|integer',
+        ]);
+
+        $res = User::where('id', $request->id)->first();
+
+        return response($res);
     }
 }
