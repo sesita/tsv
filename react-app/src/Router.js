@@ -9,6 +9,7 @@ import VideosPage from "./pages/Videos/VideosPage";
 // import UserLayout from "./components/Layouts/UserLayout";
 import SettingsPage from "./pages/Settings/SettingsPage";
 import AnalyticsPage from "./pages/Analytics/AnalyticsPage";
+import UploadPage from "./pages/Upload/UploadPage";
 import AnalyticsSinglePage from "./pages/AnalyticsSingle/AnalyticsSinglePage";
 
 const router = createBrowserRouter([
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
             {
                 path: "Settings",
                 element: <SettingsPage />,
+            },
+            {
+                path: "Upload",
+                element: <UploadPage />,
             },
         ],
     },

@@ -16,7 +16,7 @@ const Profile = () => {
         const getUser = async () => {
             if (params.id) {
                 try {
-                    const res = await await axios.post("getUser", { id: params.id });
+                    const res = await axios.post("getUser", { id: params.id });
                     setUserInfo(res?.data);
                 } catch (e) {
                     toast.error(e.response?.data?.message);
