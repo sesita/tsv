@@ -3,7 +3,7 @@ import Comments from './Comments'
 import Video from './Video'
 import VideoInfo from './VideoInfo'
 
-const MainBox = () => {
+const MainBox = ({info}) => {
     return (
         <>
             <section>
@@ -12,7 +12,7 @@ const MainBox = () => {
                         <Video />
                         <div className='flex gap-6 mt-5'>
                             <div className='flex-1'>
-                                <VideoInfo />
+                                <VideoInfo info={info} />
                                 <Comments />
                             </div>
                             <div className='w-full max-w-[300px] flex flex-col gap-5 p-2 rounded'>

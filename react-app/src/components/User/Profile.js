@@ -48,7 +48,7 @@ const Profile = () => {
                 <div className="w-[250px] h-auto rounded-[32px] bg-[#F2F2F2] px-8 py-6">
                     <div className="mb-5">
                         <h4 className="font-semibold text-2xl text-[#232323] mb-1">Language</h4>
-                        {userInfo?.additional_info?.languages.map((language, index) => (
+                        {userInfo?.additional_info?.languages?.map((language, index) => (
                             <p key={index} className="text-md text-[#232323]">
                                 {language}
                             </p>
@@ -56,7 +56,7 @@ const Profile = () => {
                     </div>
                     <div className="mb-5">
                         <h4 className="font-semibold text-2xl text-[#232323] mb-1">Skills</h4>
-                        {userInfo?.additional_info?.skills.map((skill, index) => (
+                        {userInfo?.additional_info?.skills?.map((skill, index) => (
                             <p key={index} className="text-md text-[#232323]">
                                 {skill}
                             </p>
@@ -64,7 +64,7 @@ const Profile = () => {
                     </div>
                     <div className="mb-5">
                         <h4 className="font-semibold text-2xl text-[#232323] mb-1">Educations</h4>
-                        {userInfo?.additional_info?.educations.map((education, index) => (
+                        {userInfo?.additional_info?.educations?.map((education, index) => (
                             <p key={index} className="text-md text-[#232323]">
                                 {education}
                             </p>

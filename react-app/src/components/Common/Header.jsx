@@ -13,12 +13,16 @@ import { useDetectClickOutside } from "react-detect-click-outside";
 
 const Header = ({ searchQuery }) => {
     const [showDropdown, setShowDropdown] = useState(false);
+    const [notificationDropdown, setNotificationDropdown] = useState(false);
     const [mobileSearch, setMobileSearch] = useState(false);
     const [searchText, setSearchText] = useState("");
     const navigate = useNavigate();
 
     const closeUserDropdown = () => {
         setShowDropdown(false);
+    };
+    const closeNotificationDropdown = () => {
+        setNotificationDropdown(false);
     };
     const closeSearchDropdown = (e) => {
         if (!searchButton.current.contains(e.target)) {
@@ -35,6 +39,7 @@ const Header = ({ searchQuery }) => {
         onTriggered: closeSearchDropdown,
     });
     const searchButton = useRef();
+    const notificationRef = useDetectClickOutside({ onTriggered: closeNotificationDropdown });
 
     return (
         <>
@@ -78,9 +83,19 @@ const Header = ({ searchQuery }) => {
                                 <Link to={`/User/Upload`}>
                                     <BiSolidVideoPlus className="md:text-3xl text-xl cursor-pointer" />
                                 </Link>
-                                <div className="relative cursor-pointer">
+                                <div className="relative cursor-pointer" ref={notificationRef} onClick={() => setNotificationDropdown(!notificationDropdown)}>
                                     <span className="absolute border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-[#C60C0D] text-white text-[11px] -top-1.5 -right-1.5">15</span>
                                     <IoMdNotifications className="md:text-3xl text-xl" />
+
+                                    {notificationDropdown && (
+                                        <>
+                                            <div className="shadow-[0px_0px_5px_0px_rgba(0,0,0,0.2)] rounded-xl py-4 px-4 absolute right-0 top-12 w-52 z-20 text-center bg-white">
+                                                <span className="font-medium text-xl text-red-600 capitalize">Notifications</span>
+                                                <hr className="my-2.5" />
+                                                <h1>No New Notifications</h1>
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
                                 <div ref={userRef}>
                                     <div className="flex items-center cursor-pointer" onClick={() => setShowDropdown(!showDropdown)}>

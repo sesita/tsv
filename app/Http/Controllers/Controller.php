@@ -57,7 +57,7 @@ class Controller extends BaseController
 
 
         if($slug){
-            $list = $query->where('slug', $slug)->first();
+            $list = $query->with(['comments','user:avatar,name,id'])->where('slug', $slug)->first();
         } else {
             $list = $query->paginate($paginate);
         }

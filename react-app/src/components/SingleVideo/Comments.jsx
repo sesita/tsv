@@ -19,7 +19,7 @@ const Comments = () => {
                 <div className="bg-[#FFFFFF] rounded-2xl py-8 px-5">
                     <div className="">
                         <div className="flex items-center gap-3">
-                            <div className="w-[50px] h-[50px] rounded-full flex items-center justify-center bg-[#ECECEC]">
+                            <div className="w-[50px] h-[50px] rounded-full flex items-center justify-center bg-[#ECECEC] mb-4">
                                 <span className="text-[17px] font-semibold text-[#0A2A8D]">
                                     H
                                 </span>

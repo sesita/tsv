@@ -12,6 +12,37 @@ class Video extends Model
 
     protected $fillable = ['slug', 'title', 'description', 'video', 'user_id', 'thumbnail', 'views'];
 
+    public $appends = ['likes', 'dislikes', 'comments_count'];
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function getLikesAttribute($value)
+    {
+        return '15';
+    }
+
+    public function getDislikesAttribute($value)
+    {
+        return '9';
+    }
+
+    public function getViewsAttribute($value)
+    {
+        return '2K';
+    }
+
+    public function getCommentsCountAttribute($value)
+    {
+        return '1.5K';
+    }
 
     public function getThumbnailAttribute($value)
     {
