@@ -3,20 +3,36 @@ import NormalLayout from "../../components/Layouts/NormalLayout";
 import Banner from "../../components/SingleVideo/Banner";
 import MainBox from "../../components/SingleVideo/MainBox";
 import Categories from "../../components/Home/Categories";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const SingleVideo = () => {
-  const { id } = useParams();
-  console.log(id);
+    const { slug } = useParams();
+    const [video, setVideo] = useState([]);
 
-  return (
-    <>
-      <NormalLayout>
-        <Categories />
-        <Banner text="Animal Videos" />
-        <MainBox />
-      </NormalLayout>
-    </>
-  );
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.post("getVideos", {
+                    slug: slug,
+                });
+                setVideo(response.data);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+        fetchData();
+    }, []);
+
+    return (
+        <>
+            <NormalLayout>
+                <Categories />
+                <Banner text={video.title} />
+                <MainBox />
+            </NormalLayout>
+        </>
+    );
 };
 
 export default SingleVideo;

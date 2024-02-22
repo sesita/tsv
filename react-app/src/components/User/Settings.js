@@ -14,12 +14,20 @@ export const Settings = () => {
     const [educations, setEducations] = useState([]);
 
     useEffect(() => {
-        setUser(currentUser);
+        const getUser = async () => {
+            try {
+                const res = await axios.post("Auth/Me");
+                setUser(res?.data);
+            } catch (e) {
+                toast.error(e.response?.data?.message);
+            }
+        };
+        getUser();
+
         setSkills(currentUser.additional_info?.skills ?? []);
         setLanguages(currentUser.additional_info?.languages ?? []);
         setEducations(currentUser.additional_info?.educations ?? []);
-        console.log("asdf");
-    }, [currentUser]);
+    }, []);
 
     const skillInput = (value) => {
         setSkills(value);
@@ -78,7 +86,7 @@ export const Settings = () => {
             const res = await axios.post("Dashboard/Settings", data);
             setUser(res.data);
             toast.success("Successfully updated.");
-            navigate('/User/Profile/' + res.data.id);
+            navigate("/User/Profile/" + res.data.id);
         } catch (error) {
             toast.error(error.response?.data?.message);
         }

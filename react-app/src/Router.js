@@ -22,7 +22,7 @@ const router = createBrowserRouter([
         element: <Search />,
     },
     {
-        path: "/Video/:id",
+        path: "/:slug",
         element: <SingleVideo />,
     },
     {

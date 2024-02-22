@@ -43,6 +43,7 @@ class Controller extends BaseController
     public function getVideos(Request $request){
         $paginate = $request->paginate ?? 15;
         $orderBy = $request->orderBy ?? 'id';
+        $slug = $request->slug ?? null;
 
         $query = Video::query();
 
@@ -53,9 +54,14 @@ class Controller extends BaseController
         } else {
             $query->orderBy('id', 'desc');
         }
-        
-        $list = $query->paginate($paginate);
 
+
+        if($slug){
+            $list = $query->where('slug', $slug)->first();
+        } else {
+            $list = $query->paginate($paginate);
+        }
+        
         return response($list);
     }
     public function getUser(Request $request){

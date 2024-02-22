@@ -35,7 +35,7 @@ const Videos = ({ hideShadow }) => {
                         {videos?.data?.map((video, key) => (
                             <VideoBox
                                 info={{
-                                    _id: video.id,
+                                    slug: video.slug,
                                     thumbnail: video.thumbnail,
                                     title: video.title,
                                 }}

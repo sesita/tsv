@@ -8,7 +8,7 @@ const VideoBox = ({ info, hidePlayBtn, analytics }) => {
         <>
             <div className="relative">
                 {!hidePlayBtn && (
-                    <Link to={`/video/${info._id}`}>
+                    <Link to={`/${info.slug}`}>
                         <img
                             src={require("../../assets/img/PlayIcon2.png")}
                             alt="Play Icon White"
@@ -16,7 +16,7 @@ const VideoBox = ({ info, hidePlayBtn, analytics }) => {
                         />
                     </Link>
                 )}
-                <Link to={`/video/${info._id}`}>
+                <Link to={`/${info.slug}`}>
                     <div
                         style={{
                             background: `url(${info.thumbnail})`,
