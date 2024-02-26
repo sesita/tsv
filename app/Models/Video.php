@@ -10,7 +10,7 @@ class Video extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['slug', 'title', 'description', 'video', 'user_id', 'thumbnail', 'views'];
+    protected $fillable = ['slug', 'title', 'description', 'video', 'user_id', 'thumbnail', 'views', 'category_id'];
 
     public $appends = ['likes', 'dislikes', 'comments_count'];
 
@@ -22,6 +22,11 @@ class Video extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 
     public function getLikesAttribute($value)
@@ -45,6 +50,11 @@ class Video extends Model
     }
 
     public function getThumbnailAttribute($value)
+    {
+        if($value) return asset('storage/'.$value);
+    }
+
+    public function getVideoAttribute($value)
     {
         if($value) return asset('storage/'.$value);
     }

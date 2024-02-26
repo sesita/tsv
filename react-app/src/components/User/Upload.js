@@ -57,7 +57,7 @@ const Upload = () => {
         e.preventDefault();
 
         try {
-            const res = axios.post(
+            axios.post(
                 "Dashboard/Upload",
                 { ...videoInfo, video: selectedFile, thumbnail: thumbnail.target?.files[0] },
                 {
@@ -66,8 +66,8 @@ const Upload = () => {
                     },
                 }
             );
+            toast.success("Video Uploaded");
             navigate("/User/Profile");
-            toast.success(res?.data?.message);
         } catch (e) {
             toast.error(e.response?.data?.message);
         }
@@ -100,9 +100,7 @@ const Upload = () => {
                                     </label>
                                     <input type="file" id="thumbnail" name="thumbnail" className="rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" placeholder="Video Thumbnail..." onChange={(e) => setThumbnail(e)} />
                                 </div>
-                                {thumbnail?.target?.files[0] &&
-                                 <img src={URL.createObjectURL(thumbnail?.target?.files[0])} className="w-1/2 rounded-xl shadow" alt="thumbnail" />
-                                }
+                                {thumbnail?.target?.files[0] && <img src={URL.createObjectURL(thumbnail?.target?.files[0])} className="w-1/2 rounded-xl shadow" alt="thumbnail" />}
                             </div>
                         </div>
                         <button className="cursor-pointer py-4 px-12 rounded-full bg-blue-800 text-white mt-5 mx-auto block font-medium">Publish Video</button>
