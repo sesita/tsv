@@ -1,11 +1,12 @@
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { FaFacebookF } from "react-icons/fa";
 import { AiFillInstagram } from "react-icons/ai";
-import { BsGoogle, BsTwitter } from "react-icons/bs";
 import { useAuth } from "../../context/AuthContext";
-import { useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { BsGoogle, BsTwitter } from "react-icons/bs";
+import NumberFormatter from "../Common/FormatNumber";
 
 const Profile = () => {
     const [userInfo, setUserInfo] = useState();
@@ -24,8 +25,8 @@ const Profile = () => {
             } else {
                 setUserInfo(currentUser);
             }
-        }
-        
+        };
+
         getUser();
     }, [currentUser, params.id]);
 
@@ -74,15 +75,21 @@ const Profile = () => {
                 <div className="flex-1">
                     <div className="flex items-center justify-between gap-5 px-8 mb-6">
                         <div className="text-center">
-                            <h2 className="text-6xl font-bold text-[#C60C0D]">{userInfo?.following}</h2>
+                            <h2 className="text-6xl font-bold text-[#C60C0D]">
+                                <NumberFormatter value={userInfo?.following} />
+                            </h2>
                             <p className="text-md text-[#232323]">Following</p>
                         </div>
                         <div className="text-center">
-                            <h2 className="text-6xl font-bold text-[#C60C0D]">{userInfo?.followers}</h2>
+                            <h2 className="text-6xl font-bold text-[#C60C0D]">
+                                <NumberFormatter value={userInfo?.followers} />
+                            </h2>
                             <p className="text-md text-[#232323]">Followers</p>
                         </div>
                         <div className="text-center">
-                            <h2 className="text-6xl font-bold text-[#C60C0D]">{userInfo?.views}</h2>
+                            <h2 className="text-6xl font-bold text-[#C60C0D]">
+                                <NumberFormatter value={userInfo?.views} />
+                            </h2>
                             <p className="text-md text-[#232323]">Views</p>
                         </div>
                     </div>

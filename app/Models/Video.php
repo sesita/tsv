@@ -26,22 +26,22 @@ class Video extends Model
 
     public function getLikesAttribute($value)
     {
-        return '15';
+        return 9;
     }
 
     public function getDislikesAttribute($value)
     {
-        return '9';
+        return 30;
     }
 
     public function getViewsAttribute($value)
     {
-        return '2K';
+        return 24532;
     }
 
     public function getCommentsCountAttribute($value)
     {
-        return '1.5K';
+        return 1500;
     }
 
     public function getThumbnailAttribute($value)

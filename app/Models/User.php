@@ -83,14 +83,14 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     }
     public function getFollowingAttribute($value)
     {
-        return '1.2K';
+        return '1325';
     }
     public function getFollowersAttribute($value)
     {
-        return '523K';
+        return '52300';
     }
     public function getViewsAttribute($value)
     {
-        return '3.3M';
+        return '3300000';
     }
 }

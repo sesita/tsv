@@ -1,40 +1,53 @@
-import React from "react";
-import { AiFillDislike, AiFillLike } from "react-icons/ai";
-import { BiSolidCommentDetail } from "react-icons/bi";
-import { BsEyeFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import { BsEyeFill } from "react-icons/bs";
+import React, { useState, useEffect } from "react";
+import NumberFormatter from "../Common/FormatNumber";
+import { BiSolidCommentDetail } from "react-icons/bi";
+import { AiFillDislike, AiFillLike } from "react-icons/ai";
 
 const VideoInfo = ({ info }) => {
+    const [likesPercent, setLikesPercent] = useState(0);
 
+    useEffect(() => {
+        const totalVotes = info.likes + info.dislikes;
+        const likesPercentage = totalVotes === 0 ? 0 : (info.likes / totalVotes) * 100;
 
-    const likesPercentage = (info.dislikes / (info.likes + info.dislikes)) * 100;
+        setLikesPercent(likesPercentage);
+    }, [info.likes, info.dislikes]);
 
-    console.log(likesPercentage)
     return (
         <>
             <h2 className="text-3xl font-semibold">{info.title}</h2>
             <div className="flex gap-8 items-center my-4">
                 <div className="flex gap-2 items-center">
                     <BsEyeFill className="text-[#8B8B8B] text-3xl" />
-                    <span className="text-md text-[#8B8B8B]">{info.views}</span>
+                    <span className="text-md text-[#8B8B8B]">
+                        <NumberFormatter value={info.views} />
+                    </span>
                 </div>
                 <div className="flex gap-2 items-center">
                     <BiSolidCommentDetail className="text-[#8B8B8B] text-3xl" />
-                    <span className="text-md text-[#8B8B8B]">{info.comments_count}</span>
+                    <span className="text-md text-[#8B8B8B]">
+                        <NumberFormatter value={info.comments_count} />
+                    </span>
                 </div>
 
                 <div className="flex gap-2 items-center">
                     <AiFillLike className={`${true ? "text-[#0A2A8D]" : "text-[#8B8B8B]"} text-3xl`} />
-                    <span className="text-md text-[#8B8B8B]">{info.likes}</span>
+                    <span className="text-md text-[#8B8B8B]">
+                        <NumberFormatter value={info.likes} />
+                    </span>
                 </div>
 
                 <div className="flex gap-2 items-center w-[150px] h-[2px] bg-[#DBDBDB] rounded-full">
-                    <span className={`bg-[#0A2A8D] w-[50%] h-[3px] rounded-full`}></span>
+                    <span id="likesPercent" className="bg-[#0A2A8D] h-[3px] rounded-full transition-all duration-500" style={{ width: `${likesPercent}%` }}></span>
                 </div>
 
                 <div className="flex gap-2 items-center">
                     <AiFillDislike className="text-[#8B8B8B] text-3xl" />
-                    <span className="text-md text-[#8B8B8B]">{info.dislikes}</span>
+                    <span className="text-md text-[#8B8B8B]">
+                        <NumberFormatter value={info.dislikes} />
+                    </span>
                 </div>
             </div>
 
