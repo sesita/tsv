@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import VideoBox from "../Common/VideoBox";
-import axios from "axios";
+import Skeleton from "react-loading-skeleton";
+import React, { useEffect, useState } from "react";
 
 const Videos = ({ hideShadow }) => {
     const [videos, setVideos] = useState([]);
@@ -26,21 +27,30 @@ const Videos = ({ hideShadow }) => {
             <section className="mb-16 md:px-0 px-3">
                 <div className={`mx-auto md:w-[88%] ${hideShadow ? "" : "shadow-[0px_0px_14px_0px_rgba(0,0,0,0.25)]"} pt-8 px-12 rounded-[29px] -mt-24 z-20 bg-white pb-10`}>
                     <h2 className="md:text-[40px] md:text-3xl sm:text-lg mb-8">
-                        Most Popular{" "}
-                        <Link to={""} className="md:text-sm text-xs font-normal text-[#C60C0D]">
+                        Most Popular
+                        <Link to={""} className="md:text-sm text-xs ml-4 font-normal text-[#C60C0D]">
                             View All Videos
                         </Link>
                     </h2>
                     <div className="grid gap-6 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 mb-12">
-                        {videos?.data?.map((video, key) => (
-                            <VideoBox
-                                info={{
-                                    slug: video.slug,
-                                    thumbnail: video.thumbnail,
-                                    title: video.title,
-                                }}
-                            />
-                        ))}
+                        {videos.data?.length > 0 ? (
+                            videos?.data?.map((video, key) => (
+                                <VideoBox
+                                    info={{
+                                        slug: video.slug,
+                                        thumbnail: video.thumbnail,
+                                        title: video.title,
+                                    }}
+                                />
+                            ))
+                        ) : (
+                            <>
+                                <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
+                                <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
+                                <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
+                                <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
+                            </>
+                        )}
                     </div>
 
                     <h2 className="md:text-[40px] md:text-3xl sm:text-lg mb-8">

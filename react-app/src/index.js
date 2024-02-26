@@ -1,13 +1,14 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
 import "./index.css";
 import 'animate.css';
 import App from "./App";
+import axios from "axios";
+import React from "react";
+import ReactDOM from "react-dom/client";
 import reportWebVitals from "./reportWebVitals";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import 'react-loading-skeleton/dist/skeleton.css'
 import { AuthContextProvider } from "./context/AuthContext";
-import axios from "axios";
 
 let url = window.location.origin + "/api";
 if (process.env.NODE_ENV === "development"){
