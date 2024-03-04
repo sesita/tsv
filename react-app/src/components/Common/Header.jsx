@@ -84,7 +84,7 @@ const Header = ({ searchQuery }) => {
                                     <BiSolidVideoPlus className="md:text-3xl text-xl cursor-pointer" />
                                 </Link>
                                 <div className="relative cursor-pointer" ref={notificationRef} onClick={() => setNotificationDropdown(!notificationDropdown)}>
-                                    <span className="absolute border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-[#C60C0D] text-white text-[11px] -top-1.5 -right-1.5">15</span>
+                                    <span className="absolute border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-[#C60C0D] text-white text-[11px] -top-1.5 -right-1.5">0</span>
                                     <IoMdNotifications className="md:text-3xl text-xl" />
 
                                     {notificationDropdown && (

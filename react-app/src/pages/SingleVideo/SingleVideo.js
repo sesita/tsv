@@ -28,7 +28,7 @@ const SingleVideo = () => {
         <>
             <NormalLayout>
                 <Categories />
-                <Banner text={video.title} />
+                <Banner text={video?.category?.title} />
                 <MainBox info={video} />
             </NormalLayout>
         </>
