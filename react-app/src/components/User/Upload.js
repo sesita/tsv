@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import TagsInput from "react-tagsinput";
 import { MdOutlineFileUpload } from "react-icons/md";
@@ -8,10 +8,17 @@ import { useNavigate } from "react-router-dom";
 const Upload = () => {
     const navigate = useNavigate();
     const [tags, setTags] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [videoInfo, setVideoInfo] = useState([]);
     const [isDragging, setIsDragging] = useState(false);
     const [selectedFile, setSelectedFile] = useState({});
     const [thumbnail, setThumbnail] = useState({});
+
+    useEffect(() => {
+        axios.get("getCategories").then((cat) => {
+            setCategories(cat.data);
+        });
+    }, []);
 
     const handleDragEnter = (e) => {
         e.preventDefault();
@@ -57,7 +64,7 @@ const Upload = () => {
         e.preventDefault();
 
         try {
-            axios.post(
+            await axios.post(
                 "Dashboard/Upload",
                 { ...videoInfo, video: selectedFile, thumbnail: thumbnail.target?.files[0] },
                 {
@@ -93,6 +100,12 @@ const Upload = () => {
                                     }}
                                     className="rounded-lg pt-2 pb-1 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none"
                                 />
+                                <select name="category" className="rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" onChange={(e) => changeInput(e)}>
+                                    <option selected disabled>Please Select Category</option>
+                                    {categories?.map((category) => (
+                                        <option value={category?.id}>{category?.title}</option>
+                                    ))}
+                                </select>
                                 <textarea name="description" rows="4" className="w-full rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" placeholder="Description..." value={videoInfo?.description} onChange={(e) => changeInput(e)}></textarea>
                                 <div className="flex flex-col gap-2 mt-auto mb-2">
                                     <label htmlFor="thumbnail" className="font-medium">

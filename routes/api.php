@@ -31,6 +31,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'Auth'], function ($router) {
 
 Route::post('getVideos', [Controller::class, 'getVideos']);
 Route::post('getUser', [Controller::class, 'getUser']);
+Route::get('getCategories', [Controller::class, 'getCategories']);
 
 Route::group(['middleware' => 'auth:api', 'prefix' => 'Dashboard'], function ($router) {
     Route::post('Settings', [DashboardController::class, 'Settings']);

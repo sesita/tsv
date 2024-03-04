@@ -50,6 +50,7 @@ class DashboardController extends Controller
             'description' =>'required',
             'video' =>'required|mimes:mp4,mov,ogg,webm',
             'thumbnail' =>'required',
+            'category' =>'required',
         ]);
 
         $videoName = 'videos/'. Str::random(). time(). '.mp4';
@@ -72,6 +73,7 @@ class DashboardController extends Controller
             'slug' => $videoSlug,
             'video' => $videoName,
             'user_id' => $userId,
+            'category_id' => $request->category,
             'thumbnail' => $thumbnail ?? null,
             'title' => $request->title,
             'description' => $request->description,

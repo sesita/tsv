@@ -31,7 +31,7 @@ class Video extends Model
 
     public function getLikesAttribute($value)
     {
-        return 9;
+        return 5;
     }
 
     public function getDislikesAttribute($value)

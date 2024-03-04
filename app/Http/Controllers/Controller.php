@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\User;
 use App\Models\Video;
 use Illuminate\Http\Request;
@@ -78,6 +79,10 @@ class Controller extends BaseController
 
         $res = User::where('id', $request->id)->first();
 
+        return response($res);
+    }
+    public function getCategories(Request $request){
+        $res = Category::latest()->get();
         return response($res);
     }
 }
