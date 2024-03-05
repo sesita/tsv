@@ -5,14 +5,12 @@ import { useAuth } from "../../context/AuthContext";
 
 const Comments = ({ info }) => {
     const { currentUser } = useAuth();
-    const [comment, setComment] = useState({
-        reply: false,
-        comment: "",
-    });
+    const [comment, setComment] = useState();
+    const [reply, setReply] = useState();
 
     const addComment = (comment) => {
         const res = axios
-            .post("", comment)
+            .post("Video/addComment", comment)
             .then((res) => {
                 console.log(res.data);
             })
@@ -27,11 +25,20 @@ const Comments = ({ info }) => {
         <>
             <div className="rounded-3xl bg-[#ECECEC] p-8 mt-5">
                 {currentUser && (
-                    <div className="flex items-center gap-5 mb-6">
-                        <img src={currentUser?.avatar} className="w-[45px] h-[45px] rounded-full" alt="Avatar" />
-                        <input type="text" className="text-[#ACACAC] border-0 border-b-[1px] border-b-[#ACACAC] flex-1 bg-transparent outline-none py-2" placeholder="Add Comment" onChange={(e) => setComment(...comment, { comment: e.target.value })} />
-                        <BiLogoTelegram className="text-4xl cursor-pointer" />
-                    </div>
+                    <>
+                        {reply && (
+                            <div className="mb-4 mr-auto">
+                                Replying to {info.comments[0]?.user?.name}
+                            </div>
+                        )}
+                        <form onSubmit={addComment} className="flex items-center gap-5 mb-6">
+                            <img src={currentUser?.avatar} className="w-[45px] h-[45px] rounded-full" alt="Avatar" />
+                            <input type="text" className="text-[#ACACAC] border-0 border-b-[1px] border-b-[#ACACAC] flex-1 bg-transparent outline-none py-2" placeholder="Add Comment" onChange={(e) => setComment(e.target.value)} />
+                            <button type="submit">
+                                <BiLogoTelegram className="text-4xl cursor-pointer" />
+                            </button>
+                        </form>
+                    </>
                 )}
 
                 <div className="bg-[#FFFFFF] rounded-2xl pt-2 pb-6 px-5">
@@ -47,7 +54,9 @@ const Comments = ({ info }) => {
                                         </h3>
                                         <p className="text-[12px] text-[#000000]">{comment.comment}</p>
                                     </div>
-                                    <span className="ml-auto mr-4 text-sm cursor-pointer">Reply</span>
+                                    <span className="ml-auto mr-4 text-sm cursor-pointer" onClick={() => setReply(comment.id)}>
+                                        Reply
+                                    </span>
                                 </div>
                                 {comment.replies.length > 0 && (
                                     <div className="pl-[25px] mt-[20px] mb-[20px]">
