@@ -1,10 +1,10 @@
+import axios from "axios";
 import { useParams } from "react-router-dom";
 import NormalLayout from "../../components/Layouts/NormalLayout";
 import Banner from "../../components/SingleVideo/Banner";
 import MainBox from "../../components/SingleVideo/MainBox";
 import Categories from "../../components/Home/Categories";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 
 const SingleVideo = () => {
     const { slug } = useParams();
