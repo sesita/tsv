@@ -44,7 +44,6 @@ class Controller extends BaseController
     public function getVideos(Request $request){
         $paginate = $request->paginate ?? 15;
         $orderBy = $request->orderBy ?? 'id';
-        $slug = $request->slug ?? null;
 
         $query = Video::query();
 
@@ -56,18 +55,7 @@ class Controller extends BaseController
             $query->orderBy('id', 'desc');
         }
 
-
-        if($slug){
-            $list = $query->with([
-                'comments' => function ($query) {
-                    $query->where('parent_id', null);
-                },
-                'user:avatar,name,id',
-                'category'
-            ])->where('slug', $slug)->first();
-        } else {
-            $list = $query->paginate($paginate);
-        }
+        $list = $query->paginate($paginate);
         
         return response($list);
     }

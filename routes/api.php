@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\VideoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\SocialController;
@@ -32,6 +33,14 @@ Route::group(['middleware' => 'api', 'prefix' => 'Auth'], function ($router) {
 Route::post('getVideos', [Controller::class, 'getVideos']);
 Route::post('getUser', [Controller::class, 'getUser']);
 Route::get('getCategories', [Controller::class, 'getCategories']);
+
+Route::group(['prefix' => 'Video'], function ($router) {
+    Route::get('{slug}', [VideoController::class, 'getVideo']);
+    Route::post('addComment', [VideoController::class, 'addComment']);
+    Route::post('deleteComment', [VideoController::class, 'deleteComment']);
+    Route::post('Interaction', [VideoController::class, 'interaction']);
+    Route::post('View', [VideoController::class, 'setView']);
+});
 
 Route::group(['middleware' => 'auth:api', 'prefix' => 'Dashboard'], function ($router) {
     Route::post('Settings', [DashboardController::class, 'Settings']);

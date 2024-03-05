@@ -18,7 +18,7 @@ const VideoInfo = ({ info }) => {
     return (
         <>
             <h2 className="text-3xl font-semibold">{info.title}</h2>
-            <div className="flex gap-8 items-center my-4">
+            <div className="sm:flex grid grid-cols-4 gap-8 items-center my-4 mb-5">
                 <div className="flex gap-2 items-center">
                     <BsEyeFill className="text-[#8B8B8B] text-3xl" />
                     <span className="text-md text-[#8B8B8B]">
@@ -39,8 +39,8 @@ const VideoInfo = ({ info }) => {
                     </span>
                 </div>
 
-                <div className="flex gap-2 items-center w-[150px] h-[2px] bg-[#DBDBDB] rounded-full">
-                    <span id="likesPercent" className="bg-[#0A2A8D] h-[3px] rounded-full transition-all duration-500" style={{ width: `${likesPercent}%` }}></span>
+                <div className="gap-2 items-center sm:w-[20%] w-0 h-[2px] bg-[#DBDBDB] rounded-full hidden sm:flex">
+                    <span className="bg-[#0A2A8D] h-[3px] rounded-full transition-all duration-500" style={{ width: `${likesPercent}%` }}></span>
                 </div>
 
                 <div className="flex gap-2 items-center">
@@ -49,6 +49,7 @@ const VideoInfo = ({ info }) => {
                         <NumberFormatter value={info.dislikes} />
                     </span>
                 </div>
+
             </div>
 
             <Link to={`/User/Profile/${info?.user?.id}`} className="flex items-center gap-3 mb-8">
