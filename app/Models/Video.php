@@ -29,24 +29,24 @@ class Video extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function interactions()
+    {
+        return $this->hasMany(Interaction::class);
+    }
+
     public function getLikesAttribute($value)
     {
-        return 5;
+        return $this->interactions()->where('is_liked', true)->count();
     }
 
     public function getDislikesAttribute($value)
     {
-        return 30;
-    }
-
-    public function getViewsAttribute($value)
-    {
-        return 24532;
+        return $this->interactions()->where('is_liked', false)->count();
     }
 
     public function getCommentsCountAttribute($value)
     {
-        return 1500;
+        return $this->comments()->count();
     }
 
     public function getThumbnailAttribute($value)

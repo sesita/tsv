@@ -1,16 +1,32 @@
+import { axios } from "axios";
+import { useState } from "react";
 import { BiLogoTelegram } from "react-icons/bi";
 import { useAuth } from "../../context/AuthContext";
 
 const Comments = ({ info }) => {
     const { currentUser } = useAuth();
+    const [comment, setComment] = useState({
+        reply: false,
+        comment: "",
+    });
+
+    const addComment = (comment) => {
+        axios.post("/api/comments", comment)
+         .then((res) => {
+                console.log(res.data);
+            })
+         .catch((err) => {
+                console.log(err);
+            });
+    };
 
     return (
         <>
             <div className="rounded-3xl bg-[#ECECEC] p-8 mt-5">
                 {currentUser && (
-                    <div className="flex items-center gap-5 mb-4">
+                    <div className="flex items-center gap-5 mb-6">
                         <img src={currentUser?.avatar} className="w-[45px] h-[45px] rounded-full" alt="Avatar" />
-                        <input type="text" className="text-[#ACACAC] border-0 border-b-[1px] border-b-[#ACACAC] flex-1 bg-transparent outline-none py-1" placeholder="Add Comment" />
+                        <input type="text" className="text-[#ACACAC] border-0 border-b-[1px] border-b-[#ACACAC] flex-1 bg-transparent outline-none py-2" placeholder="Add Comment" onChange={(e) => setComment(...comment, {comment: e.target.value})} />
                         <BiLogoTelegram className="text-4xl cursor-pointer" />
                     </div>
                 )}
@@ -28,6 +44,7 @@ const Comments = ({ info }) => {
                                         </h3>
                                         <p className="text-[12px] text-[#000000]">{comment.comment}</p>
                                     </div>
+                                    <span className="ml-auto mr-4 text-sm">Reply</span>
                                 </div>
                                 {comment.replies.length > 0 && (
                                     <div className="pl-[25px] mt-[20px] mb-[20px]">

@@ -11,6 +11,8 @@ class Comment extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $fillable = ['video_id', 'user_id', 'parent_id', 'comment'];
+
     protected $hidden = ['deleted_at', 'updated_at'];
 
     public $appends = ['replies', 'user'];

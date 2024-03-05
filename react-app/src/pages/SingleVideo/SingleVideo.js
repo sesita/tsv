@@ -13,9 +13,7 @@ const SingleVideo = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.post("getVideos", {
-                    slug: slug,
-                });
+                const response = await axios.get(`Video/${slug}`);
                 setVideo(response.data);
             } catch (error) {
                 console.error("Error fetching data:", error);
