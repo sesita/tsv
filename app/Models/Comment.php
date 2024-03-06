@@ -15,15 +15,19 @@ class Comment extends Model
 
     protected $hidden = ['deleted_at', 'updated_at'];
 
-    public $appends = ['replies', 'user'];
+    public $appends = ['user'];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-    public function replies()
+    public function selfReply()
     {
         return $this->hasMany(Comment::class, 'parent_id');
+    }
+    public function replies()
+    {
+        return $this->selfReply()->with('replies');
     }
     public function getUserAttribute()
     {

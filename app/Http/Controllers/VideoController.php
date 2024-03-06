@@ -18,6 +18,7 @@ class VideoController extends Controller
     {
         $res = Video::with([
             'comments' => function ($query) {
+                $query->with('replies');
                 $query->where('parent_id', null);
             },
             'user:avatar,name,id',
@@ -33,7 +34,7 @@ class VideoController extends Controller
         $request->validate([
             'video_id' => 'required|integer|exists:videos,id',
             'comment' => 'required|string',
-            'reply' => 'mullable|exists:comments,id',
+            'reply' => 'nullable|exists:comments,id',
         ]);
 
         $res = Comment::create([
@@ -43,7 +44,16 @@ class VideoController extends Controller
             'parent_id' => $request->reply ?? null,
         ]);
 
-        return response(['status' => $res ? 'success' : 'error']);
+        $video = Video::with([
+            'comments' => function ($query) {
+                $query->with('replies');
+                $query->where('parent_id', null);
+            },
+            'user:avatar,name,id',
+            'category',
+        ])->where('id', $request->video_id)->first();
+
+        return response(['status' => $res ? 'success' : 'error', 'comments'=>$video->comments ?? []]);
     }
     public function deleteComment(Request $request)
     {
