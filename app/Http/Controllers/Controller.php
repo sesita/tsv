@@ -47,9 +47,9 @@ class Controller extends BaseController
 
         $query = Video::query();
 
-        if ($orderBy == 'views') {
+        if ($orderBy == 'popular') {
             $query->orderBy('views', 'desc');
-        } elseif($orderBy == 'likes') {
+        } elseif($orderBy == 'recommended') {
             $query->orderBy('likes', 'desc');
         } else {
             $query->orderBy('id', 'desc');

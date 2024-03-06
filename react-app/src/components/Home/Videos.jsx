@@ -6,12 +6,13 @@ import React, { useEffect, useState } from "react";
 
 const Videos = ({ hideShadow }) => {
     const [videos, setVideos] = useState([]);
+    const [videosRecommended, setVideosRecommended] = useState([]);
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchPopular = async () => {
             try {
                 const response = await axios.post("getVideos", {
-                    orderBy: "views",
+                    orderBy: "popular",
                     paginate: 4,
                 });
                 setVideos(response.data);
@@ -19,7 +20,19 @@ const Videos = ({ hideShadow }) => {
                 console.error("Error fetching data:", error);
             }
         };
-        fetchData();
+        const fetchRecommended = async () => {
+            try {
+                const response = await axios.post("getVideos", {
+                    orderBy: "recommended",
+                    paginate: 4,
+                });
+                setVideosRecommended(response.data);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+        fetchPopular();
+        fetchRecommended();
     }, []);
 
     return (
@@ -60,34 +73,24 @@ const Videos = ({ hideShadow }) => {
                         </Link>
                     </h2>
                     <div className="grid gap-6 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 mb-16">
-                        <VideoBox
-                            info={{
-                                _id: 1,
-                                thumbnail: require("../../assets/img/Video1.png"),
-                                title: "Lorem Ipsum is simply dummy text of the printing.",
-                            }}
-                        />
-                        <VideoBox
-                            info={{
-                                _id: 2,
-                                thumbnail: require("../../assets/img/Video2.png"),
-                                title: "Lorem Ipsum is simply dummy text of the printing.",
-                            }}
-                        />
-                        <VideoBox
-                            info={{
-                                _id: 3,
-                                thumbnail: require("../../assets/img/Video3.png"),
-                                title: "Lorem Ipsum is simply dummy text of the printing.",
-                            }}
-                        />
-                        <VideoBox
-                            info={{
-                                _id: 4,
-                                thumbnail: require("../../assets/img/Video4.png"),
-                                title: "Lorem Ipsum is simply dummy text of the printing.",
-                            }}
-                        />
+                        {videos.data?.length > 0 ? (
+                            videos?.data?.map((video, key) => (
+                                <VideoBox
+                                    info={{
+                                        slug: video.slug,
+                                        thumbnail: video.thumbnail,
+                                        title: video.title,
+                                    }}
+                                />
+                            ))
+                        ) : (
+                            <>
+                                <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
+                                <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
+                                <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
+                                <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
+                            </>
+                        )}
                     </div>
 
                     <button className="bg-[#C60C0D] hover:bg-[#e22121] text-white font-semibold rounded-full py-2 px-8 mx-auto block transition-all">Load More</button>
