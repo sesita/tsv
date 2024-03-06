@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Video;
 use App\Models\Comment;
 use App\Models\Interaction;
+use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,7 +25,16 @@ class VideoController extends Controller
             'category',
         ])->where('slug', $slug)->first();
 
-        if($res->id) Video::where('id', $res->id)->increment('views');
+        if ($res->id) {
+            Video::where('id', $res->id)->increment('views');
+        }
+
+        if (Auth::user()) {
+            $interaction = Interaction::where('user_id', Auth::user()->id)->where('video_id', $res->id)->first();
+            if($interaction) $res['interaction'] = $interaction->is_liked ? 'like' : 'dislike';
+        } else {
+            $res['interaction'] = false;
+        }
 
         return $res;
     }
@@ -53,7 +62,7 @@ class VideoController extends Controller
             'category',
         ])->where('id', $request->video_id)->first();
 
-        return response(['status' => $res ? 'success' : 'error', 'comments'=>$video->comments ?? []]);
+        return response(['status' => $res ? 'success' : 'error', 'comments' => $video->comments ?? []]);
     }
     public function deleteComment(Request $request)
     {
@@ -66,18 +75,17 @@ class VideoController extends Controller
     public function interaction(Request $request)
     {
         $request->validate([
-            'interaction'=> 'required|in:like,dislike',
-            'video_id' =>'required|integer|exists:videos,id',
+            'interaction' => 'required|in:like,dislike',
+            'video_id' => 'required|integer|exists:videos,id',
         ]);
-     
-        $res = false;
-        if(!Interaction::where('video_id', $request->video_id)->where('user_id', Auth::user()->id)->first()){
-            $res = Interaction::create([
-                'video_id' => $request->video_id,
-                'user_id' => Auth::user()->id,
-                'is_liked' => $request->interaction ? true : false,
-            ]);
-        }
+
+        $res = Interaction::updateOrCreate([
+            'user_id' => Auth::user()->id,
+            'video_id' => $request->video_id,
+        ], [
+            'is_liked' => $request->interaction == 'like' ? true : false
+        ]);
+        
         return response(['status' => $res ? 'success' : 'error']);
     }
 }
