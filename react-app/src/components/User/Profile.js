@@ -76,21 +76,21 @@ const Profile = () => {
                     <div className="flex items-center justify-between gap-5 px-8 mb-6">
                         <div className="text-center">
                             <h2 className="text-6xl font-bold text-[#C60C0D]">
-                                <NumberFormatter value={userInfo?.following} />
-                            </h2>
-                            <p className="text-md text-[#232323]">Following</p>
-                        </div>
-                        <div className="text-center">
-                            <h2 className="text-6xl font-bold text-[#C60C0D]">
-                                <NumberFormatter value={userInfo?.followers} />
-                            </h2>
-                            <p className="text-md text-[#232323]">Followers</p>
-                        </div>
-                        <div className="text-center">
-                            <h2 className="text-6xl font-bold text-[#C60C0D]">
                                 <NumberFormatter value={userInfo?.views} />
                             </h2>
                             <p className="text-md text-[#232323]">Views</p>
+                        </div>
+                        <div className="text-center">
+                            <h2 className="text-6xl font-bold text-[#C60C0D]">
+                                <NumberFormatter value={userInfo?.videos} />
+                            </h2>
+                            <p className="text-md text-[#232323]">Videos</p>
+                        </div>
+                        <div className="text-center">
+                            <h2 className="text-6xl font-bold text-[#C60C0D]">
+                                <NumberFormatter value={userInfo?.likes} />
+                            </h2>
+                            <p className="text-md text-[#232323]">Likes</p>
                         </div>
                     </div>
                     <div className="bg-[#F2F2F2] py-6 px-8 rounded-[32px]">

@@ -68,7 +68,7 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         return [];
     }
 
-    public $appends = ['following', 'followers', 'views'];
+    public $appends = ['likes', 'videos', 'views'];
 
     public function getAdditionalInfoAttribute($value)
     {
@@ -81,16 +81,17 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
 
         return "https://ui-avatars.com/api/?background=random&name={$this->name}&bold=true";
     }
-    public function getFollowingAttribute($value)
+    public function getLikesAttribute($value)
     {
-        return '1325';
+        $videoIds = Video::where('user_id', $this->id)->pluck('id');
+        return Interaction::whereIn('video_id', $videoIds)->sum('is_liked');
     }
-    public function getFollowersAttribute($value)
+    public function getVideosAttribute($value)
     {
-        return '52300';
+        return Video::where('user_id', $this->id)->count();
     }
     public function getViewsAttribute($value)
     {
-        return '3300000';
+        return Video::where('user_id', $this->id)->sum('views');
     }
 }
