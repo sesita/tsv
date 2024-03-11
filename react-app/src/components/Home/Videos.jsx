@@ -12,8 +12,10 @@ const Videos = ({ hideShadow }) => {
         const fetchPopular = async () => {
             try {
                 const response = await axios.get("Main/getVideos", {
-                    orderBy: "popular",
-                    paginate: 4,
+                    params: {
+                        orderBy: "popular",
+                        paginate: 4,
+                    }
                 });
                 setVideos(response.data);
             } catch (error) {
@@ -23,8 +25,10 @@ const Videos = ({ hideShadow }) => {
         const fetchRecommended = async () => {
             try {
                 const response = await axios.get("Main/getVideos", {
-                    orderBy: "recommended",
-                    paginate: 4,
+                    params: {
+                        orderBy: "recommended",
+                        paginate: 4,
+                    }
                 });
                 setVideosRecommended(response.data);
             } catch (error) {
