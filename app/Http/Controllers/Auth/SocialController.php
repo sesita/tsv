@@ -40,6 +40,7 @@ class SocialController extends Controller
 
                 $user = User::create([
                     'name' => $user->name,
+                    'full_name' => $user->name,
                     'email' => $user->email,
                     'avatar' => $user->avatar,
                     'password' => Hash::make($user->id),

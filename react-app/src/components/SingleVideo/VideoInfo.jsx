@@ -23,19 +23,22 @@ const VideoInfo = ({ info }) => {
         setLikesPercent(countInteractionPercent(info.likes, info.dislikes));
     }, [info]);
 
+    useEffect(() => {
+        setLikesPercent(countInteractionPercent(data.likes, data.dislikes));
+    }, [data.likes, data.dislikes]);
+
     const Interaction = async (status) => {
         if (!currentUser) return toast.error("Require Authorizations");
-        if(status === data.interaction) return;
+        if (status === data.interaction) return;
 
         const res = await axios.post("Video/Interaction", {
             video_id: info.id,
             interaction: status,
         });
         if (res.data.status === "success") {
-            const oldInteraction = {[data.interaction]: data[data.interaction+'s']-1}
-            const upd = status === 'like' ? {likes: info.likes + 1, ...oldInteraction} : {dislikes: info.dislikes + 1, ...oldInteraction};
-            setData({...info, ...upd, interaction: status});
-            setLikesPercent(countInteractionPercent(data.likes, data.dislikes));
+            const oldInteraction = { [data.interaction + "s"]: data[data.interaction + "s"] - 1 };
+            const upd = status === "like" ? { likes: data.likes + 1, ...oldInteraction } : { dislikes: data.dislikes + 1, ...oldInteraction };
+            setData({ ...info, ...upd, interaction: status });
         } else {
             toast.error("Could not interacted");
         }
@@ -58,7 +61,7 @@ const VideoInfo = ({ info }) => {
                     </span>
                 </div>
 
-                <div className="flex gap-2 items-center cursor-pointer" onClick={() => Interaction('like')}>
+                <div className="flex gap-2 items-center cursor-pointer" onClick={() => Interaction("like")}>
                     <AiFillLike className={`${data?.interaction === "like" ? "text-[#0A2A8D]" : "text-[#8B8B8B]"} text-3xl`} />
                     <span className="text-md text-[#8B8B8B]">
                         <NumberFormatter value={data.likes} />
@@ -69,7 +72,7 @@ const VideoInfo = ({ info }) => {
                     <span className="bg-[#0A2A8D] h-[3px] rounded-full transition-all duration-500" style={{ width: `${likesPercent}%` }}></span>
                 </div>
 
-                <div className="flex gap-2 items-center cursor-pointer" onClick={() => Interaction('dislike')}>
+                <div className="flex gap-2 items-center cursor-pointer" onClick={() => Interaction("dislike")}>
                     <AiFillDislike className={`${data?.interaction === "dislike" ? "text-[#0A2A8D]" : "text-[#8B8B8B]"} text-3xl`} />
                     <span className="text-md text-[#8B8B8B]">
                         <NumberFormatter value={data.dislikes} />
