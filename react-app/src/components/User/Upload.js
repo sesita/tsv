@@ -15,7 +15,7 @@ const Upload = () => {
     const [thumbnail, setThumbnail] = useState({});
 
     useEffect(() => {
-        axios.get("getCategories").then((cat) => {
+        axios.get("Main/getCategories").then((cat) => {
             setCategories(cat.data);
         });
     }, []);

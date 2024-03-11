@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\MainController;
 use App\Http\Controllers\VideoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
@@ -30,11 +31,14 @@ Route::group(['middleware' => 'api', 'prefix' => 'Auth'], function ($router) {
     Route::post('Me', [AuthController::class, 'me']);
 });
 
-Route::post('getVideos', [Controller::class, 'getVideos']);
-Route::post('getUser', [Controller::class, 'getUser']);
-Route::get('getCategories', [Controller::class, 'getCategories']);
+Route::prefix('Main')->group(function () {
+    Route::get('getUser', [MainController::class, 'getUser']);
+    Route::get('getTags', [MainController::class, 'getTags']);
+    Route::get('getVideos', [MainController::class, 'getVideos']);
+    Route::get('getCategories', [MainController::class, 'getCategories']);
+});
 
-Route::group(['prefix' => 'Video'], function ($router) {
+Route::prefix('Video')->group(function () {
     Route::get('{slug}', [VideoController::class, 'getVideo']);
     Route::post('addComment', [VideoController::class, 'addComment']);
     Route::post('deleteComment', [VideoController::class, 'deleteComment']);

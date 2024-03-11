@@ -11,7 +11,7 @@ const Videos = ({ hideShadow }) => {
     useEffect(() => {
         const fetchPopular = async () => {
             try {
-                const response = await axios.post("getVideos", {
+                const response = await axios.get("Main/getVideos", {
                     orderBy: "popular",
                     paginate: 4,
                 });
@@ -22,7 +22,7 @@ const Videos = ({ hideShadow }) => {
         };
         const fetchRecommended = async () => {
             try {
-                const response = await axios.post("getVideos", {
+                const response = await axios.get("Main/getVideos", {
                     orderBy: "recommended",
                     paginate: 4,
                 });

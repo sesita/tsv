@@ -10,8 +10,6 @@ const Search = () => {
   const searchParams = new URLSearchParams(location.search);
   const searchText = searchParams.get("q");
 
-  console.log(searchText);
-
   return (
     <>
       <NormalLayout searchQuery={searchText}>
