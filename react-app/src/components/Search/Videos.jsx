@@ -17,19 +17,9 @@ const Videos = ({ searchQuery }) => {
         setVideos(res.data);
     };
 
-    const getTags = async () => {
-        const res = await axios.get("Main/getVideos", {
-            params: {
-                search: searchQuery,
-            },
-        });
-        setVideos(res.data);
-    };
-
-
     useEffect(() => {
         getVideos();
-    }, [searchQuery]);
+    }, [searchQuery, activeTag]);
 
     return (
         <>

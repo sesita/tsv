@@ -1,10 +1,10 @@
 import axios from "axios";
 import { RiFilter2Fill } from "react-icons/ri";
 import { FiChevronDown } from "react-icons/fi";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useDetectClickOutside } from "react-detect-click-outside";
 
-const FilterOptions = ({ searchQuery, getVideos, activeTag, setActiveTag }) => {
+const FilterOptions = ({ searchQuery, activeTag, setActiveTag }) => {
     const [terms, setTerms] = useState([]);
 
     const getTags = async () => {
@@ -39,16 +39,11 @@ const FilterOptions = ({ searchQuery, getVideos, activeTag, setActiveTag }) => {
         getTags();
     }, [searchQuery]);
 
-    
-    useEffect(() => {
-        getVideos();
-    }, [activeTag]);
-
     return (
         <>
             <section className="flex items-center gap-6 mb-8">
                 <div className="flex gap-2 flex-wrap">
-                    <button className={`py-1 px-5 rounded-full text-sm text-center ${activeTag === null ? "text-white bg-[#0A2A8D]" : "text-[#0A2A8D] bg-[#A3A3A336]"}`} onClick={() => setActiveTag("")}>
+                    <button className={`py-1 px-5 rounded-full text-sm text-center ${activeTag === null ? "text-white bg-[#0A2A8D]" : "text-[#0A2A8D] bg-[#A3A3A336]"}`} onClick={() => setActiveTag(null)}>
                         All
                     </button>
                     {terms?.map((term) => (
