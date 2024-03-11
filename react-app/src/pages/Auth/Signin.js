@@ -68,12 +68,7 @@ const Signin = () => {
                                     <a href="https://mytsv.com/api/Auth/Social/Google/Redirect" className="border-[1px] border-red-700 rounded-full md:w-11 w-8 md:h-11 h-8 flex items-center justify-center">
                                         <BsGoogle className="text-[#C60C0D] md:text-2xl text-md" />
                                     </a>
-                                    <button disabled className="border-[1px] border-red-700 rounded-full md:w-11 w-8 md:h-11 h-8 flex items-center justify-center disabled:opacity-40">
-                                        <FaFacebookF className="text-[#C60C0D] md:text-2xl text-md" />
-                                    </button>
-                                    <button disabled className="border-[1px] border-red-700 rounded-full md:w-11 w-8 md:h-11 h-8 flex items-center justify-center disabled:opacity-40">
-                                        <BsTwitterX className="text-[#C60C0D] md:text-2xl text-md" />
-                                    </button>
+                                
                                 </div>
                                 <p className="text-center capitalize">or use your email for login:</p>
                                 <form method="post" className="flex flex-col gap-3 md:w-[400px] w-full" onSubmit={(e) => handleLogin(e)}>
