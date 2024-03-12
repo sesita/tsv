@@ -1,6 +1,5 @@
 import { useEffect } from "react";
-import { BsArrowLeft, BsGoogle, BsTwitterX } from "react-icons/bs";
-import { FaFacebookF } from "react-icons/fa";
+import { BsArrowLeft, BsGoogle } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthContext";

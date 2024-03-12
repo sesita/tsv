@@ -1,8 +1,7 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
-import { FaFacebookF } from "react-icons/fa";
-import { BsArrowLeft, BsGoogle, BsTwitterX } from "react-icons/bs";
+import { BsArrowLeft, BsGoogle } from "react-icons/bs";
 import { useAuth } from "../../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 

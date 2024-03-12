@@ -77,8 +77,8 @@ const Videos = ({ hideShadow }) => {
                         </Link>
                     </h2>
                     <div className="grid gap-6 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 mb-16">
-                        {videos.data?.length > 0 ? (
-                            videos?.data?.map((video, key) => (
+                        {videosRecommended.data?.length > 0 ? (
+                            videosRecommended?.data?.map((video, key) => (
                                 <VideoBox
                                     info={{
                                         slug: video.slug,
