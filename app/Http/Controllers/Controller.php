@@ -19,7 +19,7 @@ class Controller extends BaseController
         if (!is_file($this->templateFile)) return '<h1>Something Went Wrong...</h1>';
         $template = file_get_contents($this->templateFile);
 
-        $title = 'mytsv.com';
+        $title = 'MyTSV';
         $description = 'Videos';
         $keywords = 'videos';
         $image = 'mytsv.com';

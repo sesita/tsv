@@ -12,7 +12,7 @@ class Video extends Model
 
     protected $fillable = ['slug', 'title', 'description', 'video', 'user_id', 'thumbnail', 'views', 'category_id'];
 
-    public $appends = ['likes', 'dislikes', 'comments_count'];
+    public $appends = ['tags', 'likes', 'dislikes', 'comments_count'];
 
     public function comments()
     {
@@ -37,6 +37,11 @@ class Video extends Model
     public function interactions()
     {
         return $this->hasMany(Interaction::class);
+    }
+
+    public function getTagsAttribute($value)
+    {
+        return $this->tags()->withCount('videos')->orderBy('videos_count', 'desc')->get();
     }
 
     public function getLikesAttribute($value)

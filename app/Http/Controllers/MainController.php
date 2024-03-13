@@ -22,8 +22,6 @@ class MainController extends Controller
 
         if ($orderBy == 'popular') {
             $query->orderBy('views', 'desc');
-        } elseif ($orderBy == 'recommended') {
-            $query->orderBy('likes', 'desc');
         } else {
             $query->orderBy('id', 'desc');
         }
@@ -38,8 +36,9 @@ class MainController extends Controller
         }
 
         if($tag) {
+            if(!is_array($tag)) $tag = [$tag];
             $query->whereHas('tags', function ($query) use ($tag) {
-                $query->where('tags.id', $tag);
+                $query->whereIn('tags.id', $tag);
             });
         }
 

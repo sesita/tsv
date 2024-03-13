@@ -23,10 +23,11 @@ const Videos = ({ hideShadow }) => {
             }
         };
         const fetchRecommended = async () => {
+            const recommendedTags = JSON.parse(localStorage.getItem("recommendedTags"));
             try {
                 const response = await axios.get("Main/getVideos", {
                     params: {
-                        orderBy: "recommended",
+                        tag: recommendedTags,
                         paginate: 4,
                     }
                 });

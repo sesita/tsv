@@ -20,7 +20,17 @@ const SingleVideo = () => {
             }
         };
         fetchData();
-    }, []);
+    }, [slug]);
+
+    useEffect(() => {
+        if(video?.tags?.[0]){
+            let Tags = JSON.parse(localStorage.getItem('recommendedTags'));
+            if(!Array.isArray(Tags)) Tags = [];
+            if(!Tags.includes(video.tags[0].id)) Tags.push(video.tags[0].id);
+            if(Tags.length >= 5) delete Tags[0];
+            localStorage.setItem('recommendedTags', JSON.stringify(Tags));
+        }
+    }, [video]);
 
     return (
         <>
