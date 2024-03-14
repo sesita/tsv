@@ -12,7 +12,7 @@ const Featured = () => {
         <>
             <Swiper
                 autoplay={{
-                    delay: 1300,
+                    delay: 1500,
                     disableOnInteraction: false,
                 }}
                 effect={"fade"}

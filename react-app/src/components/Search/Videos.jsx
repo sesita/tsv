@@ -23,7 +23,7 @@ const Videos = ({ searchQuery }) => {
 
     return (
         <>
-            <section className="mb-16 md:px-0 px-3">
+            <section className="mb-16 md:px-0 px-3 relative z-10">
                 <div className="mx-auto md:w-[88%] shadow-[0px_0px_14px_0px_rgba(0,0,0,0.25)] pt-8 px-12 rounded-[29px] -mt-24 z-20 bg-white pb-10">
                     <FilterOptions searchQuery={searchQuery} getVideos={getVideos} activeTag={activeTag} setActiveTag={setActiveTag} />
                     <div className={videos.data?.length > 0 ? `grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2` : `flex`}>

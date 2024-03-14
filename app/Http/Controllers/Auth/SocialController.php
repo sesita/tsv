@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Exception;
 use App\Models\User;
+use Exception;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -20,8 +20,9 @@ class SocialController extends Controller
     {
         try {
             $user = Socialite::driver($provider)->stateless()->user();
-            if (!isset($user))
+            if (!isset($user)) {
                 return response(['status' => 'error', 'message' => 'user not found']);
+            }
 
             $currentUser = User::where('email', $user->email)->first();
 
@@ -32,8 +33,6 @@ class SocialController extends Controller
 
                 if ($provider == 'Google') {
                     $emailVerified = $user->user['email_verified'] ? date('Y-m-d H:i:s') : null;
-                } elseif ($provider == 'discord') {
-                    $emailVerified = $user->user['verified'] ? date('Y-m-d H:i:s') : null;
                 } else {
                     $emailVerified = null;
                 }
@@ -44,7 +43,7 @@ class SocialController extends Controller
                     'email' => $user->email,
                     'avatar' => $user->avatar,
                     'password' => Hash::make($user->id),
-                    'email_verified_at' => $emailVerified
+                    'email_verified_at' => $emailVerified,
                 ]);
 
                 $token = Auth::login($user);
