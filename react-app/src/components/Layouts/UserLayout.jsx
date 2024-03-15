@@ -1,8 +1,6 @@
 import React from "react";
 import Banner from "../User/Banner";
-import NormalLayout from "./NormalLayout";
 import { useParams, useLocation } from "react-router-dom";
-import Categories from "../../components/Home/Categories";
 import ProfileInfoBox from "../../components/User/ProfileInfoBox";
 
 const UserLayout = ({ pageTitle, children }) => {

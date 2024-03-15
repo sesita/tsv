@@ -30,19 +30,6 @@ const router = createBrowserRouter([
                 element: <SingleVideo />,
             },
             {
-                path: "/Auth",
-                children: [
-                    {
-                        path: "Login/:social?",
-                        element: <Signin />,
-                    },
-                    {
-                        path: "Register",
-                        element: <Signup />,
-                    },
-                ],
-            },
-            {
                 path: "/User",
                 children: [
                     {
@@ -84,6 +71,19 @@ const router = createBrowserRouter([
                         element: "",
                     },
                 ],
+            },
+        ],
+    },
+    {
+        path: "/Auth",
+        children: [
+            {
+                path: "Login/:social?",
+                element: <Signin />,
+            },
+            {
+                path: "Register",
+                element: <Signup />,
             },
         ],
     },

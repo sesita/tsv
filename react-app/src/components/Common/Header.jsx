@@ -142,6 +142,9 @@ const Header = ({ searchQuery }) => {
                     ) : (
                         <>
                             <div className="flex md:gap-4 gap-1 items-center">
+                                <Link to={`/Auth/Register`} className="sm:block hidden">
+                                    <BiSolidVideoPlus className="md:text-3xl text-xl cursor-pointer mr-6" />
+                                </Link>
                                 <Link to="/Auth/Register" className="bg-[#C60C0D] text-white md:text-sm text-xs md:px-7 px-4 md:py-2 py-1 rounded-full">
                                     Sign Up
                                 </Link>
