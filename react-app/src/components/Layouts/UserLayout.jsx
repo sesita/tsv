@@ -12,19 +12,10 @@ const UserLayout = ({ pageTitle, children }) => {
 
     return (
         <>
-            <NormalLayout>
-                <Categories />
-                <Banner pageTitle={pageTitle}>
-                    {isProfilePage ? (
-                        <ProfileInfoBox />
-                    ) : null}
-                </Banner>
-                <section className="container mx-auto lg:px-0 px-2 -mt-28 mb-14">
-                    <div className="shadow-lg rounded-2xl py-10 px-12 bg-white">
-                        {children}
-                    </div>
-                </section>
-            </NormalLayout>
+            <Banner pageTitle={pageTitle}>{isProfilePage ? <ProfileInfoBox /> : null}</Banner>
+            <section className="container mx-auto lg:px-0 px-2 -mt-28 mb-14">
+                <div className="shadow-lg rounded-2xl py-10 px-12 bg-white">{children}</div>
+            </section>
         </>
     );
 };

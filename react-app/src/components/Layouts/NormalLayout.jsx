@@ -1,12 +1,19 @@
 import Header from "../Common/Header";
-import { ScrollRestoration } from "react-router-dom";
+import Featured from "../../components/Home/Featured";
+import Categories from "../../components/Home/Categories";
+import { ScrollRestoration, Outlet, useLocation } from "react-router-dom";
 
-const NormalLayout = ({ children, searchQuery }) => {
+const NormalLayout = ({ searchQuery }) => {
+    const location = useLocation();
+    const showFeature = location.pathname === "/" || location.pathname === "/search";
+
     return (
         <>
             <ScrollRestoration />
             <Header searchQuery={searchQuery} />
-            {children}
+            <Categories />
+            {showFeature && <Featured />}
+            <Outlet />
         </>
     );
 };

@@ -11,73 +11,79 @@ import SettingsPage from "./pages/Settings/SettingsPage";
 import AnalyticsPage from "./pages/Analytics/AnalyticsPage";
 import UploadPage from "./pages/Upload/UploadPage";
 import AnalyticsSinglePage from "./pages/AnalyticsSingle/AnalyticsSinglePage";
+import NormalLayout from "./components/Layouts/NormalLayout";
 
 const router = createBrowserRouter([
     {
-        path: "/",
-        element: <Home />,
-    },
-    {
-        path: "/Search",
-        element: <Search />,
-    },
-    {
-        path: "/:slug",
-        element: <SingleVideo />,
-    },
-    {
-        path: "/Auth",
+        element: <NormalLayout />,
         children: [
             {
-                path: "Login/:social?",
-                element: <Signin />,
+                path: "/",
+                element: <Home />,
             },
             {
-                path: "Register",
-                element: <Signup />,
-            },
-        ],
-    },
-    {
-        path: "/User",
-        children: [
-            {
-                path: "Profile/:id?",
-                element: <ProfilePage />,
+                path: "/Search",
+                element: <Search />,
             },
             {
-                path: "Analytics",
-                element: <AnalyticsPage />,
+                path: "/:slug",
+                element: <SingleVideo />,
             },
             {
-                path: "singleAnalytic",
-                element: <AnalyticsSinglePage />,
+                path: "/Auth",
+                children: [
+                    {
+                        path: "Login/:social?",
+                        element: <Signin />,
+                    },
+                    {
+                        path: "Register",
+                        element: <Signup />,
+                    },
+                ],
             },
             {
-                path: "Videos",
-                element: <VideosPage />,
+                path: "/User",
+                children: [
+                    {
+                        path: "Profile/:id?",
+                        element: <ProfilePage />,
+                    },
+                    {
+                        path: "Analytics",
+                        element: <AnalyticsPage />,
+                    },
+                    {
+                        path: "singleAnalytic",
+                        element: <AnalyticsSinglePage />,
+                    },
+                    {
+                        path: "Videos",
+                        element: <VideosPage />,
+                    },
+                    {
+                        path: "Promotion",
+                        element: <ProfilePage />,
+                    },
+                    {
+                        path: "Settings",
+                        element: <SettingsPage />,
+                    },
+                    {
+                        path: "Upload",
+                        element: <UploadPage />,
+                    },
+                ],
             },
             {
-                path: "Promotion",
-                element: <ProfilePage />,
-            },
-            {
-                path: "Settings",
-                element: <SettingsPage />,
-            },
-            {
-                path: "Upload",
-                element: <UploadPage />,
-            },
-        ],
-    },
-    {
-        path: "/Admin",
-        element: "",
-        children: [
-            {
-                path: "Dashboard",
+                path: "/Admin",
                 element: "",
+                children: [
+                    {
+                        path: "Dashboard",
+                        element: "",
+                    },
+                ],
             },
         ],
     },

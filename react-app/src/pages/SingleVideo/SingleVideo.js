@@ -1,9 +1,7 @@
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import NormalLayout from "../../components/Layouts/NormalLayout";
 import Banner from "../../components/SingleVideo/Banner";
 import MainBox from "../../components/SingleVideo/MainBox";
-import Categories from "../../components/Home/Categories";
 import React, { useState, useEffect } from "react";
 
 const SingleVideo = () => {
@@ -23,22 +21,19 @@ const SingleVideo = () => {
     }, [slug]);
 
     useEffect(() => {
-        if(video?.tags?.[0]){
-            let Tags = JSON.parse(localStorage.getItem('recommendedTags'));
-            if(!Array.isArray(Tags)) Tags = [];
-            if(!Tags.includes(video.tags[0].id)) Tags.push(video.tags[0].id);
-            if(Tags.length >= 5) delete Tags[0];
-            localStorage.setItem('recommendedTags', JSON.stringify(Tags));
+        if (video?.tags?.[0]) {
+            let Tags = JSON.parse(localStorage.getItem("recommendedTags"));
+            if (!Array.isArray(Tags)) Tags = [];
+            if (!Tags.includes(video.tags[0].id)) Tags.push(video.tags[0].id);
+            if (Tags.length >= 5) delete Tags[0];
+            localStorage.setItem("recommendedTags", JSON.stringify(Tags));
         }
     }, [video]);
 
     return (
         <>
-            <NormalLayout>
-                <Categories />
-                <Banner text={video?.category?.title} />
-                <MainBox info={video} />
-            </NormalLayout>
+            <Banner text={video?.category?.title} />
+            <MainBox info={video} />
         </>
     );
 };
