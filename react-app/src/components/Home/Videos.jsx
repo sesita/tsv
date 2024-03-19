@@ -3,42 +3,57 @@ import { Link } from "react-router-dom";
 import VideoBox from "../Common/VideoBox";
 import Skeleton from "react-loading-skeleton";
 import React, { useEffect, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const Videos = ({ hideShadow }) => {
     const [videos, setVideos] = useState([]);
-    const [videosRecommended, setVideosRecommended] = useState([]);
+    const [videosRecommended, setVideosRecommended] = useState({ data: [], total: 0 });
+
+    const fetchPopular = async (page) => {
+        try {
+            const response = await axios.get("Main/getVideos", {
+                params: {
+                    orderBy: "popular",
+                    paginate: 4,
+                },
+            });
+            setVideos(response.data);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
+    const fetchRecommended = async (page) => {
+        const recommendedTags = JSON.parse(localStorage.getItem("recommendedTags"));
+        try {
+            const response = await axios.get("Main/getVideos", {
+                params: {
+                    tag: recommendedTags,
+                    paginate: 4,
+                    page,
+                },
+            });
+            setVideosRecommended((videosRecommended) => ({
+                data: [...videosRecommended.data, ...(response.data?.data || [])],
+                total: response.data?.total || 0,
+            }));
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
+
+    const fetchNextData = async (e) => {
+        await fetchRecommended(2);
+        return videosRecommended;
+    };
 
     useEffect(() => {
-        const fetchPopular = async () => {
-            try {
-                const response = await axios.get("Main/getVideos", {
-                    params: {
-                        orderBy: "popular",
-                        paginate: 4,
-                    }
-                });
-                setVideos(response.data);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
-        const fetchRecommended = async () => {
-            const recommendedTags = JSON.parse(localStorage.getItem("recommendedTags"));
-            try {
-                const response = await axios.get("Main/getVideos", {
-                    params: {
-                        tag: recommendedTags,
-                        paginate: 4,
-                    }
-                });
-                setVideosRecommended(response.data);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
-        fetchPopular();
-        fetchRecommended();
+        fetchPopular(1);
+        fetchRecommended(1);
     }, []);
+
+    useEffect(() => {
+        console.log(videosRecommended);
+    }, [videosRecommended]);
 
     return (
         <>
@@ -72,33 +87,42 @@ const Videos = ({ hideShadow }) => {
                     </div>
 
                     <h2 className="md:text-[40px] md:text-3xl sm:text-lg mb-8">
-                        Recommended{" "}
-                        <Link to={""} className="md:text-sm text-xs font-normal text-[#C60C0D]">
+                        Recommended
+                        <Link to={""} className="md:text-sm text-xs ml-4 font-normal text-[#C60C0D]">
                             View All Videos
                         </Link>
                     </h2>
-                    <div className="grid gap-6 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 mb-16">
-                        {videosRecommended.data?.length > 0 ? (
-                            videosRecommended?.data?.map((video, key) => (
-                                <VideoBox
-                                    info={{
-                                        slug: video.slug,
-                                        thumbnail: video.thumbnail,
-                                        title: video.title,
-                                    }}
-                                />
-                            ))
-                        ) : (
-                            <>
+                    {videosRecommended?.data?.length > 0 ? (
+                        <>
+                            <InfiniteScroll
+                                dataLength={videosRecommended?.total} //This is important field to render the next data
+                                next={fetchNextData}
+                                hasMore={videosRecommended?.total !== videosRecommended?.data?.length}
+                                loader={<Skeleton height={250} borderRadius={15} className="rounded-2xl" />}
+                                refreshFunction={fetchRecommended}
+                                className="grid gap-6 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 mb-16"
+                            >
+                                {videosRecommended?.data?.map((video, key) => (
+                                    <VideoBox
+                                        info={{
+                                            slug: video.slug,
+                                            thumbnail: video.thumbnail,
+                                            title: video.title,
+                                        }}
+                                    />
+                                ))}
+                            </InfiniteScroll>
+                        </>
+                    ) : (
+                        <>
+                            <div className="grid gap-6 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 mb-16">
                                 <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
                                 <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
                                 <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
                                 <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
-                            </>
-                        )}
-                    </div>
-
-                    <button className="bg-[#C60C0D] hover:bg-[#e22121] text-white font-semibold rounded-full py-2 px-8 mx-auto block transition-all">Load More</button>
+                            </div>
+                        </>
+                    )}
                 </div>
             </section>
         </>
