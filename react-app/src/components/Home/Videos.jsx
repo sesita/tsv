@@ -78,10 +78,11 @@ const Videos = ({ hideShadow }) => {
                             ))
                         ) : (
                             <>
-                                <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
-                                <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
-                                <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
-                                <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
+                                {Array(4)
+                                    .fill()
+                                    .map((_, key) => (
+                                        <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
+                                    ))}
                             </>
                         )}
                     </div>
@@ -95,10 +96,14 @@ const Videos = ({ hideShadow }) => {
                     {videosRecommended?.data?.length > 0 ? (
                         <>
                             <InfiniteScroll
-                                dataLength={videosRecommended?.total} //This is important field to render the next data
+                                dataLength={videosRecommended?.total}
                                 next={fetchNextData}
                                 hasMore={videosRecommended?.total !== videosRecommended?.data?.length}
-                                loader={<Skeleton height={250} borderRadius={15} className="rounded-2xl" />}
+                                loader={Array(4)
+                                    .fill()
+                                    .map((_, key) => (
+                                        <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
+                                    ))}
                                 refreshFunction={fetchRecommended}
                                 className="grid gap-6 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 mb-16"
                             >
@@ -116,10 +121,11 @@ const Videos = ({ hideShadow }) => {
                     ) : (
                         <>
                             <div className="grid gap-6 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 mb-16">
-                                <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
-                                <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
-                                <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
-                                <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
+                                {Array(4)
+                                    .fill()
+                                    .map((_, key) => (
+                                        <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
+                                    ))}
                             </div>
                         </>
                     )}
