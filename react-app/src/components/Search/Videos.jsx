@@ -22,7 +22,6 @@ const Videos = ({ searchQuery }) => {
     };
 
     useEffect(() => {
-        setVideos([]);
         getVideos();
     }, [searchQuery, activeTag]);
 
