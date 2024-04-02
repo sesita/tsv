@@ -1,11 +1,11 @@
 import "swiper/css";
 import React from "react";
-import "swiper/css/effect-fade";
 import "swiper/css/navigation";
+import "swiper/css/effect-fade";
 import { Link } from "react-router-dom";
 import AdsRibon from "../Common/AdsRibon";
-import { Autoplay, EffectFade, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, EffectFade } from "swiper/modules";
 
 const Featured = () => {
     return (
@@ -17,7 +17,7 @@ const Featured = () => {
                 }}
                 effect={"fade"}
                 navigation={true}
-                modules={[Autoplay, EffectFade, Navigation]}
+                modules={[Autoplay, EffectFade]}
             >
                 <SwiperSlide>
                     <section className="pt-16 pb-32 md:px-0 px-6">
