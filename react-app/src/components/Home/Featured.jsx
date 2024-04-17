@@ -16,13 +16,12 @@ const Featured = () => {
                     disableOnInteraction: false,
                 }}
                 effect={"fade"}
-                navigation={true}
                 modules={[Autoplay, EffectFade]}
             >
                 <SwiperSlide>
-                    <section className="pt-16 pb-32 md:px-0 px-6">
+                    <section className="pt-16 pb-32">
                         <img src={require("../../assets/img/Home-Featured.png")} className="absolute w-full h-full top-0 object-cover" alt="Cover" />
-                        <div className="container mx-auto text-white relative">
+                        <div className="container mx-auto text-white relative px-4 md:px-20">
                             <div className="w-[100%] max-w-[450px]">
                                 <h4 className="md:text-3xl text-lg">
                                     <span className="drop-shadow">Lorem Ipsum</span>
@@ -37,9 +36,9 @@ const Featured = () => {
                     </section>
                 </SwiperSlide>
                 <SwiperSlide>
-                    <section className="pt-16 pb-32 md:px-0 px-6">
+                    <section className="pt-16 pb-32">
                         <img src="https://picsum.photos/1200/400" className="absolute w-full h-full top-0 object-cover" alt="Cover" />
-                        <div className="container mx-auto text-white relative">
+                        <div className="container mx-auto text-white relative px-4 md:px-20">
                             <div className="w-[100%] max-w-[450px]">
                                 <h4 className="md:text-3xl text-lg">
                                     <span className="drop-shadow">Lorem Ipsum</span>

@@ -45,7 +45,7 @@ const Header = ({ searchQuery }) => {
         <>
             {mobileSearch && (
                 <>
-                    <section className="fixed top-0 left-0 right-0 bottom-0 w-full h-full bg-[#0000009a] z-40 flex justify-center items-center p-12">
+                    <section className="fixed top-0 left-0 right-0 bottom-0 w-full h-full bg-[#0000009a] z-40 flex justify-center items-center p-12 px-4">
                         <button className="lg:hidden w-9 h-9 bg-[#C60C0D] flex justify-center items-center rounded-full text-white absolute top-5 right-5" onClick={() => setMobileSearch(!mobileSearch)}>
                             <FaTimes className="text-xl" />
                         </button>
@@ -59,7 +59,7 @@ const Header = ({ searchQuery }) => {
                     </section>
                 </>
             )}
-            <section className="border-b border-[#e4e1e1] py-5 md:px-0 px-3">
+            <section className="border-b border-[#e4e1e1] py-5 px-2 md:px-12">
                 <header className="container mx-auto flex justify-between items-center">
                     <Link to="/">
                         <img src="/logo.png" alt="Logo" className="w-full md:max-w-[150px] max-w-[80px]" />
