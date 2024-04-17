@@ -57,7 +57,7 @@ const Signup = () => {
     return (
         <>
             <section className="min-h-screen h-full w-full bg-[#E3EAFF]">
-                <div className="container mx-auto px-2 pt-5 pb-20 flex flex-col min-h-screen gap-5">
+                <div className="container mx-auto px-12 pt-5 pb-20 flex flex-col min-h-screen gap-5">
                     <div className="flex justify-between items-center gap-5 mb-3">
                         <BsArrowLeft className="text-5xl text-[#C60C0D] cursor-pointer" onClick={() => navigate(-1)} />
                         <Link to="/">
