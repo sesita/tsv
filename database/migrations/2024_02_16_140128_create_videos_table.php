@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->bigInteger('category_id')->unsigned();
             $table->foreign('category_id')->references('id')->on('categories');
-            $table->string('video');
+            $table->text('video');
             $table->string('title');
             $table->string('slug')->unique();
             $table->text('description')->nullable();

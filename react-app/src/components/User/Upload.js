@@ -83,6 +83,23 @@ const Upload = () => {
         }
     };
 
+    const uploadIframeVideo = async (e) => {
+        e.preventDefault();
+
+        try {
+            await axios.post("Dashboard/Upload", { ...videoInfo, thumbnail: thumbnail.target?.files[0] },
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                });
+            toast.success("Video Uploaded");
+            navigate("/User/Profile");
+        } catch (e) {
+            toast.error(e.response?.data?.message);
+        }
+    };
+
     return (
         <>
             {selectedFile.name ? (
@@ -233,7 +250,42 @@ const Upload = () => {
                     </div>
                 </div>
             ) : videoPackage === "free" ? (
-                <h1 className="text-3xl text-black font-medium">Youtube Video Iframe</h1>
+                <form onSubmit={uploadIframeVideo}>
+                    <div className="flex justify-between gap-10 mb-10">
+                        <div className="w-1/2">
+                            <h1 className="text-xl font-medium mb-4">Video Iframe</h1>
+                            <textarea className="w-full h-32 rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" placeholder="Iframe link..." name="iframe"  value={videoInfo?.iframe} onChange={(e) => changeInput(e)}></textarea>
+                        </div>
+                        <div className="flex flex-col gap-4 w-full mt-2">
+                            <input type="text" name="title" className="rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" placeholder="Title..." value={videoInfo?.title} onChange={(e) => changeInput(e)} />
+                            <TagsInput
+                                value={tags}
+                                onChange={tagsInputChange}
+                                onlyUnique={true}
+                                inputProps={{
+                                    placeholder: "Tags",
+                                }}
+                                className="rounded-lg pt-2 pb-1 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none"
+                            />
+                            <select name="category" className="rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" onChange={(e) => changeInput(e)}>
+                                <option selected disabled>
+                                    Please Select Category
+                                </option>
+                                {categories?.map((category) => (
+                                    <option value={category?.id}>{category?.title}</option>
+                                ))}
+                            </select>
+                            <textarea name="description" rows="4" className="w-full rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" placeholder="Description..." value={videoInfo?.description} onChange={(e) => changeInput(e)}></textarea>
+                            <div className="flex flex-col gap-2 mt-auto mb-2">
+                                <label htmlFor="thumbnail" className="font-medium">
+                                    Video Thumbnail*
+                                </label>
+                                <input type="file" id="thumbnail" name="thumbnail" className="rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" placeholder="Video Thumbnail..." onChange={(e) => setThumbnail(e)} />
+                            </div>
+                        </div>
+                    </div>
+                    <button className="cursor-pointer py-4 px-12 rounded-full bg-blue-800 text-white mt-5 mx-auto block font-medium">Publish Video</button>
+                </form>
             ) : (
                 <div className={`flex flex-col items-center gap-4 mb-6 animate__animated animate__pulse ${isDragging ? "border-2 border-blue-800" : ""}`} onDragEnter={handleDragEnter} onDragLeave={handleDragLeave} onDragOver={handleDragOver} onDrop={handleDrop}>
                     <MdOutlineFileUpload className="text-[200px] text-gray-600" />

@@ -48,13 +48,17 @@ class DashboardController extends Controller
         $request->validate([
             'title' =>'required',
             'description' =>'required',
-            'video' =>'required|mimes:mp4,mov,ogg,webm',
+            'video' =>'nullable|mimes:mp4,mov,ogg,webm',
             'thumbnail' =>'required',
             'category' =>'required',
         ]);
 
-        $videoName = 'videos/'. Str::random(). time(). '.mp4';
-        $request->video->move(public_path('storage/videos'), $videoName);
+        if($request->file('video')){   
+            $videoName = 'videos/'. Str::random(). time(). '.mp4';
+            $request->video->move(public_path('storage/videos'), $videoName);
+        } else {
+            $videoName = $request->iframe;
+        }
 
         if($request->file('thumbnail')){
             $thumbnail = 'thumbnails/'. Str::random(). time(). '.webp';
