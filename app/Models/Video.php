@@ -12,7 +12,7 @@ class Video extends Model
 
     protected $fillable = ['slug', 'title', 'description', 'video', 'user_id', 'thumbnail', 'views', 'category_id'];
 
-    public $appends = ['tags', 'likes', 'dislikes', 'comments_count'];
+    public $appends = ['iframe', 'tags', 'likes', 'dislikes', 'comments_count'];
 
     public function comments()
     {
@@ -38,6 +38,22 @@ class Video extends Model
     {
         return $this->hasMany(Interaction::class);
     }
+
+public function getIframeAttribute()
+{
+    $value = $this->video;
+
+    if ($value) {
+        $value = str_replace(asset('storage/').'/', '', $value);
+        $value = preg_replace_callback('/<iframe[^>]+src="([^"]+)"[^>]*>/', function ($matches) {
+            $src = $matches[1];
+            return '<iframe src="' . $src . '">';
+        }, $value);
+
+        return $value;
+    }
+}
+
 
     public function getTagsAttribute($value)
     {
