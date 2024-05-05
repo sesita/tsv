@@ -39,20 +39,28 @@ class Video extends Model
         return $this->hasMany(Interaction::class);
     }
 
-public function getIframeAttribute()
-{
-    $value = $this->video;
+    public function getIframeAttribute()
+    {
+        $value = $this->video;
+        if ($value) {
+            $value = str_replace(asset('storage/') . '/', '', $value);
+            if (str_contains($value, 'watch?v=')) {
+                $parsedUrl = parse_url($value);
+                $queryString = $parsedUrl['query'];
+                parse_str($queryString, $queryParams);
+                if(isset($queryParams['v'])){
+                    return "<iframe src='https://www.youtube.com/embed/{$queryParams['v']}'>";
+                }
+            }
+            $value = preg_replace_callback('/<iframe[^>]+src="([^"]+)"[^>]*>/', function ($matches) {
+                dd($matches);
+                $src = $matches[1];
+                return '<iframe src="' . $src . '">';
+            }, $value);
 
-    if ($value) {
-        $value = str_replace(asset('storage/').'/', '', $value);
-        $value = preg_replace_callback('/<iframe[^>]+src="([^"]+)"[^>]*>/', function ($matches) {
-            $src = $matches[1];
-            return '<iframe src="' . $src . '">';
-        }, $value);
-
-        return $value;
+            return $value;
+        }
     }
-}
 
 
     public function getTagsAttribute($value)
@@ -77,11 +85,13 @@ public function getIframeAttribute()
 
     public function getThumbnailAttribute($value)
     {
-        if($value) return asset('storage/'.$value);
+        if ($value)
+            return asset('storage/' . $value);
     }
 
     public function getVideoAttribute($value)
     {
-        if($value) return asset('storage/'.$value);
+        if ($value)
+            return asset('storage/' . $value);
     }
 }
