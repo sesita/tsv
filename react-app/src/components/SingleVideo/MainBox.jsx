@@ -23,15 +23,15 @@ const MainBox = ({ info }) => {
     return (
         <>
             <section>
-                <div className="container mx-auto md:px-0 px-2">
-                    <div className="rounded-3xl py-8 px-8 shadow-[box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.25)] bg-white -mt-10">
+                <div className="container mx-auto">
+                    <div className="md:rounded-3xl md:py-8 py-4 md:px-8 shadow-[box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.25)] bg-white -mt-10">
                         <Video info={info} />
                         <div className="flex flex-col lg:flex-row gap-6 mt-5">
                             <div className="flex-1">
                                 <VideoInfo info={info} />
                                 <Comments info={info} />
                             </div>
-                            <div className="grid md:grid-cols-3 lg:grid-cols-1 grid-cols-1 w-full lg:max-w-[300px] gap-5 p-2 rounded">
+                            <div className="grid md:grid-cols-3 lg:grid-cols-1 grid-cols-1 w-full lg:max-w-[300px] gap-5 md:p-2 rounded">
                                 {relatedVideos.map((video, key) => {
                                     return (
                                         <VideoBox

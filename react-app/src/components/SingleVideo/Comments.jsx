@@ -64,7 +64,7 @@ const Comments = ({ info }) => {
 
     return (
         <>
-            <div className="rounded-3xl bg-[#ECECEC] p-8 mt-5">
+            <div className="md:rounded-3xl bg-[#ECECEC] md:p-8 p-4 mt-5">
                 {currentUser && (
                     <>
                         {reply && (

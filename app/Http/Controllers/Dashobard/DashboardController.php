@@ -11,6 +11,15 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
+    public function MyVideo($id){
+        $video = Video::find($id);
+        return response($video);
+    }
+    public function MyVideos(Request $request){
+        $order = $request->order ?? 'id';
+        $videos = Video::where('user_id', Auth::user()->id)->orderBy($order, 'desc')->get();
+        return response($videos);
+    }
     public function Settings(Request $request){
         $userId = Auth::user()->id;
         $request->validate([

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import Banner from "../../components/SingleVideo/Banner";
-import MainBox from "../../components/SingleVideo/MainBox";
+import Banner from "../components/SingleVideo/Banner";
+import MainBox from "../components/SingleVideo/MainBox";
 import React, { useState, useEffect } from "react";
 
 const SingleVideo = () => {

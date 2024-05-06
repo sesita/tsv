@@ -1,6 +1,6 @@
 import React from "react";
-import Upload from "../../components/User/Upload";
-import UserLayout from "../../components/Layouts/UserLayout";
+import Upload from "../components/User/Upload";
+import UserLayout from "../components/Layouts/UserLayout";
 
 const SettingsPage = () => {
     return (

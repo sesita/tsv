@@ -46,8 +46,8 @@ const VideoInfo = ({ info }) => {
 
     return (
         <>
-            <h2 className="text-3xl font-semibold">{data.title}</h2>
-            <div className="sm:flex grid grid-cols-4 gap-8 items-center my-4 mb-5">
+            <h2 className="text-3xl font-semibold mx-1.5 md:mx-0">{data.title}</h2>
+            <div className="sm:flex grid grid-cols-4 gap-8 items-center my-4 mb-5 mx-1.5 md:mx-0">
                 <div className="flex gap-2 items-center">
                     <BsEyeFill className="text-[#8B8B8B] text-3xl" />
                     <span className="text-md text-[#8B8B8B]">

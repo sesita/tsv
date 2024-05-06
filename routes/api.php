@@ -49,4 +49,6 @@ Route::prefix('Video')->group(function () {
 Route::group(['middleware' => 'auth:api', 'prefix' => 'Dashboard'], function ($router) {
     Route::post('Settings', [DashboardController::class, 'Settings']);
     Route::post('Upload', [DashboardController::class, 'UploadVideo']);
+    Route::get('MyVideos', [DashboardController::class, 'MyVideos']);
+    Route::get('MyVideo/{id}', [DashboardController::class, 'MyVideo']);
 });

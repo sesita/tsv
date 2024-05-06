@@ -1,5 +1,5 @@
 import React from "react";
-import Videos from "../../components/Home/Videos";
+import Videos from "../components/Home/Videos";
 
 const Home = () => {
     return (

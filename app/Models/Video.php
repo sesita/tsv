@@ -12,7 +12,7 @@ class Video extends Model
 
     protected $fillable = ['slug', 'title', 'description', 'video', 'user_id', 'thumbnail', 'views', 'category_id'];
 
-    public $appends = ['iframe', 'tags', 'likes', 'dislikes', 'comments_count'];
+    public $appends = ['iframe', 'tags', 'likes', 'dislikes', 'comments_count', 'shares'];
 
     public function comments()
     {
@@ -48,7 +48,7 @@ class Video extends Model
                 $parsedUrl = parse_url($value);
                 $queryString = $parsedUrl['query'];
                 parse_str($queryString, $queryParams);
-                if(isset($queryParams['v'])){
+                if (isset($queryParams['v'])) {
                     return "<iframe src='https://www.youtube.com/embed/{$queryParams['v']}'>";
                 }
             }
@@ -88,6 +88,12 @@ class Video extends Model
         if ($value)
             return asset('storage/' . $value);
     }
+
+    public function getSharesAttribute($value)
+    {
+        return 0;
+    }
+
 
     public function getVideoAttribute($value)
     {

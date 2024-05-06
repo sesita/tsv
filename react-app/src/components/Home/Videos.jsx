@@ -57,11 +57,11 @@ const Videos = ({ hideShadow }) => {
 
     return (
         <>
-            <section className="mb-16 md:px-0 px-3 relative z-10">
-                <div className={`mx-auto md:w-[88%] ${hideShadow ? "" : "shadow-[0px_0px_14px_0px_rgba(0,0,0,0.25)]"} pt-8 px-12 rounded-[29px] -mt-24 z-20 bg-white pb-10`}>
-                    <h2 className="md:text-[40px] md:text-3xl sm:text-lg mb-8">
+            <section className="mb-16 relative z-10">
+                <div className={`mx-auto md:w-[88%] ${hideShadow ? "" : "shadow-[0px_0px_14px_0px_rgba(0,0,0,0.25)]"} pt-8 md:px-12 md:rounded-[29px] -mt-24 z-20 bg-white pb-10`}>
+                    <h2 className="md:text-[40px] md:text-3xl mb-8 px-4 md:px-0 flex justify-between md:block">
                         Most Popular
-                        <Link to={""} className="md:text-sm text-xs ml-4 font-normal text-[#C60C0D]">
+                        <Link to={""} className="text-sm ml-4 font-normal text-[#C60C0D]">
                             View All Videos
                         </Link>
                     </h2>
@@ -87,9 +87,9 @@ const Videos = ({ hideShadow }) => {
                         )}
                     </div>
 
-                    <h2 className="md:text-[40px] md:text-3xl sm:text-lg mb-8">
+                    <h2 className="md:text-[40px] md:text-3xl mb-8 px-4 md:px-0 flex justify-between md:block">
                         Recommended
-                        <Link to={""} className="md:text-sm text-xs ml-4 font-normal text-[#C60C0D]">
+                        <Link to={""} className="text-sm ml-4 font-normal text-[#C60C0D]">
                             View All Videos
                         </Link>
                     </h2>

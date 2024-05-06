@@ -125,7 +125,7 @@ const Header = ({ searchQuery }) => {
                                                     <BsGraphUpArrow className="text-[#C60C0D] text-md" />
                                                     Analytics
                                                 </Link>
-                                                <Link to={`/User/Promotion`} className="flex items-center gap-4 text-blue-900 text-sm mb-1">
+                                                <Link to={`/User/Upload`} className="flex items-center gap-4 text-blue-900 text-sm mb-1">
                                                     <CgProfile className="text-[#C60C0D] text-md" />
                                                     Promotion
                                                 </Link>

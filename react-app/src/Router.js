@@ -1,17 +1,22 @@
 import { createBrowserRouter } from "react-router-dom";
-import Home from "./pages/Home/Home";
-import Search from "./pages/Search/Search";
+
+// Layouts
+import NormalLayout from "./components/Layouts/NormalLayout";
+
+// Main Pages
+import Home from "./pages/Home";
+import Search from "./pages/Search";
 import Signin from "./pages/Auth/Signin";
 import Signup from "./pages/Auth/Signup";
-import SingleVideo from "./pages/SingleVideo/SingleVideo";
-import ProfilePage from "./pages/Profile/ProfilePage";
-import VideosPage from "./pages/Videos/VideosPage";
-// import UserLayout from "./components/Layouts/UserLayout";
-import SettingsPage from "./pages/Settings/SettingsPage";
-import AnalyticsPage from "./pages/Analytics/AnalyticsPage";
-import UploadPage from "./pages/Upload/UploadPage";
-import AnalyticsSinglePage from "./pages/AnalyticsSingle/AnalyticsSinglePage";
-import NormalLayout from "./components/Layouts/NormalLayout";
+import UploadPage from "./pages/UploadPage";
+import SingleVideo from "./pages/SingleVideo";
+
+// Dashboard Pages
+import VideoPage from "./pages/Dashboard/VideoPage";
+import VideosPage from "./pages/Dashboard/VideosPage";
+import ProfilePage from "./pages/Dashboard/ProfilePage";
+import SettingsPage from "./pages/Dashboard/SettingsPage";
+import AnalyticsPage from "./pages/Dashboard/AnalyticsPage";
 
 const router = createBrowserRouter([
     {
@@ -41,8 +46,8 @@ const router = createBrowserRouter([
                         element: <AnalyticsPage />,
                     },
                     {
-                        path: "singleAnalytic",
-                        element: <AnalyticsSinglePage />,
+                        path: "Video/:id",
+                        element: <VideoPage />,
                     },
                     {
                         path: "Videos",
