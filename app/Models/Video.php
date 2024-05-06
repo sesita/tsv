@@ -53,12 +53,11 @@ class Video extends Model
                 }
             }
             $value = preg_replace_callback('/<iframe[^>]+src="([^"]+)"[^>]*>/', function ($matches) {
-                dd($matches);
                 $src = $matches[1];
                 return '<iframe src="' . $src . '">';
             }, $value);
 
-            return $value;
+            return false;
         }
     }
 
