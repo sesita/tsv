@@ -5,7 +5,7 @@ import "swiper/css/navigation";
 import "swiper/css/effect-fade";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-import AdsRibon from "../Common/AdsRibon";
+import AdsRibon from "./AdsRibon";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectFade } from "swiper/modules";
 
@@ -16,20 +16,19 @@ const Featured = () => {
         try {
             const response = await axios.get("Main/getVideos", {
                 params: {
-                    orderBy: 'featured',
-                    paginate: 3
-                }
+                    orderBy: "featured",
+                    paginate: 3,
+                },
             });
             setVideos(response.data);
         } catch (error) {
-            toast.error(error.response?.data?.message ?? 'Caught error');
+            toast.error(error.response?.data?.message ?? "Caught error");
         }
     };
 
     useEffect(() => {
         fetchVideos();
     }, []);
-
 
     return (
         <>
@@ -40,7 +39,6 @@ const Featured = () => {
                 }}
                 effect={"fade"}
                 modules={[Autoplay, EffectFade]}
-
             >
                 {videos?.data?.map((video, key) => (
                     <SwiperSlide>
@@ -52,9 +50,7 @@ const Featured = () => {
                                         <span className="drop-shadow">{video?.category?.title}</span>
                                         <AdsRibon />
                                     </h4>
-                                    <h1 className="md:text-5xl text-2xl font-semibold md:font-bold my-3 md:leading-tight text-white opacity-95 drop-shadow">
-                                        {video.title}
-                                    </h1>
+                                    <h1 className="md:text-5xl text-2xl font-semibold md:font-bold my-3 md:leading-tight text-white opacity-95 drop-shadow">{video.title}</h1>
                                     <Link to={`/${video?.slug}`}>
                                         <img src={require("../../assets/img/PlayIcon.png")} alt="Play Icon" className="inline w-full md:max-w-[100px] max-w-[45px]" />
                                     </Link>

@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import VideoBox from "../Common/VideoBox";
-import FilterOptions from "../Common/FilterOptions";
+import VideoBox from "../components/Common/VideoBox";
+import FilterOptions from "../components/Common/FilterOptions";
 import Skeleton from "react-loading-skeleton";
 
-const Videos = ({ searchQuery }) => {
+const Search = ({ searchQuery }) => {
     const [videos, setVideos] = useState([]);
     const [loading, setLoading] = useState(false);
     const [activeTag, setActiveTag] = useState(null);
@@ -61,4 +61,4 @@ const Videos = ({ searchQuery }) => {
     );
 };
 
-export default Videos;
+export default Search;

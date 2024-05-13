@@ -1,6 +1,6 @@
 import Header from "../Common/Header";
-import Featured from "../../components/Home/Featured";
-import Categories from "../../components/Home/Categories";
+import Featured from "../Common/Featured";
+import Categories from "../Common/Categories";
 import { ScrollRestoration, Outlet, useLocation } from "react-router-dom";
 
 const NormalLayout = ({ searchQuery }) => {
