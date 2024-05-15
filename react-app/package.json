@@ -10,6 +10,7 @@
     "axios": "^1.4.0",
     "chart.js": "^4.4.0",
     "daisyui": "^2.51.3",
+    "moment": "^2.30.1",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-detect-click-outside": "^1.1.7",

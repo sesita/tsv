@@ -17,7 +17,7 @@ class DashboardController extends Controller
     }
     public function MyVideos(Request $request){
         $order = $request->order ?? 'id';
-        $videos = Video::where('user_id', Auth::user()->id)->orderBy($order, 'desc')->get();
+        $videos = Video::with('user')->where('user_id', Auth::user()->id)->orderBy($order, 'desc')->get();
         return response($videos);
     }
     public function Settings(Request $request){

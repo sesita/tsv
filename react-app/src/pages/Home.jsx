@@ -30,7 +30,7 @@ const Home = () => {
             toast.error(error.response?.data?.message ?? "Caught error");
         }
     };
-    
+
     const fetchPopular = async (page) => {
         try {
             const response = await axios.get("Main/getVideos", {
@@ -105,35 +105,34 @@ const Home = () => {
                         </SwiperSlide>
                     ))
                 ) : (
-                    <Skeleton height={430} className="rounded-2xl" />
+                    <Skeleton className="rounded-2xl sm:h-96 h-72" />
                 )}
             </Swiper>
-            <div className="mb-16 relative mx-auto md:w-10/12 shadow-[0px_0px_14px_0px_rgba(0,0,0,0.25)] pt-8 md:px-12 md:rounded-[29px] -mt-24 z-10 bg-white pb-10">
-                <h2 className="md:text-[40px] md:text-3xl mb-8 px-4 md:px-0 flex justify-between md:block">
+            <div className="mb-16 relative mx-auto sm:w-10/12 shadow-[0px_0px_14px_0px_rgba(0,0,0,0.25)] pt-8 sm:px-12 sm:rounded-[29px] -mt-24 z-10 bg-white pb-10">
+                <h2 className="sm:text-[40px] sm:text-3xl mb-8 px-4 sm:px-0 flex justify-between sm:block">
                     Most Popular
                     <Link to={""} className="text-sm ml-4 font-normal text-[#C60C0D]">
                         View All Videos
                     </Link>
                 </h2>
-                <div className="grid gap-6 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 mb-12">
+                <div className="grid gap-6 xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 mb-12">
                     {videos.data?.length > 0 ? (
-                        videos?.data?.map((video, key) => (
-                            <VideoBox
-                                info={video}
-                            />
-                        ))
+                        videos?.data?.map((video, key) => <VideoBox info={video} />)
                     ) : (
                         <>
                             {Array(4)
                                 .fill()
                                 .map((_, key) => (
-                                    <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
+                                    <>
+                                        <Skeleton height={200} borderRadius={15} className="rounded-2xl" />
+                                        <Skeleton height={200} borderRadius={15} className="rounded-2xl" />
+                                    </>
                                 ))}
                         </>
                     )}
                 </div>
 
-                <h2 className="md:text-[40px] md:text-3xl mb-8 px-4 md:px-0 flex justify-between md:block">
+                <h2 className="sm:text-[40px] sm:text-3xl mb-8 px-4 sm:px-0 flex justify-between sm:block">
                     Recommended
                     <Link to={""} className="text-sm ml-4 font-normal text-[#C60C0D]">
                         View All Videos
@@ -148,25 +147,29 @@ const Home = () => {
                             loader={Array(4)
                                 .fill()
                                 .map((_, key) => (
-                                    <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
+                                    <div className="flex flex-col gap-2">
+                                        <Skeleton height={200} borderRadius={15} className="rounded-2xl" />
+                                        <Skeleton height={40} borderRadius={15} className="rounded-2xl" />
+                                    </div>
                                 ))}
                             refreshFunction={fetchRecommended}
-                            className="grid gap-6 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 mb-16"
+                            className="grid gap-6 xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 mb-16"
                         >
                             {videosRecommended?.data?.map((video, key) => (
-                                <VideoBox
-                                    info={video}
-                                />
+                                <VideoBox info={video} />
                             ))}
                         </InfiniteScroll>
                     </>
                 ) : (
                     <>
-                        <div className="grid gap-6 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 mb-16">
+                        <div className="grid gap-6 xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 mb-16">
                             {Array(4)
                                 .fill()
                                 .map((_, key) => (
-                                    <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
+                                    <div className="flex flex-col gap-2">
+                                        <Skeleton height={200} borderRadius={15} className="rounded-2xl" />
+                                        <Skeleton height={40} borderRadius={15} className="rounded-2xl" />
+                                    </div>
                                 ))}
                         </div>
                     </>
