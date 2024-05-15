@@ -42,7 +42,7 @@ class MainController extends Controller
         //     });
         // }
 
-        $list = $query->with('category')->paginate($paginate);
+        $list = $query->with(['category', 'user'])->paginate($paginate);
 
         return response($list);
     }

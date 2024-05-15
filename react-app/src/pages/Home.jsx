@@ -30,11 +30,7 @@ const Home = () => {
             toast.error(error.response?.data?.message ?? "Caught error");
         }
     };
-
-    useEffect(() => {
-        fetchSliderVideos();
-    }, []);
-
+    
     const fetchPopular = async (page) => {
         try {
             const response = await axios.get("Main/getVideos", {
@@ -75,11 +71,8 @@ const Home = () => {
     useEffect(() => {
         fetchPopular(1);
         fetchRecommended(1);
+        fetchSliderVideos();
     }, []);
-
-    useEffect(() => {
-        console.log(videosRecommended);
-    }, [videosRecommended]);
 
     return (
         <>
@@ -91,25 +84,29 @@ const Home = () => {
                 effect={"fade"}
                 modules={[Autoplay, EffectFade]}
             >
-                {sliderVideos?.data?.map((video, key) => (
-                    <SwiperSlide>
-                        <section className="pt-16 pb-32">
-                            <img src={video?.thumbnail} className="absolute w-full h-full top-0 object-cover" alt="Cover" />
-                            <div className="md:w-10/12 mx-auto text-white relative px-4">
-                                <div className="w-[100%] max-w-[450px]">
-                                    <h4 className="md:text-3xl text-lg">
-                                        <span className="drop-shadow">{video?.category?.title}</span>
-                                        <AdsRibon />
-                                    </h4>
-                                    <h1 className="md:text-5xl text-2xl font-semibold md:font-bold my-3 md:leading-tight text-white opacity-95 drop-shadow">{video.title}</h1>
-                                    <Link to={`/${video?.slug}`}>
-                                        <img src={require("../assets/img/PlayIcon.png")} alt="Play Icon" className="inline w-full md:max-w-[100px] max-w-[45px]" />
-                                    </Link>
+                {videos.data?.length > 0 ? (
+                    sliderVideos?.data?.map((video, key) => (
+                        <SwiperSlide>
+                            <section className="pt-16 pb-32">
+                                <img src={video?.thumbnail} className="absolute w-full h-full top-0 object-cover" alt="Cover" />
+                                <div className="md:w-10/12 mx-auto text-white relative px-4">
+                                    <div className="w-[100%] max-w-[450px]">
+                                        <h4 className="md:text-3xl text-lg">
+                                            <span className="drop-shadow">{video?.category?.title}</span>
+                                            <AdsRibon />
+                                        </h4>
+                                        <h1 className="md:text-5xl text-2xl font-semibold md:font-bold my-3 md:leading-tight text-white opacity-95 drop-shadow">{video.title}</h1>
+                                        <Link to={`/${video?.slug}`}>
+                                            <img src={require("../assets/img/PlayIcon.png")} alt="Play Icon" className="inline w-full md:max-w-[100px] max-w-[45px]" />
+                                        </Link>
+                                    </div>
                                 </div>
-                            </div>
-                        </section>
-                    </SwiperSlide>
-                ))}
+                            </section>
+                        </SwiperSlide>
+                    ))
+                ) : (
+                    <Skeleton height={430} className="rounded-2xl" />
+                )}
             </Swiper>
             <div className="mb-16 relative mx-auto md:w-10/12 shadow-[0px_0px_14px_0px_rgba(0,0,0,0.25)] pt-8 md:px-12 md:rounded-[29px] -mt-24 z-10 bg-white pb-10">
                 <h2 className="md:text-[40px] md:text-3xl mb-8 px-4 md:px-0 flex justify-between md:block">
@@ -122,11 +119,7 @@ const Home = () => {
                     {videos.data?.length > 0 ? (
                         videos?.data?.map((video, key) => (
                             <VideoBox
-                                info={{
-                                    slug: video.slug,
-                                    thumbnail: video.thumbnail,
-                                    title: video.title,
-                                }}
+                                info={video}
                             />
                         ))
                     ) : (
@@ -162,11 +155,7 @@ const Home = () => {
                         >
                             {videosRecommended?.data?.map((video, key) => (
                                 <VideoBox
-                                    info={{
-                                        slug: video.slug,
-                                        thumbnail: video.thumbnail,
-                                        title: video.title,
-                                    }}
+                                    info={video}
                                 />
                             ))}
                         </InfiniteScroll>
