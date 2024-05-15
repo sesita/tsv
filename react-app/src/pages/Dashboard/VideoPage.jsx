@@ -29,7 +29,7 @@ const VideoPage = () => {
                 <img
                     src={video.thumbnail}
                     alt="Play Icon White"
-                    className="w-full max-w-[250px]"
+                    className="w-full max-w-[250px] md:h-[130px] object-cover rounded-xl"
                 />
                 <h2 className="text-2xl font-bold max-w-[400px] w-full">
                     {video.title}

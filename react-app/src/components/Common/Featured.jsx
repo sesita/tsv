@@ -10,24 +10,24 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectFade } from "swiper/modules";
 
 const Featured = () => {
-    const [videos, setVideos] = useState([]);
+    const [sliderVideos, setSliderVideos] = useState([]);
 
-    const fetchVideos = async () => {
+    const fetchSliderVideos = async () => {
         try {
-            const response = await axios.get("Main/getVideos", {
+            const response = await axios.get("Main/getSliderVideos", {
                 params: {
                     orderBy: "featured",
                     paginate: 3,
                 },
             });
-            setVideos(response.data);
+            setSliderVideos(response.data);
         } catch (error) {
             toast.error(error.response?.data?.message ?? "Caught error");
         }
     };
 
     useEffect(() => {
-        fetchVideos();
+        fetchSliderVideos();
     }, []);
 
     return (
@@ -40,7 +40,7 @@ const Featured = () => {
                 effect={"fade"}
                 modules={[Autoplay, EffectFade]}
             >
-                {videos?.data?.map((video, key) => (
+                {sliderVideos?.data?.map((video, key) => (
                     <SwiperSlide>
                         <section className="pt-16 pb-32">
                             <img src={video?.thumbnail} className="absolute w-full h-full top-0 object-cover" alt="Cover" />

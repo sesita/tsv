@@ -21,10 +21,7 @@ const VideoBox = ({ info, hidePlayBtn, analytics }) => {
                             backgroundSize: "cover",
                             cursor: "pointer",
                         }}
-                        className="sm:h-[250px] h-[160px] w-full shadow md:rounded-xl"
-                        onClick={() => {
-                            analytics && navigate(`/User/Video/${info.id}`);
-                        }}
+                        className="sm:h-[200px] h-[160px] w-full shadow md:rounded-xl"
                     ></div>
                 </Link>
                 <h2 className="text-md text-[#232323] font-semibold mt-2 px-1 md:px-0">{analytics ? <Link to={`/User/Video/${info.id}`}>{info.title}</Link> : <Link to={`/${info.slug}`}>{info.title}</Link>}</h2>

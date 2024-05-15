@@ -19,7 +19,7 @@ const Categories = () => {
     return (
         <>
             <section className="mt-4 mb-1 px-3">
-                <div className="container mx-auto overflow-x-scroll hide-scrollbar">
+                <div className="md:w-10/12 mx-auto overflow-x-scroll hide-scrollbar">
                     <div className="flex md:gap-x-8 gap-x-4 md:text-lg">
                         {categories?.map((category, key) => (
                             <>
