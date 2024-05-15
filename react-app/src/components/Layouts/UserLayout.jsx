@@ -11,7 +11,7 @@ const UserLayout = ({ pageTitle, children }) => {
     return (
         <>
             <Banner pageTitle={pageTitle}>{isProfilePage ? <ProfileInfoBox /> : null}</Banner>
-            <section className="container mx-auto md:px-8 px-2 -mt-28 mb-14">
+            <section className="mx-auto sm:w-10/12 sm:px-0 px-2 -mt-28 mb-14">
                 <div className="shadow-lg rounded-2xl py-10 px-12 bg-white">{children}</div>
             </section>
         </>

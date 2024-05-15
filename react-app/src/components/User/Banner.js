@@ -13,7 +13,7 @@ const Banner = ({ pageTitle, children }) => {
                     aspectRatio: '16:9',
                 }}
             >
-                <div className='container mx-auto md:px-8 px-2'>
+                <div className='mx-auto sm:w-10/12 sm:px-0 px-2'>
                     {pageTitle ? <h2 className='text-white text-6xl font-medium mb-14 mt-6'>{pageTitle}</h2> : null}
                     {children}
                 </div>
