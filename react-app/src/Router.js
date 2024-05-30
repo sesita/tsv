@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 
 // Layouts
+import AdminLayout from "./components/Layouts/AdminLayout";
 import NormalLayout from "./components/Layouts/NormalLayout";
 
 // Main Pages
@@ -17,6 +18,9 @@ import VideosPage from "./pages/Dashboard/VideosPage";
 import ProfilePage from "./pages/Dashboard/ProfilePage";
 import SettingsPage from "./pages/Dashboard/SettingsPage";
 import AnalyticsPage from "./pages/Dashboard/AnalyticsPage";
+
+// Admin Pages
+import Dashboard from "./pages/Dashboard/Admin/Dashboard";
 
 const router = createBrowserRouter([
     {
@@ -69,11 +73,11 @@ const router = createBrowserRouter([
             },
             {
                 path: "/Admin",
-                element: "",
+                element: <AdminLayout />,
                 children: [
                     {
-                        path: "Dashboard",
-                        element: "",
+                        path: "",
+                        element: <Dashboard />,
                     },
                 ],
             },

@@ -108,30 +108,35 @@ const Header = ({ searchQuery }) => {
                                             <div className="shadow-[0px_0px_14px_0px_rgba(0,0,0,0.2)] rounded-xl py-4 px-5 absolute right-0 top-12 w-48 z-20 bg-white">
                                                 <span className="font-medium text-xl text-red-600 capitalize">{currentUser.name}</span>
                                                 <hr className="my-2.5" />
-                                                <Link to={`/User/Profile`} className="flex items-center gap-2 text-blue-900 text-sm mb-2">
+                                                <Link to={`/User/Profile`} className="flex items-center gap-3 text-blue-900 text-sm mb-2">
                                                     <CgProfile className="text-[#C60C0D] text-lg" />
                                                     Profile
                                                 </Link>
-                                                <button className="flex items-center gap-2 text-blue-900 text-sm mb-2" onClick={() => logout({})}>
+                                                <button className="flex items-center gap-3 text-blue-900 text-sm mb-2" onClick={() => logout({})}>
                                                     <VscSignOut className="text-[#C60C0D] text-lg" />
                                                     Sign Out
                                                 </button>
                                                 <hr className="my-3" />
-                                                <Link to={`/User/Videos`} className="flex items-center gap-2 text-blue-900 text-sm mb-1">
+                                                <Link to={`/User/Videos`} className="flex items-center gap-3 text-blue-900 text-sm mb-1">
                                                     <AiFillPlayCircle className="text-[#C60C0D] text-lg" />
                                                     My Videos
                                                 </Link>
-                                                <Link to={`/User/Analytics`} className="flex items-center gap-4 text-blue-900 text-sm mb-1">
-                                                    <BsGraphUpArrow className="text-[#C60C0D] text-md" />
+                                                <Link to={`/User/Analytics`} className="flex items-center gap-3 text-blue-900 text-sm mb-1">
+                                                    <BsGraphUpArrow className="text-[#C60C0D] text-lg" />
                                                     Analytics
                                                 </Link>
-                                                <Link to={`/User/Upload`} className="flex items-center gap-4 text-blue-900 text-sm mb-1">
-                                                    <CgProfile className="text-[#C60C0D] text-md" />
+                                                <Link to={`/User/Upload`} className="flex items-center gap-3 text-blue-900 text-sm mb-1">
+                                                    <CgProfile className="text-[#C60C0D] text-lg" />
                                                     Promotion
                                                 </Link>
-                                                <Link to={`/User/Settings`} className="flex items-center gap-4 text-blue-900 text-sm mb-1">
-                                                    <AiFillSetting className="text-[#C60C0D] text-md" />
+                                                <Link to={`/User/Settings`} className="flex items-center gap-3 text-blue-900 text-sm mb-1">
+                                                    <AiFillSetting className="text-[#C60C0D] text-lg" />
                                                     Settings
+                                                </Link>
+                                                <hr className="my-3" />
+                                                <Link to={`/Admin`} className="flex items-center gap-3 text-blue-900 text-sm mb-1">
+                                                    <CgProfile className="text-[#C60C0D] text-lg" />
+                                                    Admin Panel
                                                 </Link>
                                             </div>
                                         </>

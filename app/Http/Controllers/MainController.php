@@ -35,12 +35,12 @@ class MainController extends Controller
             });
         }
 
-        // if($tag) {
-        //     if(!is_array($tag)) $tag = [$tag];
-        //     $query->whereHas('tags', function ($query) use ($tag) {
-        //         $query->whereIn('tags.id', $tag);
-        //     });
-        // }
+        if($tag) {
+            if(!is_array($tag)) $tag = [$tag];
+            $query->whereHas('tags', function ($query) use ($tag) {
+                $query->whereIn('tags.id', $tag);
+            });
+        }
 
         $list = $query->with(['category', 'user'])->paginate($paginate);
 

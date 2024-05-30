@@ -51,11 +51,12 @@ const Search = ({ searchQuery }) => {
     useEffect(() => {
         getVideos();
         fetchSliderVideos();
+        console.log(searchQuery)
     }, [searchQuery, activeTag]);
 
     return (
         <>
-        <Swiper
+            <Swiper
                 autoplay={{
                     delay: 1500,
                     disableOnInteraction: false,
@@ -96,7 +97,10 @@ const Search = ({ searchQuery }) => {
                                 {Array(4)
                                     .fill()
                                     .map((_, key) => (
-                                        <Skeleton height={250} borderRadius={15} className="rounded-2xl" />
+                                        <div className="flex flex-col gap-2">
+                                            <Skeleton height={200} borderRadius={15} className="rounded-2xl" />
+                                            <Skeleton height={40} borderRadius={15} className="rounded-2xl" />
+                                        </div>
                                     ))}
                             </>
                         ) : videos.data?.length > 0 ? (
