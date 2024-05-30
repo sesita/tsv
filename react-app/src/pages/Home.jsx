@@ -85,7 +85,7 @@ const Home = () => {
                 modules={[Autoplay, EffectFade]}
             >
                 {videos.data?.length > 0 ? (
-                    sliderVideos?.data?.map((video, key) => (
+                    sliderVideos?.data?.map((video) => (
                         <SwiperSlide>
                             <section className="pt-16 pb-32">
                                 <img src={video?.thumbnail} className="absolute w-full h-full top-0 object-cover" alt="Cover" />
@@ -124,8 +124,10 @@ const Home = () => {
                                 .fill()
                                 .map((_, key) => (
                                     <>
-                                        <Skeleton height={200} borderRadius={15} className="rounded-2xl" />
-                                        <Skeleton height={200} borderRadius={15} className="rounded-2xl" />
+                                        <div className="flex flex-col gap-2">
+                                            <Skeleton height={200} borderRadius={15} className="rounded-2xl" />
+                                            <Skeleton height={40} borderRadius={15} className="rounded-2xl" />
+                                        </div>
                                     </>
                                 ))}
                         </>

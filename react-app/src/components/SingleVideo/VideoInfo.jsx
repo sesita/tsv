@@ -28,7 +28,7 @@ const VideoInfo = ({ info }) => {
     }, [data.likes, data.dislikes]);
 
     const Interaction = async (status) => {
-        if (!currentUser) return toast.error("Require Authorizations");
+        if (!currentUser) return toast.error("Require Authorization");
         if (status === data.interaction) return;
 
         const res = await axios.post("Video/Interaction", {

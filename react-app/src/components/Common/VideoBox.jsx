@@ -23,7 +23,7 @@ const VideoBox = ({ info, hidePlayBtn, analytics }) => {
                             backgroundSize: "cover",
                             cursor: "pointer",
                         }}
-                        className="md:h-52 sm:h-40 h-36 w-full shadow sm:rounded-xl mb-1.5"
+                        className="md:h-52 sm:h-40 h-36 w-full shadow sm:rounded-xl mb-2"
                     ></div>
                 </Link>
                 <div className="flex items-center gap-3 mx-2 sm:mx-0">
