@@ -49,7 +49,7 @@ const Home = () => {
         try {
             const response = await axios.get("Main/getVideos", {
                 params: {
-                    tag: recommendedTags,
+                    tag: recommendedTags ?? [],
                     paginate: 4,
                     page,
                 },
@@ -165,7 +165,7 @@ const Home = () => {
                 ) : (
                     <>
                         <div className="grid gap-6 xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 mb-16">
-                            {Array(4)
+                            {Array(8)
                                 .fill()
                                 .map((_, key) => (
                                     <div className="flex flex-col gap-2">

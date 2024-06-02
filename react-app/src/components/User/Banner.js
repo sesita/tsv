@@ -4,7 +4,7 @@ const Banner = ({ pageTitle, children }) => {
     return (
         <>
             <section
-                className='pt-12 pb-32'
+                className='pt-12 pb-32 flex justify-between'
                 style={{
                     background: `url(${require('../../assets/img/User-page-banner.png')})`,
                     backgroundSize: 'cover',
@@ -14,9 +14,10 @@ const Banner = ({ pageTitle, children }) => {
                 }}
             >
                 <div className='mx-auto sm:w-10/12 sm:px-0 px-2'>
-                    {pageTitle ? <h2 className='text-white text-6xl font-medium mb-14 mt-6'>{pageTitle}</h2> : null}
+                    {pageTitle ? <h2 className='text-white md:text-6xl text-3xl font-medium mb-14 mt-6'>{pageTitle}</h2> : null}
                     {children}
                 </div>
+                <button className='bg-red-500'>dfsg</button>
             </section>
         </>
     )

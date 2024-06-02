@@ -19,8 +19,8 @@ const Categories = () => {
 
     return (
         <>
-            <section className="mt-4 mb-1 px-3">
-                <div className="md:w-10/12 mx-auto overflow-x-scroll hide-scrollbar">
+            <section className="p-4">
+                <div className="md:w-10/12 mx-auto">
                     <div className="flex md:gap-x-8 gap-x-4 md:text-lg">
                         {categories?.length > 0 ? (
                             categories?.map((category, key) => (
