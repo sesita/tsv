@@ -1,9 +1,9 @@
 import axios from "axios";
-import { React, useEffect, useState } from "react";
-import TagsInput from "react-tagsinput";
-import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
+import TagsInput from "react-tagsinput";
 import { useNavigate } from "react-router-dom";
+import { React, useEffect, useState } from "react";
+import { useAuth } from "../../context/AuthContext";
 
 export const Settings = () => {
     const navigate = useNavigate();

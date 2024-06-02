@@ -1,5 +1,4 @@
 import Header from "../Common/Header";
-import Categories from "../Common/Categories";
 import { ScrollRestoration, Outlet } from "react-router-dom";
 
 const NormalLayout = ({ searchQuery }) => {
@@ -7,7 +6,6 @@ const NormalLayout = ({ searchQuery }) => {
         <>
             <ScrollRestoration />
             <Header searchQuery={searchQuery} />
-            <Categories />
             <Outlet />
         </>
     );

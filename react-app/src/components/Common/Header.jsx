@@ -1,22 +1,26 @@
-import { useState, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useState, useRef, useEffect } from "react";
 import { CiSearch } from "react-icons/ci";
 import { FaTimes } from "react-icons/fa";
-import { BiSolidVideoPlus } from "react-icons/bi";
-import { IoMdNotifications } from "react-icons/io";
-import { BsChevronDown, BsChevronUp, BsGraphUpArrow } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
 import { VscSignOut } from "react-icons/vsc";
-import { AiFillPlayCircle, AiFillSetting } from "react-icons/ai";
+import Skeleton from "react-loading-skeleton";
+import { BiSolidVideoPlus } from "react-icons/bi";
+import { IoMdNotifications } from "react-icons/io";
 import { useAuth } from "../../context/AuthContext";
+import { AiFillPlayCircle, AiFillSetting } from "react-icons/ai";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDetectClickOutside } from "react-detect-click-outside";
+import { BsChevronDown, BsChevronUp, BsGraphUpArrow } from "react-icons/bs";
 
 const Header = ({ searchQuery }) => {
-    const [showDropdown, setShowDropdown] = useState(false);
-    const [notificationDropdown, setNotificationDropdown] = useState(false);
-    const [mobileSearch, setMobileSearch] = useState(false);
-    const [searchText, setSearchText] = useState("");
+    const location = useLocation();
     const navigate = useNavigate();
+
+    const [searchText, setSearchText] = useState("");
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [mobileSearch, setMobileSearch] = useState(false);
+    const [notificationDropdown, setNotificationDropdown] = useState(false);
 
     const closeUserDropdown = () => {
         setShowDropdown(false);
@@ -41,6 +45,18 @@ const Header = ({ searchQuery }) => {
     const searchButton = useRef();
     const notificationRef = useDetectClickOutside({ onTriggered: closeNotificationDropdown });
 
+    const [categories, setCategories] = useState();
+
+    const getCategories = async () => {
+        axios.get("Main/getCategories").then((res) => {
+            setCategories(res.data);
+        });
+    };
+
+    useEffect(() => {
+        getCategories();
+    }, []);
+
     return (
         <>
             {mobileSearch && (
@@ -59,7 +75,7 @@ const Header = ({ searchQuery }) => {
                     </section>
                 </>
             )}
-            <section className="border-b border-[#e4e1e1] py-5 px-2 md:px-12">
+            <div className="border-b border-[#e4e1e1] py-5 px-2 md:px-12">
                 <header className="container mx-auto flex justify-between items-center">
                     <Link to="/">
                         <img src="/logo.png" alt="Logo" className="w-full md:max-w-[150px] max-w-[80px]" />
@@ -160,7 +176,31 @@ const Header = ({ searchQuery }) => {
                         </>
                     )}
                 </header>
-            </section>
+            </div>
+            <div className="p-4">
+                <div className="md:w-10/12 mx-auto">
+                    <div className="flex md:gap-x-8 gap-x-4 md:text-lg">
+                        {categories?.length > 0 ? (
+                            categories?.map((category, key) => (
+                                <>
+                                    <div className={location.search === `?q=${category?.title}` ? "font-medium" : ""}>
+                                        <Link to={`/search?q=${category?.title}`}>{category?.title}</Link>
+                                    </div>
+                                </>
+                            ))
+                        ) : (
+                            <div className="flex gap-x-8">
+                                <Skeleton borderRadius={150} width={120} height={25} />
+                                <Skeleton borderRadius={150} width={80} height={25} />
+                                <Skeleton borderRadius={150} width={150} height={25} />
+                                <Skeleton borderRadius={150} width={180} height={25} />
+                                <Skeleton borderRadius={150} width={100} height={25} />
+                                <Skeleton borderRadius={150} width={70} height={25} />
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
         </>
     );
 };

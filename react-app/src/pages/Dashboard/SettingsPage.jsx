@@ -1,15 +1,20 @@
 import React from "react";
-import UserLayout from "../../components/Layouts/UserLayout";
+import { useEffect } from "react";
 import Settings from "../../components/User/Settings";
+import { usePageTitle } from "../../components/Layouts/UserLayout";
 
 const SettingsPage = () => {
-  return (
-    <>
-      <UserLayout pageTitle={"Settings"}>
-        <Settings />
-      </UserLayout>
-    </>
-  );
+    const setPageTitle = usePageTitle();
+
+    useEffect(() => {
+        setPageTitle("Settings");
+    }, [setPageTitle]);
+
+    return (
+        <>
+            <Settings />
+        </>
+    );
 };
 
 export default SettingsPage;

@@ -4,10 +4,16 @@ import React, { useEffect, useState } from "react";
 import Graph from "../../components/Analytics/Graph";
 import VideoBox from "../../components/Common/VideoBox";
 import Devices from "../../components/Analytics/Devices";
-import UserLayout from "../../components/Layouts/UserLayout";
 import TotalInfo from "../../components/Analytics/TotalInfo";
+import { usePageTitle } from "../../components/Layouts/UserLayout";
 
 const AnalyticsPage = () => {
+    const setPageTitle = usePageTitle();
+
+    useEffect(() => {
+        setPageTitle("Analytics");
+    }, [setPageTitle]);
+
     const [videos, setVideos] = useState([]);
 
     const fetchVideos = async () => {
@@ -15,7 +21,7 @@ const AnalyticsPage = () => {
             const response = await axios.get("Dashboard/MyVideos");
             setVideos(response.data);
         } catch (error) {
-            toast.error(error.response?.data?.message ?? 'Caught error');
+            toast.error(error.response?.data?.message ?? "Caught error");
         }
     };
 
@@ -23,23 +29,21 @@ const AnalyticsPage = () => {
         fetchVideos();
     }, []);
     return (
-        <UserLayout pageTitle={"Analytics"}>
+        <>
             <TotalInfo />
             <div className="flex justify-between gap-6 md:flex-row flex-col">
                 <Graph />
                 <Devices />
             </div>
             <div className="mt-16">
-                <h2 className="text-center text-black text-[40px] font-light mb-8">
-                    Your top content in this period
-                </h2>
+                <h2 className="text-center text-black text-[40px] font-light mb-8">Your top content in this period</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {videos?.map((video, key) => (
                         <VideoBox info={video} hidePlayBtn={true} analytics={true} />
                     ))}
                 </div>
             </div>
-        </UserLayout >
+        </>
     );
 };
 

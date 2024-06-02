@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 
 // Layouts
+import UserLayout from "./components/Layouts/UserLayout";
 import AdminLayout from "./components/Layouts/AdminLayout";
 import NormalLayout from "./components/Layouts/NormalLayout";
 
@@ -40,6 +41,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/User",
+                element: <UserLayout />,
                 children: [
                     {
                         path: "Profile/:id?",
