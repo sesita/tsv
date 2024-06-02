@@ -64,7 +64,7 @@ const Search = ({ searchQuery }) => {
                 effect={"fade"}
                 modules={[Autoplay, EffectFade]}
             >
-                {videos.data?.length > 0 ? (
+                {sliderVideos?.data ? (
                     sliderVideos?.data?.map((video, key) => (
                         <SwiperSlide>
                             <section className="pt-16 pb-32">

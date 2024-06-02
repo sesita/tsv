@@ -1,11 +1,11 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import TagsInput from "react-tagsinput";
-import { MdOutlineFileUpload } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
 import { FaCheck } from "react-icons/fa6";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { LiaTimesSolid } from "react-icons/lia";
+import { MdOutlineFileUpload } from "react-icons/md";
 
 const Upload = () => {
     const navigate = useNavigate();
@@ -87,12 +87,15 @@ const Upload = () => {
         e.preventDefault();
 
         try {
-            await axios.post("Dashboard/Upload", { ...videoInfo, thumbnail: thumbnail.target?.files[0] },
+            await axios.post(
+                "Dashboard/Upload",
+                { ...videoInfo, thumbnail: thumbnail.target?.files[0] },
                 {
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },
-                });
+                }
+            );
             toast.success("Video Uploaded");
             navigate("/User/Profile");
         } catch (e) {
@@ -254,7 +257,7 @@ const Upload = () => {
                     <div className="flex justify-between gap-10 mb-10">
                         <div className="w-1/2">
                             <h1 className="text-xl font-medium mb-4">Video Iframe</h1>
-                            <textarea className="w-full h-32 rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" placeholder="Iframe link..." name="iframe"  value={videoInfo?.iframe} onChange={(e) => changeInput(e)}></textarea>
+                            <textarea className="w-full h-32 rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" placeholder="Iframe link..." name="iframe" value={videoInfo?.iframe} onChange={(e) => changeInput(e)}></textarea>
                         </div>
                         <div className="flex flex-col gap-4 w-full mt-2">
                             <input type="text" name="title" className="rounded-lg py-3 pl-4 pr-1 border-2 border-[#0A2A8D52] bg-[#E3EAFF52] text-md text-gray-800 outline-none" placeholder="Title..." value={videoInfo?.title} onChange={(e) => changeInput(e)} />

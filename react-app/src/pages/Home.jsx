@@ -84,8 +84,8 @@ const Home = () => {
                 effect={"fade"}
                 modules={[Autoplay, EffectFade]}
             >
-                {videos.data?.length > 0 ? (
-                    sliderVideos?.data?.map((video) => (
+                {sliderVideos?.data ? (
+                    sliderVideos.data?.map((video) => (
                         <SwiperSlide>
                             <section className="pt-16 pb-32">
                                 <img src={video?.thumbnail} className="absolute w-full h-full top-0 object-cover" alt="Cover" />
