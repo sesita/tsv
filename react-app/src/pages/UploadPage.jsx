@@ -1,13 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Upload from "../components/User/Upload";
-import UserLayout from "../components/Layouts/UserLayout";
+import { usePageTitle } from "../components/Layouts/UserLayout";
 
 const SettingsPage = () => {
+    const setPageTitle = usePageTitle();
+
+    useEffect(() => {
+        setPageTitle("Upload New Video 🥳");
+    }, [setPageTitle]);
+
     return (
         <>
-            <UserLayout pageTitle={"Upload New Video 🥳"}>
-                <Upload />
-            </UserLayout>
+            <Upload />
         </>
     );
 };

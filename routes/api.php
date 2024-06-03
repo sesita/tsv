@@ -1,11 +1,12 @@
 <?php
 
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\VideoController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\SocialController;
+use App\Http\Controllers\Dashobard\AdminController;
 use App\Http\Controllers\Dashobard\DashboardController;
 
 /*
@@ -51,4 +52,10 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'Dashboard'], function ($r
     Route::post('Upload', [DashboardController::class, 'UploadVideo']);
     Route::get('MyVideos', [DashboardController::class, 'MyVideos']);
     Route::get('MyVideo/{id}', [DashboardController::class, 'MyVideo']);
+
+    
+    Route::post('Admin/{method}', function ($method, Request $request) {
+        $controller = new AdminController();
+        return $controller->callAction($method, [$request->all()]);
+    })->middleware('admin');
 });

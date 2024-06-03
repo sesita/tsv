@@ -2,7 +2,6 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import React, { useEffect, useState } from "react";
 import VideoBox from "../../components/Common/VideoBox";
-import UserLayout from "../../components/Layouts/UserLayout";
 import FilterOptions from "../../components/Common/FilterOptions";
 import { usePageTitle } from "../../components/Layouts/UserLayout";
 

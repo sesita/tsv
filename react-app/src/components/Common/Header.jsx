@@ -162,17 +162,23 @@ const Header = ({ searchQuery }) => {
                         </>
                     ) : (
                         <>
-                            <div className="flex md:gap-4 gap-1 items-center">
-                                <Link to={`/Auth/Login`} className="sm:block hidden">
-                                    <BiSolidVideoPlus className="md:text-3xl text-xl cursor-pointer mr-6" />
-                                </Link>
-                                <Link to="/Auth/Register" className="bg-[#C60C0D] text-white md:text-sm text-xs md:px-7 px-4 md:py-2 py-1 rounded-full">
-                                    Sign Up
-                                </Link>
-                                <Link to="/Auth/Login" className="text-[#0A2A8D] md:text-sm text-xs md:px-7 px-4 md:py-2 py-1 rounded-full border-[1px] border-[#CACACA]">
-                                    Sign In
-                                </Link>
-                            </div>
+                            {currentUser === false ? (
+                                <div>
+                                    <Skeleton borderRadius={150} width={150} height={30} />
+                                </div>
+                            ) : (
+                                <div className="flex md:gap-4 gap-1 items-center">
+                                    <Link to={`/Auth/Login`} className="sm:block hidden">
+                                        <BiSolidVideoPlus className="md:text-3xl text-xl cursor-pointer mr-6" />
+                                    </Link>
+                                    <Link to="/Auth/Register" className="bg-[#C60C0D] text-white md:text-sm text-xs md:px-7 px-4 md:py-2 py-1 rounded-full">
+                                        Sign Up
+                                    </Link>
+                                    <Link to="/Auth/Login" className="text-[#0A2A8D] md:text-sm text-xs md:px-7 px-4 md:py-2 py-1 rounded-full border-[1px] border-[#CACACA]">
+                                        Sign In
+                                    </Link>
+                                </div>
+                            )}
                         </>
                     )}
                 </header>
