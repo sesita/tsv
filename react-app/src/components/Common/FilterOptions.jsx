@@ -65,7 +65,7 @@ const FilterOptions = ({ searchQuery, activeTag, setActiveTag }) => {
                         </span>
                     </button>
                     {filterDropdown && (
-                        <div className="rounded-2xl py-8 px-6 w-[500px] absolute bg-[#fafafa] z-10 gap-5 top-12 left-0 flex flex-col  border border-gray-200 shadow-[0px_0px_24px_0px_rgba(0,0,0,0.25)]">
+                        <div className="rounded-2xl py-8 px-6 w-[500px] absolute bg-[#fafafa] z-10 gap-5 top-12 left-0 right-0 flex flex-col border border-gray-200 shadow-[0px_0px_24px_0px_rgba(0,0,0,0.25)]">
                             <select className="bg-gray-200 text-gray-600 py-2 px-5 rounded-full w-full outline-none" onChange={filtersChange}>
                                 <option>Select your country</option>
                                 <option>USA</option>

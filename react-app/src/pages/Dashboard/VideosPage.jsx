@@ -29,8 +29,8 @@ const VideosPage = () => {
 
     return (
         <>
-            <div className="flex justify-between mb-4">
-                <h1 className="text-3xl font-medium">Filter Your Videos</h1>
+            <div className="flex justify-between gap-10 mb-4">
+                <h1 className="text-3xl font-medium">Manage Your Videos</h1>
                 <FilterOptions />
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

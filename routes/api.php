@@ -50,11 +50,12 @@ Route::prefix('Video')->group(function () {
 Route::group(['middleware' => 'auth:api', 'prefix' => 'Dashboard'], function ($router) {
     Route::post('Settings', [DashboardController::class, 'Settings']);
     Route::post('Upload', [DashboardController::class, 'UploadVideo']);
+    Route::post('UpdateVideo', [DashboardController::class, 'UpdateVideo']);
     Route::get('MyVideos', [DashboardController::class, 'MyVideos']);
     Route::get('MyVideo/{id}', [DashboardController::class, 'MyVideo']);
 
     
-    Route::post('Admin/{method}', function ($method, Request $request) {
+    Route::any('Admin/{method}', function ($method, Request $request) {
         $controller = new AdminController();
         return $controller->callAction($method, [$request->all()]);
     })->middleware('admin');

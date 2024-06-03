@@ -35,6 +35,18 @@ const VideoPage = () => {
         }
     };
 
+    const updateVideo = async () => {
+        try {
+            const response = await axios.get(`Dashboard/MyVideo/${params.id}`);
+            setVideo(response.data);
+            if (response.data?.tags) {
+                setTags(response.data.tags.map((tag) => tag.title));
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message ?? "Caught error");
+        }
+    };
+
     const tagsInputChange = (value) => {
         setTags(value);
     };
@@ -50,7 +62,7 @@ const VideoPage = () => {
         <>
             <div className="flex justify-between gap-8 mb-10 border-b pb-10 rounded-2xl">
                 <div className="relative w-full group" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-                    <img src={thumbnail?.target?.files[0] ? URL.createObjectURL(thumbnail?.target?.files[0]) : video.thumbnail} onError={(e) => (e.target.src = require("../../assets/img/not-found.png"))} alt="Play Icon White" className="w-full h-full object-cover rounded-xl" />
+                    <img src={thumbnail?.target?.files[0] ? URL.createObjectURL(thumbnail?.target?.files[0]) : video.thumbnail} onError={(e) => (e.target.src = require("../../assets/img/not-found.png"))} alt="Thumbnail" className="w-full h-full object-cover rounded-xl" />
                     {hover && (
                         <>
                             <label htmlFor="thumbnail" className="absolute inset-0 rounded-2xl cursor-pointer flex items-center justify-center bg-black bg-opacity-50 text-white shadow-xl font-medium text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">

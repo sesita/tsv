@@ -94,4 +94,45 @@ class DashboardController extends Controller
 
         return response(['status' =>'success', 'message'=> 'Video Uploaded Successfully']);
     }
+
+    public function UpdateVideo(Request $request){
+        $userId = Auth::user()->id;
+        $request->validate([
+            'title' =>'required',
+            'description' =>'required',
+            'category' =>'required',
+        ]);
+
+        if($request->file('video')){   
+            $videoName = 'videos/'. Str::random(). time(). '.mp4';
+            $request->video->move(public_path('storage/videos'), $videoName);
+        } else {
+            $videoName = $request->iframe;
+        }
+
+        if($request->file('thumbnail')){
+            $thumbnail = 'thumbnails/'. Str::random(). time(). '.webp';
+            $request->thumbnail->move(public_path('storage/thumbnails'), $thumbnail);
+        }
+
+        $slug = Str::slug($request->title);
+        $counter = 1;
+        do {
+            $videoSlug = $counter > 1 ? $slug . '-' . $counter : $slug;
+            $counter++;
+        } while (Video::where('slug', $videoSlug)->exists());
+
+        Video::create([
+            'views' => 0,
+            'slug' => $videoSlug,
+            'video' => $videoName,
+            'user_id' => $userId,
+            'category_id' => $request->category,
+            'thumbnail' => $thumbnail ?? null,
+            'title' => $request->title,
+            'description' => $request->description,
+        ]);
+
+        return response(['status' =>'success', 'message'=> 'Video Uploaded Successfully']);
+    }
 }
