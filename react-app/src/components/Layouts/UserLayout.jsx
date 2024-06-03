@@ -1,15 +1,22 @@
-import React, { useState } from "react";
 import Banner from "../User/Banner";
+import React, { useEffect, useState } from "react";
+import { useAuth } from "../../context/AuthContext";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { Outlet, useOutletContext } from "react-router-dom";
-import { useParams, useLocation } from "react-router-dom";
 import ProfileInfoBox from "../../components/User/ProfileInfoBox";
 
 const UserLayout = () => {
     const { id } = useParams();
     const location = useLocation();
+    const navigate = useNavigate();
     const isProfilePage = location.pathname === `/user/${id}/videos`;
 
     const [pageTitle, setPageTitle] = useState(null);
+    const { currentUser } = useAuth();
+
+    useEffect(() => {
+        if(currentUser === null) navigate('/');
+    }, []);
 
     return (
         <>

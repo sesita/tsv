@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 class DashboardController extends Controller
 {
     public function MyVideo($id){
-        $video = Video::find($id);
+        $video = Video::with('tags')->find($id);
         return response($video);
     }
     public function MyVideos(Request $request){
