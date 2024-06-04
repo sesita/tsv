@@ -1,32 +1,34 @@
 import axios from "axios";
 import moment from "moment";
 import { toast } from "react-toastify";
-import TagsInput from "react-tagsinput";
 import { FaCheck } from "react-icons/fa";
-import { useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
+import CreatableSelect from "react-select/creatable";
 import Graph from "../../components/Analytics/Graph";
 import Devices from "../../components/Analytics/Devices";
+import { useParams, useNavigate } from "react-router-dom";
 import { usePageTitle } from "../../components/Layouts/UserLayout";
 import NumberFormatter from "../../components/Common/FormatNumber";
 
 const VideoPage = () => {
     const params = useParams();
+    const navigate = useNavigate();
     const setPageTitle = usePageTitle();
     const [tags, setTags] = useState([]);
-    const [video, setVideo] = useState([]);
     const [hover, setHover] = useState(false);
+    const [options, setOptions] = useState([]);
+    const [videoInfo, setVideoInfo] = useState([]);
     const [thumbnail, setThumbnail] = useState({});
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
-        setPageTitle(video?.title);
-    }, [video.title]);
+        setPageTitle(videoInfo?.title);
+    }, [videoInfo.title]);
 
     const fetchVideo = async () => {
         try {
             const response = await axios.get(`Dashboard/MyVideo/${params.id}`);
-            setVideo(response.data);
+            setVideoInfo(response.data);
             if (response.data?.tags) {
                 setTags(response.data.tags.map((tag) => tag.title));
             }
@@ -35,20 +37,36 @@ const VideoPage = () => {
         }
     };
 
-    const updateVideo = async () => {
+    const updateVideo = async (e) => {
+        e.preventDefault();
+
         try {
-            const response = await axios.get(`Dashboard/MyVideo/${params.id}`);
-            setVideo(response.data);
-            if (response.data?.tags) {
-                setTags(response.data.tags.map((tag) => tag.title));
-            }
-        } catch (error) {
-            toast.error(error.response?.data?.message ?? "Caught error");
+            await axios.post(
+                "Dashboard/Update",
+                { ...videoInfo, tags: tags, thumbnail: thumbnail.target?.files[0] },
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
+            toast.success("Video Uploaded");
+            navigate("/User/Videos");
+        } catch (e) {
+            toast.error(e.response?.data?.message);
         }
     };
 
-    const tagsInputChange = (value) => {
-        setTags(value);
+    const handleChange = (selectedOptions) => {
+        const selectedTags = selectedOptions.map((option) => option.value);
+        setTags(selectedTags);
+    };
+
+    const changeInput = (e) => {
+        setVideoInfo({
+            ...videoInfo,
+            [e.target.name]: e.target.value,
+        });
     };
 
     useEffect(() => {
@@ -56,13 +74,17 @@ const VideoPage = () => {
         axios.get("Main/getCategories").then((cat) => {
             setCategories(cat.data);
         });
+        axios.get("Main/getTags").then((res) => {
+            const fetchedTags = res.data.map((tag) => ({ label: tag.title, value: tag.title }));
+            setOptions(fetchedTags);
+        });
     }, []);
 
     return (
         <>
             <div className="flex justify-between gap-8 mb-10 border-b pb-10 rounded-2xl">
-                <div className="relative w-full group" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-                    <img src={thumbnail?.target?.files[0] ? URL.createObjectURL(thumbnail?.target?.files[0]) : video.thumbnail} onError={(e) => (e.target.src = require("../../assets/img/not-found.png"))} alt="Thumbnail" className="w-full h-full object-cover rounded-xl" />
+                <div className="relative w-full group md:max-h-[355px]" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+                    <img src={thumbnail?.target?.files[0] ? URL.createObjectURL(thumbnail?.target?.files[0]) : videoInfo.thumbnail} onError={(e) => (e.target.src = require("../../assets/img/not-found.png"))} alt="Thumbnail" className="w-full h-full object-cover rounded-xl" />
                     {hover && (
                         <>
                             <label htmlFor="thumbnail" className="absolute inset-0 rounded-2xl cursor-pointer flex items-center justify-center bg-black bg-opacity-50 text-white shadow-xl font-medium text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -73,52 +95,85 @@ const VideoPage = () => {
                     )}
                 </div>
 
-                <div className="w-full flex flex-col gap-4">
-                    <div className="flex flex-col gap-2">
-                        <label className="text-sm font-medium text-gray-500 ml-1">Title</label>
-                        <input type="text" className="text-lg font-bold rounded-2xl border py-2 px-4 outline-none" value={video.title} />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <label className="text-sm font-medium text-gray-500 ml-1">Categories</label>
-                        <select name="category" className="text-lg font-medium rounded-2xl border py-2 px-4 outline-none">
-                            {categories?.map((category) => (
-                                <option value={category?.id} selected={video.category_id === category.id}>
-                                    {category?.title}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <label className="text-sm font-medium text-gray-500 ml-1">Tags</label>
-                        <TagsInput
-                            value={tags}
-                            onChange={tagsInputChange}
-                            onlyUnique={true}
-                            inputProps={{
-                                placeholder: "Tags",
-                            }}
-                            className="text-lg font-bold rounded-2xl border pt-1 px-4 outline-none"
-                        />
-                    </div>
-                    {video.iframe && (
+                <form className="w-full" onSubmit={updateVideo}>
+                    <div className="flex flex-col gap-4">
                         <div className="flex flex-col gap-2">
-                            <label className="text-sm font-medium text-gray-500 ml-1">Iframe</label>
-                            <input type="text" className="rounded-2xl border py-3 px-4 outline-none" value={video.iframe} />
+                            <label className="text-sm font-medium text-gray-500 ml-1">Title</label>
+                            <input name="title" type="text" className="text-lg font-bold rounded-2xl border py-2 px-4 outline-none" value={videoInfo.title} onChange={(e) => changeInput(e)} />
                         </div>
-                    )}
-                    <button className="bg-red-500 py-3 text-white font-medium text-lg rounded-2xl flex items-center gap-3 justify-center mt-4">
-                        Update <FaCheck />
-                    </button>
-                </div>
+                        <div className="flex flex-col gap-2">
+                            <label className="text-sm font-medium text-gray-500 ml-1">Categories</label>
+                            <select name="category_id" className="text-lg font-medium rounded-2xl border py-2 px-4 outline-none" onChange={(e) => changeInput(e)}>
+                                {categories?.map((category) => (
+                                    <option value={category?.id} selected={videoInfo.category_id === category.id}>
+                                        {category?.title}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <label className="text-sm font-medium text-gray-500 ml-1">Tags</label>
+                            <CreatableSelect
+                                isMulti
+                                value={tags.map((tag) => ({ label: tag, value: tag }))}
+                                onChange={handleChange}
+                                options={options}
+                                placeholder="Tags"
+                                classNamePrefix="react-select"
+                                styles={{
+                                    control: (provided) => ({
+                                        ...provided,
+                                        borderRadius: "1rem", // Rounded-2xl
+                                        padding: "0.3rem 0.5rem", // Py-2 Px-4
+                                        outline: "none",
+                                        fontWeight: "500", // Font-medium
+                                    }),
+                                    placeholder: (provided) => ({
+                                        ...provided,
+                                        color: "#6b7280", // Text-gray-500
+                                        padding: "0.4rem 0rem", // Py-2 Px-4
+                                    }),
+                                    multiValue: (provided) => ({
+                                        ...provided,
+                                        backgroundColor: "#e5e7eb", // Background gray-200
+                                        borderRadius: "0.375rem", // Rounded-md
+                                        padding: "0.2rem",
+                                    }),
+                                    multiValueLabel: (provided) => ({
+                                        ...provided,
+                                        fontWeight: "500", // Font-medium
+                                    }),
+                                    multiValueRemove: (provided) => ({
+                                        ...provided,
+                                        color: "#9ca3af", // Text-gray-400
+                                        ":hover": {
+                                            backgroundColor: "#d1d5db", // Hover:bg-gray-300
+                                            color: "#374151", // Hover:text-gray-700
+                                        },
+                                    }),
+                                }}
+                            />
+                        </div>
+                        {videoInfo.iframe && (
+                            <div className="flex flex-col gap-2">
+                                <label className="text-sm font-medium text-gray-500 ml-1">Iframe</label>
+                                <input type="text" className="rounded-2xl border py-3 px-4 outline-none" value={videoInfo.iframe} onChange={(e) => changeInput(e)} />
+                            </div>
+                        )}
+                        <button type="submit" className="bg-red-500 py-3 text-white font-medium text-lg rounded-2xl flex items-center gap-3 justify-center mt-4">
+                            Update <FaCheck />
+                        </button>
+                    </div>
+                </form>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 md:gap-3 gap-y-6 gap-x-8 rounded-2xl mb-12">
                 <div className="border rounded-xl px-6 py-4">
                     <h5 className="text-black font-medium text-[16px]">Total Views</h5>
                     <h2 className="text-[#0A2A8D] font-bold text-[28px]">
-                        <NumberFormatter value={video.views} />
+                        <NumberFormatter value={videoInfo.views} />
                     </h2>
                     <p className="text-[#071148] text-[14px] font-[400]">
-                        {moment(video.created_at).format("MMM D, YYYY")}
+                        {moment(videoInfo.created_at).format("MMM D, YYYY")}
                         <span className="mx-2">-</span>
                         {moment().format("MMM D, YYYY")}
                     </p>
@@ -128,10 +183,10 @@ const VideoPage = () => {
                         <h5 className="text-black text-[16px]">Total Comments</h5>
                     </div>
                     <h2 className="text-[#0A2A8D] font-bold text-[28px]">
-                        <NumberFormatter value={video.comments_count} />
+                        <NumberFormatter value={videoInfo.comments_count} />
                     </h2>
                     <p className="text-[#071148] text-[14px] font-[400]">
-                        {moment(video.created_at).format("MMM D, YYYY")}
+                        {moment(videoInfo.created_at).format("MMM D, YYYY")}
                         <span className="mx-2">-</span>
                         {moment().format("MMM D, YYYY")}
                     </p>
@@ -139,10 +194,10 @@ const VideoPage = () => {
                 <div className="border rounded-xl px-6 py-4">
                     <h5 className="text-black font-medium text-[16px]">Total Likes</h5>
                     <h2 className="text-[#0A2A8D] font-bold text-[28px]">
-                        <NumberFormatter value={video.likes} />
+                        <NumberFormatter value={videoInfo.likes} />
                     </h2>
                     <p className="text-[#071148] text-[14px] font-[400]">
-                        {moment(video.created_at).format("MMM D, YYYY")}
+                        {moment(videoInfo.created_at).format("MMM D, YYYY")}
                         <span className="mx-2">-</span>
                         {moment().format("MMM D, YYYY")}
                     </p>
@@ -150,10 +205,10 @@ const VideoPage = () => {
                 <div className="border rounded-xl px-6 py-4">
                     <h5 className="text-black font-medium text-[16px]">Total Dislikes</h5>
                     <h2 className="text-[#0A2A8D] font-bold text-[28px]">
-                        <NumberFormatter value={video.dislikes} />
+                        <NumberFormatter value={videoInfo.dislikes} />
                     </h2>
                     <p className="text-[#071148] text-[14px] font-[400]">
-                        {moment(video.created_at).format("MMM D, YYYY")}
+                        {moment(videoInfo.created_at).format("MMM D, YYYY")}
                         <span className="mx-2">-</span>
                         {moment().format("MMM D, YYYY")}
                     </p>

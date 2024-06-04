@@ -100,7 +100,7 @@ class DashboardController extends Controller
         $request->validate([
             'title' =>'required',
             'description' =>'required',
-            'category' =>'required',
+            'category_id' =>'required',
         ]);
 
         if($request->file('video')){   
@@ -115,24 +115,22 @@ class DashboardController extends Controller
             $request->thumbnail->move(public_path('storage/thumbnails'), $thumbnail);
         }
 
-        $slug = Str::slug($request->title);
-        $counter = 1;
-        do {
-            $videoSlug = $counter > 1 ? $slug . '-' . $counter : $slug;
-            $counter++;
-        } while (Video::where('slug', $videoSlug)->exists());
-
-        Video::create([
-            'views' => 0,
-            'slug' => $videoSlug,
+        $updateData = [
             'video' => $videoName,
             'user_id' => $userId,
-            'category_id' => $request->category,
-            'thumbnail' => $thumbnail ?? null,
+            'category_id' => $request->category_id,
             'title' => $request->title,
             'description' => $request->description,
-        ]);
+        ];
 
-        return response(['status' =>'success', 'message'=> 'Video Uploaded Successfully']);
+        if (isset($thumbnail)) {
+            $updateData['thumbnail'] = $thumbnail;
+        }
+
+        $video = Video::where('id', $request->id)->where('user_id', $userId)->firstOrFail();
+        $video->update($updateData);
+        $video->syncTags($request->tags);
+
+        return response(['status' =>'success', 'message'=> 'Video Updated Successfully']);
     }
 }
