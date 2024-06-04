@@ -2,13 +2,15 @@ import axios from "axios";
 import moment from "moment";
 import { toast } from "react-toastify";
 import { FaCheck } from "react-icons/fa";
+import { FaInfoCircle } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import CreatableSelect from "react-select/creatable";
 import Graph from "../../components/Analytics/Graph";
+import { Tooltip as ReactTooltip } from "react-tooltip";
 import Devices from "../../components/Analytics/Devices";
 import { useParams, useNavigate } from "react-router-dom";
-import { usePageTitle } from "../../components/Layouts/UserLayout";
 import NumberFormatter from "../../components/Common/FormatNumber";
+import { usePageTitle } from "../../components/Layouts/UserLayout";
 
 const VideoPage = () => {
     const params = useParams();
@@ -154,12 +156,14 @@ const VideoPage = () => {
                                 }}
                             />
                         </div>
-                        {videoInfo.iframe && (
-                            <div className="flex flex-col gap-2">
-                                <label className="text-sm font-medium text-gray-500 ml-1">Iframe</label>
-                                <input type="text" className="rounded-2xl border py-3 px-4 outline-none" value={videoInfo.iframe} onChange={(e) => changeInput(e)} />
-                            </div>
-                        )}
+                        <div className="flex flex-col gap-2">
+                            <label className="text-sm font-medium text-gray-500 ml-1 flex gap-1 cursor-pointer" data-tooltip-id="link">
+                                Video Link
+                                <FaInfoCircle className="mt-1" />
+                                <ReactTooltip id="link" content="Youtube Video Link or Iframe" />
+                            </label>
+                            <input type="text" className="rounded-2xl border py-3 px-4 outline-none font-medium" placeholder="Video Link..." name="iframe" value={videoInfo?.iframe} onChange={(e) => changeInput(e)} />
+                        </div>
                         <button type="submit" className="bg-red-500 py-3 text-white font-medium text-lg rounded-2xl flex items-center gap-3 justify-center mt-4">
                             Update <FaCheck />
                         </button>

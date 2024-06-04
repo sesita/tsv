@@ -150,7 +150,7 @@ const UploadPage = () => {
                     <form onSubmit={uploadVideo}>
                         <div className="md:flex justify-between gap-8 mb-10 rounded-2xl">
                             <div className="w-full">
-                                <video className="w-full rounded-xl shadow h-fit md:max-h-[355px] mb-4" controls>
+                                <video className="w-full rounded-xl shadow h-fit md:h-[355px] mb-4" controls>
                                     <source src={URL.createObjectURL(selectedFile)} type="video/mp4" />
                                 </video>
                                 <div className="flex flex-col gap-2 mb-5">
@@ -439,29 +439,109 @@ const UploadPage = () => {
             ) : videoPackage === "free" ? (
                 <form onSubmit={uploadIframeVideo}>
                     <div className="md:flex justify-between gap-8 mb-10 rounded-2xl">
-                        <div className="relative w-full group flex items-center justify-center border rounded-2xl cursor-pointer md:max-h-[355px]" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-                            {thumbnail?.target?.files[0] ? (
-                                <>
-                                    <img src={URL.createObjectURL(thumbnail?.target?.files[0])} alt="Thumbnail" className="w-full h-full object-cover rounded-xl" />
-                                    {hover && (
-                                        <>
-                                            <label htmlFor="thumbnail" className="cursor-pointer absolute inset-0 rounded-2xl flex items-center justify-center bg-black bg-opacity-50 text-white shadow-xl font-medium text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                                Change
-                                            </label>
-                                        </>
-                                    )}
-                                </>
-                            ) : (
-                                <>
-                                    <label htmlFor="thumbnail" className="cursor-pointer bg-red-500 rounded-full w-fit md:py-20 py-12 md:px-5 px-2 md:text-2xl text-white font-bold flex gap-3 items-center">
-                                        Thumbnail
-                                        <MdOutlineFileUpload className="text-3xl" />
-                                    </label>
-                                </>
-                            )}
-                            <input type="file" id="thumbnail" name="thumbnail" className="hidden" accept="image/*" onChange={(e) => setThumbnail(e)} />
+                        <div className="w-full h-auto">
+                            <div className="relative w-full group flex items-center justify-center border rounded-2xl cursor-pointer md:h-[355px] mb-4" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+                                {thumbnail?.target?.files[0] ? (
+                                    <>
+                                        <img src={URL.createObjectURL(thumbnail?.target?.files[0])} alt="Thumbnail" className="w-full h-full object-cover rounded-xl" />
+                                        {hover && (
+                                            <>
+                                                <label htmlFor="thumbnail" className="cursor-pointer absolute inset-0 rounded-2xl flex items-center justify-center bg-black bg-opacity-50 text-white shadow-xl font-medium text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                    Change
+                                                </label>
+                                            </>
+                                        )}
+                                    </>
+                                ) : (
+                                    <>
+                                        <label htmlFor="thumbnail" className="cursor-pointer bg-red-500 rounded-full w-fit md:py-20 py-12 md:px-5 px-2 md:text-2xl text-white font-bold flex gap-3 items-center">
+                                            Thumbnail
+                                            <MdOutlineFileUpload className="text-3xl" />
+                                        </label>
+                                    </>
+                                )}
+                                <input type="file" id="thumbnail" name="thumbnail" className="hidden" accept="image/*" onChange={(e) => setThumbnail(e)} />
+                            </div>
+                            <div className="flex flex-col gap-2 mb-5">
+                                <label className="text-sm font-medium text-gray-500 ml-1">Location</label>
+                                <Select
+                                    options={countryOptions}
+                                    onChange={handleCountryChange}
+                                    placeholder="Country"
+                                    classNamePrefix="react-select"
+                                    styles={{
+                                        control: (provided) => ({
+                                            ...provided,
+                                            borderRadius: "1rem", // Rounded-2xl
+                                            padding: "0.3rem 0.5rem", // Py-2 Px-4
+                                            outline: "none",
+                                            fontWeight: "500", // Font-medium
+                                        }),
+                                        placeholder: (provided) => ({
+                                            ...provided,
+                                            color: "#6b7280", // Text-gray-500
+                                            padding: "0.4rem 0rem", // Py-2 Px-4
+                                        }),
+                                        multiValue: (provided) => ({
+                                            ...provided,
+                                            backgroundColor: "#e5e7eb", // Background gray-200
+                                            borderRadius: "0.375rem", // Rounded-md
+                                            padding: "0.2rem",
+                                        }),
+                                        multiValueLabel: (provided) => ({
+                                            ...provided,
+                                            fontWeight: "500", // Font-medium
+                                        }),
+                                        multiValueRemove: (provided) => ({
+                                            ...provided,
+                                            color: "#9ca3af", // Text-gray-400
+                                            ":hover": {
+                                                backgroundColor: "#d1d5db", // Hover:bg-gray-300
+                                                color: "#374151", // Hover:text-gray-700
+                                            },
+                                        }),
+                                    }}
+                                />
+                            </div>
+                            <Select
+                                options={cityOptions}
+                                isDisabled={!selectedCountry}
+                                placeholder="City"
+                                classNamePrefix="react-select"
+                                styles={{
+                                    control: (provided) => ({
+                                        ...provided,
+                                        borderRadius: "1rem", // Rounded-2xl
+                                        padding: "0.3rem 0.5rem", // Py-2 Px-4
+                                        outline: "none",
+                                        fontWeight: "500", // Font-medium
+                                    }),
+                                    placeholder: (provided) => ({
+                                        ...provided,
+                                        color: "#6b7280", // Text-gray-500
+                                        padding: "0.4rem 0rem", // Py-2 Px-4
+                                    }),
+                                    multiValue: (provided) => ({
+                                        ...provided,
+                                        backgroundColor: "#e5e7eb", // Background gray-200
+                                        borderRadius: "0.375rem", // Rounded-md
+                                        padding: "0.2rem",
+                                    }),
+                                    multiValueLabel: (provided) => ({
+                                        ...provided,
+                                        fontWeight: "500", // Font-medium
+                                    }),
+                                    multiValueRemove: (provided) => ({
+                                        ...provided,
+                                        color: "#9ca3af", // Text-gray-400
+                                        ":hover": {
+                                            backgroundColor: "#d1d5db", // Hover:bg-gray-300
+                                            color: "#374151", // Hover:text-gray-700
+                                        },
+                                    }),
+                                }}
+                            />
                         </div>
-
                         <div className="w-full flex flex-col gap-4 mt-5 md:mt-0">
                             <div className="flex flex-col gap-2">
                                 <label className="text-sm font-medium text-gray-500 ml-1">Title</label>
@@ -527,10 +607,14 @@ const UploadPage = () => {
                                     <FaInfoCircle className="mt-1" />
                                     <ReactTooltip id="link" content="Youtube Video Link or Iframe" />
                                 </label>
-                                <input type="text" className="rounded-2xl border py-3 px-4 outline-none" name="iframe" value={videoInfo?.iframe} onChange={(e) => changeInput(e)} />
+                                <input type="text" className="rounded-2xl border py-3 px-4 outline-none font-medium" placeholder="Video Link..." name="iframe" value={videoInfo?.iframe} onChange={(e) => changeInput(e)} />
                             </div>
                             <div className="flex flex-col gap-2">
-                                <label className="text-sm font-medium text-gray-500 ml-1">Description</label>
+                                <label className="text-sm font-medium text-gray-500 ml-1 flex gap-1 cursor-pointer" data-tooltip-id="Description">
+                                    Description
+                                    <FaInfoCircle className="mt-1" />
+                                    <ReactTooltip id="Description" content="This Description Field Is For Better Seo" />
+                                </label>
                                 <textarea name="description" rows="4" className="text-lg font-medium rounded-2xl border py-2 px-4 outline-none" placeholder="Description..." value={videoInfo?.description} onChange={(e) => changeInput(e)}></textarea>
                             </div>
                             <button className="bg-red-500 py-3 text-white font-medium text-lg rounded-2xl flex items-center gap-3 justify-center mt-4">Create</button>
