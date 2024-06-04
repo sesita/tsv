@@ -37,6 +37,7 @@ Route::prefix('Main')->group(function () {
     Route::get('getTags', [MainController::class, 'getTags']);
     Route::get('getVideos', [MainController::class, 'getVideos']);
     Route::get('getCategories', [MainController::class, 'getCategories']);
+    Route::get('getLocations', [MainController::class, 'getLocations']);
 });
 
 Route::prefix('Video')->group(function () {

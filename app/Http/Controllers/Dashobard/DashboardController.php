@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashobard;
 
 use App\Models\User;
 use App\Models\Video;
+use App\Models\Location;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -81,16 +82,23 @@ class DashboardController extends Controller
             $counter++;
         } while (Video::where('slug', $videoSlug)->exists());
 
-        Video::create([
+        if($request->location){
+            $location = Location::where('title', $request->location)->first();
+        }
+
+        $video = Video::create([
             'views' => 0,
             'slug' => $videoSlug,
             'video' => $videoName,
             'user_id' => $userId,
-            'category_id' => $request->category,
-            'thumbnail' => $thumbnail ?? null,
             'title' => $request->title,
+            'thumbnail' => $thumbnail ?? null,
+            'category_id' => $request->category,
+            'location_id' => $location->id ?? null,
             'description' => $request->description,
         ]);
+
+        $video->syncTags($request->tags);
 
         return response(['status' =>'success', 'message'=> 'Video Uploaded Successfully']);
     }

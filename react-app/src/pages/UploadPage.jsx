@@ -20,22 +20,25 @@ const UploadPage = () => {
 
     const navigate = useNavigate();
     const [tags, setTags] = useState([]);
+    const [hover, setHover] = useState(false);
+    const [videoInfo, setVideoInfo] = useState({});
     const [tagOptions, setTagOptions] = useState([]);
     const [categories, setCategories] = useState([]);
     const [videoPackage, setVideoPackage] = useState(null);
-    const [videoInfo, setVideoInfo] = useState([]);
     const [isDragging, setIsDragging] = useState(false);
     const [selectedFile, setSelectedFile] = useState({});
     const [thumbnail, setThumbnail] = useState({});
-    const [hover, setHover] = useState(false);
-
+    const [countryCityData, setCountryCityData] = useState([]);
+    
     useEffect(() => {
-        axios.get("Main/getCategories").then((cat) => {
-            setCategories(cat.data);
+        axios.get("Main/getCategories").then((res) => {
+            setCategories(res.data.map((val) => ({ label: val.title, value: val.id })));
         });
         axios.get("Main/getTags").then((res) => {
-            const fetchedTags = res.data.map((tag) => ({ label: tag.title, value: tag.title }));
-            setTagOptions(fetchedTags);
+            setTagOptions(res.data.map((val) => ({ label: val.title, value: val.title })));
+        });
+        axios.get("Main/getLocations").then((res) => {
+            setCountryCityData(res.data);
         });
     }, []);
 
@@ -120,12 +123,6 @@ const UploadPage = () => {
         }
     };
 
-    const countryCityData = {
-        USA: ["New York", "Los Angeles", "Chicago"],
-        Canada: ["Toronto", "Vancouver", "Montreal"],
-        Australia: ["Sydney", "Melbourne", "Brisbane"],
-    };
-
     const countryOptions = Object.keys(countryCityData).map((country) => ({
         value: country,
         label: country,
@@ -141,6 +138,15 @@ const UploadPage = () => {
             label: city,
         }));
         setCityOptions(cities);
+        setVideoInfo({ ...videoInfo, location: selectedOption.value });
+    };
+
+    const handleCityChange = (selectedOption) => {
+        setVideoInfo({ ...videoInfo, location: selectedOption.value });
+    };
+
+    const handleCategoryChange = (selectedOption) => {
+        setVideoInfo({ ...videoInfo, category: selectedOption.value });
     };
 
     return (
@@ -171,25 +177,6 @@ const UploadPage = () => {
                                             placeholder: (provided) => ({
                                                 ...provided,
                                                 color: "#6b7280", // Text-gray-500
-                                                padding: "0.4rem 0rem", // Py-2 Px-4
-                                            }),
-                                            multiValue: (provided) => ({
-                                                ...provided,
-                                                backgroundColor: "#e5e7eb", // Background gray-200
-                                                borderRadius: "0.375rem", // Rounded-md
-                                                padding: "0.2rem",
-                                            }),
-                                            multiValueLabel: (provided) => ({
-                                                ...provided,
-                                                fontWeight: "500", // Font-medium
-                                            }),
-                                            multiValueRemove: (provided) => ({
-                                                ...provided,
-                                                color: "#9ca3af", // Text-gray-400
-                                                ":hover": {
-                                                    backgroundColor: "#d1d5db", // Hover:bg-gray-300
-                                                    color: "#374151", // Hover:text-gray-700
-                                                },
                                             }),
                                         }}
                                     />
@@ -197,6 +184,7 @@ const UploadPage = () => {
                                 <Select
                                     options={cityOptions}
                                     isDisabled={!selectedCountry}
+                                    onChange={handleCityChange}
                                     placeholder="City"
                                     classNamePrefix="react-select"
                                     styles={{
@@ -210,25 +198,6 @@ const UploadPage = () => {
                                         placeholder: (provided) => ({
                                             ...provided,
                                             color: "#6b7280", // Text-gray-500
-                                            padding: "0.4rem 0rem", // Py-2 Px-4
-                                        }),
-                                        multiValue: (provided) => ({
-                                            ...provided,
-                                            backgroundColor: "#e5e7eb", // Background gray-200
-                                            borderRadius: "0.375rem", // Rounded-md
-                                            padding: "0.2rem",
-                                        }),
-                                        multiValueLabel: (provided) => ({
-                                            ...provided,
-                                            fontWeight: "500", // Font-medium
-                                        }),
-                                        multiValueRemove: (provided) => ({
-                                            ...provided,
-                                            color: "#9ca3af", // Text-gray-400
-                                            ":hover": {
-                                                backgroundColor: "#d1d5db", // Hover:bg-gray-300
-                                                color: "#374151", // Hover:text-gray-700
-                                            },
                                         }),
                                     }}
                                 />
@@ -239,15 +208,26 @@ const UploadPage = () => {
                                     <input type="text" name="title" className="text-lg font-medium rounded-2xl border py-2 px-4 outline-none" placeholder="Title..." value={videoInfo?.title} onChange={(e) => changeInput(e)} />
                                 </div>
                                 <div className="flex flex-col gap-2">
-                                    <label className="text-sm font-medium text-gray-500 ml-1">Categories</label>
-                                    <select name="category" defaultValue={"DEFAULT"} className="text-lg font-medium rounded-2xl border py-2 px-4 outline-none" onChange={(e) => changeInput(e)}>
-                                        <option value="DEFAULT" disabled>
-                                            Please Select Category
-                                        </option>
-                                        {categories?.map((category) => (
-                                            <option value={category?.id}>{category?.title}</option>
-                                        ))}
-                                    </select>
+                                    <label className="text-sm font-medium text-gray-500 ml-1">Category</label>
+                                    <Select
+                                        options={categories}
+                                        onChange={handleCategoryChange}
+                                        placeholder="Category"
+                                        classNamePrefix="react-select"
+                                        styles={{
+                                            control: (provided) => ({
+                                                ...provided,
+                                                borderRadius: "1rem", // Rounded-2xl
+                                                padding: "0.3rem 0.5rem", // Py-2 Px-4
+                                                outline: "none",
+                                                fontWeight: "500", // Font-medium
+                                            }),
+                                            placeholder: (provided) => ({
+                                                ...provided,
+                                                color: "#6b7280", // Text-gray-500
+                                            }),
+                                        }}
+                                    />
                                 </div>
                                 <div className="flex flex-col gap-2">
                                     <label className="text-sm font-medium text-gray-500 ml-1">Tags</label>
@@ -548,15 +528,26 @@ const UploadPage = () => {
                                 <input type="text" name="title" className="text-lg font-medium rounded-2xl border py-2 px-4 outline-none" placeholder="Title..." value={videoInfo?.title} onChange={(e) => changeInput(e)} />
                             </div>
                             <div className="flex flex-col gap-2">
-                                <label className="text-sm font-medium text-gray-500 ml-1">Categories</label>
-                                <select name="category" defaultValue={"DEFAULT"} className="text-lg font-medium rounded-2xl border py-2 px-4 outline-none" onChange={(e) => changeInput(e)}>
-                                    <option value="DEFAULT" disabled>
-                                        Please Select Category
-                                    </option>
-                                    {categories?.map((category) => (
-                                        <option value={category?.id}>{category?.title}</option>
-                                    ))}
-                                </select>
+                                <label className="text-sm font-medium text-gray-500 ml-1">Category</label>
+                                <Select
+                                    options={categories}
+                                    onChange={handleCategoryChange}
+                                    placeholder="Category"
+                                    classNamePrefix="react-select"
+                                    styles={{
+                                        control: (provided) => ({
+                                            ...provided,
+                                            borderRadius: "1rem", // Rounded-2xl
+                                            padding: "0.3rem 0.5rem", // Py-2 Px-4
+                                            outline: "none",
+                                            fontWeight: "500", // Font-medium
+                                        }),
+                                        placeholder: (provided) => ({
+                                            ...provided,
+                                            color: "#6b7280", // Text-gray-500
+                                        }),
+                                    }}
+                                />
                             </div>
                             <div className="flex flex-col gap-2">
                                 <label className="text-sm font-medium text-gray-500 ml-1">Tags</label>

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Models\Location;
 use App\Models\Tag;
 use App\Models\User;
 use App\Models\Video;
-use App\Models\Category;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class MainController extends Controller
 {
@@ -26,17 +27,19 @@ class MainController extends Controller
             $query->orderBy('id', 'desc');
         }
 
-
         if ($search) {
-            $query->where(function ($q) use ($search){ 
+            $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")->orwhereHas('category', function ($query) use ($search) {
                     $query->where('title', 'like', "%{$search}%");
                 });
             });
         }
 
-        if($tag) {
-            if(!is_array($tag)) $tag = [$tag];
+        if ($tag) {
+            if (!is_array($tag)) {
+                $tag = [$tag];
+            }
+
             $query->whereHas('tags', function ($query) use ($tag) {
                 $query->whereIn('tags.id', $tag);
             });
@@ -48,7 +51,6 @@ class MainController extends Controller
     }
     public function getUser(Request $request)
     {
-
         $request->validate([
             'id' => 'required|integer',
         ]);
@@ -67,4 +69,17 @@ class MainController extends Controller
         $res = Tag::withCount('videos')->orderBy('videos_count', 'desc')->get();
         return response($res);
     }
+    public function getLocations(Request $request)
+    {
+        $locations = Location::with('parent')->latest()->get();
+
+        $groupedLocations = $locations->groupBy(function ($location) {
+            return $location->parent->title ?? $location->title;
+        })->map(function ($group) {
+            return $group->pluck('title');
+        });
+
+        return response()->json($groupedLocations);
+    }
+
 }

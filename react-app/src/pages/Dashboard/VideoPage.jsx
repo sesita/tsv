@@ -1,5 +1,6 @@
 import axios from "axios";
 import moment from "moment";
+import Select from "react-select";
 import { toast } from "react-toastify";
 import { FaCheck } from "react-icons/fa";
 import { FaInfoCircle } from "react-icons/fa";
@@ -18,10 +19,11 @@ const VideoPage = () => {
     const setPageTitle = usePageTitle();
     const [tags, setTags] = useState([]);
     const [hover, setHover] = useState(false);
-    const [options, setOptions] = useState([]);
     const [videoInfo, setVideoInfo] = useState([]);
     const [thumbnail, setThumbnail] = useState({});
     const [categories, setCategories] = useState([]);
+    const [tagOptions, setTagOptions] = useState([]);
+    const [countryCityData, setCountryCityData] = useState([]);
 
     useEffect(() => {
         setPageTitle(videoInfo?.title);
@@ -73,28 +75,99 @@ const VideoPage = () => {
 
     useEffect(() => {
         fetchVideo();
-        axios.get("Main/getCategories").then((cat) => {
-            setCategories(cat.data);
+        axios.get("Main/getCategories").then((res) => {
+            setCategories(res.data.map((val) => ({ label: val.title, value: val.id })));
         });
         axios.get("Main/getTags").then((res) => {
-            const fetchedTags = res.data.map((tag) => ({ label: tag.title, value: tag.title }));
-            setOptions(fetchedTags);
+            setTagOptions(res.data.map((val) => ({ label: val.title, value: val.title })));
+        });
+        axios.get("Main/getLocations").then((res) => {
+            setCountryCityData(res.data);
         });
     }, []);
 
+    const countryOptions = Object.keys(countryCityData).map((country) => ({
+        value: country,
+        label: country,
+    }));
+
+    const [selectedCountry, setSelectedCountry] = useState(null);
+    const [cityOptions, setCityOptions] = useState([]);
+
+    const handleCountryChange = (selectedOption) => {
+        setSelectedCountry(selectedOption);
+        const cities = countryCityData[selectedOption.value].map((city) => ({
+            value: city,
+            label: city,
+        }));
+        setCityOptions(cities);
+        setVideoInfo({ ...videoInfo, location: selectedOption.value });
+    };
+
+    const handleCityChange = (selectedOption) => {
+        setVideoInfo({ ...videoInfo, location: selectedOption.value });
+    };
+
+    const handleCategoryChange = (selectedOption) => {
+        setVideoInfo({ ...videoInfo, category: selectedOption.value });
+    };
     return (
         <>
             <div className="flex justify-between gap-8 mb-10 border-b pb-10 rounded-2xl">
-                <div className="relative w-full group md:max-h-[355px]" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-                    <img src={thumbnail?.target?.files[0] ? URL.createObjectURL(thumbnail?.target?.files[0]) : videoInfo.thumbnail} onError={(e) => (e.target.src = require("../../assets/img/not-found.png"))} alt="Thumbnail" className="w-full h-full object-cover rounded-xl" />
-                    {hover && (
-                        <>
-                            <label htmlFor="thumbnail" className="absolute inset-0 rounded-2xl cursor-pointer flex items-center justify-center bg-black bg-opacity-50 text-white shadow-xl font-medium text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                Change
-                            </label>
-                            <input type="file" id="thumbnail" name="thumbnail" className="hidden" accept="image/*" onChange={(e) => setThumbnail(e)} />
-                        </>
-                    )}
+                <div className="w-full">
+                    <div className="relative w-full group md:max-h-[355px] mb-4" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+                        <img src={thumbnail?.target?.files[0] ? URL.createObjectURL(thumbnail?.target?.files[0]) : videoInfo.thumbnail} onError={(e) => (e.target.src = require("../../assets/img/not-found.png"))} alt="Thumbnail" className="w-full md:h-[350px] object-cover rounded-xl" />
+                        {hover && (
+                            <>
+                                <label htmlFor="thumbnail" className="absolute inset-0 rounded-2xl cursor-pointer flex items-center justify-center bg-black bg-opacity-50 text-white shadow-xl font-medium text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    Change
+                                </label>
+                                <input type="file" id="thumbnail" name="thumbnail" className="hidden" accept="image/*" onChange={(e) => setThumbnail(e)} />
+                            </>
+                        )}
+                    </div>
+                    <div className="flex flex-col gap-2 mb-5">
+                        <label className="text-sm font-medium text-gray-500 ml-1">Location</label>
+                        <Select
+                            options={countryOptions}
+                            onChange={handleCountryChange}
+                            placeholder="Country"
+                            classNamePrefix="react-select"
+                            styles={{
+                                control: (provided) => ({
+                                    ...provided,
+                                    borderRadius: "1rem", // Rounded-2xl
+                                    padding: "0.3rem 0.5rem", // Py-2 Px-4
+                                    outline: "none",
+                                    fontWeight: "500", // Font-medium
+                                }),
+                                placeholder: (provided) => ({
+                                    ...provided,
+                                    color: "#6b7280", // Text-gray-500
+                                }),
+                            }}
+                        />
+                    </div>
+                    <Select
+                        options={cityOptions}
+                        isDisabled={!selectedCountry}
+                        onChange={handleCityChange}
+                        placeholder="City"
+                        classNamePrefix="react-select"
+                        styles={{
+                            control: (provided) => ({
+                                ...provided,
+                                borderRadius: "1rem", // Rounded-2xl
+                                padding: "0.3rem 0.5rem", // Py-2 Px-4
+                                outline: "none",
+                                fontWeight: "500", // Font-medium
+                            }),
+                            placeholder: (provided) => ({
+                                ...provided,
+                                color: "#6b7280", // Text-gray-500
+                            }),
+                        }}
+                    />
                 </div>
 
                 <form className="w-full" onSubmit={updateVideo}>
@@ -105,13 +178,25 @@ const VideoPage = () => {
                         </div>
                         <div className="flex flex-col gap-2">
                             <label className="text-sm font-medium text-gray-500 ml-1">Categories</label>
-                            <select name="category_id" className="text-lg font-medium rounded-2xl border py-2 px-4 outline-none" onChange={(e) => changeInput(e)}>
-                                {categories?.map((category) => (
-                                    <option value={category?.id} selected={videoInfo.category_id === category.id}>
-                                        {category?.title}
-                                    </option>
-                                ))}
-                            </select>
+                            <Select
+                                options={categories}
+                                onChange={handleCategoryChange}
+                                placeholder="Category"
+                                classNamePrefix="react-select"
+                                styles={{
+                                    control: (provided) => ({
+                                        ...provided,
+                                        borderRadius: "1rem", // Rounded-2xl
+                                        padding: "0.3rem 0.5rem", // Py-2 Px-4
+                                        outline: "none",
+                                        fontWeight: "500", // Font-medium
+                                    }),
+                                    placeholder: (provided) => ({
+                                        ...provided,
+                                        color: "#6b7280", // Text-gray-500
+                                    }),
+                                }}
+                            />
                         </div>
                         <div className="flex flex-col gap-2">
                             <label className="text-sm font-medium text-gray-500 ml-1">Tags</label>
@@ -119,7 +204,7 @@ const VideoPage = () => {
                                 isMulti
                                 value={tags.map((tag) => ({ label: tag, value: tag }))}
                                 onChange={handleChange}
-                                options={options}
+                                options={tagOptions}
                                 placeholder="Tags"
                                 classNamePrefix="react-select"
                                 styles={{
@@ -162,7 +247,15 @@ const VideoPage = () => {
                                 <FaInfoCircle className="mt-1" />
                                 <ReactTooltip id="link" content="Youtube Video Link or Iframe" />
                             </label>
-                            <input type="text" className="rounded-2xl border py-3 px-4 outline-none font-medium" placeholder="Video Link..." name="iframe" value={videoInfo?.iframe} onChange={(e) => changeInput(e)} />
+                            <input type="text" className="rounded-2xl border py-3 px-4 outline-none font-medium" placeholder="Video Link..." name="iframe" value={videoInfo?.video} onChange={(e) => changeInput(e)} />
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <label className="text-sm font-medium text-gray-500 ml-1 flex gap-1 cursor-pointer" data-tooltip-id="Description">
+                                Description
+                                <FaInfoCircle className="mt-1" />
+                                <ReactTooltip id="Description" content="This Description Field Is For Better Seo" />
+                            </label>
+                            <textarea name="description" rows="3" className="text-lg font-medium rounded-2xl border py-2 px-4 outline-none" placeholder="Description..." value={videoInfo?.description} onChange={(e) => changeInput(e)}></textarea>
                         </div>
                         <button type="submit" className="bg-red-500 py-3 text-white font-medium text-lg rounded-2xl flex items-center gap-3 justify-center mt-4">
                             Update <FaCheck />

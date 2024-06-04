@@ -10,7 +10,7 @@ class Video extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['slug', 'title', 'description', 'video', 'user_id', 'thumbnail', 'views', 'category_id'];
+    protected $fillable = ['slug', 'title', 'description', 'video', 'user_id', 'thumbnail', 'views', 'category_id', 'location_id'];
 
     public $appends = ['iframe', 'tags', 'likes', 'dislikes', 'comments_count', 'shares'];
 
@@ -114,9 +114,9 @@ class Video extends Model
 
     public function getVideoAttribute($value)
     {
-        if ($value) {
-            return asset('storage/' . $value);
+        if (filter_var($value, FILTER_VALIDATE_URL)) {
+            return $value;
         }
-
+        return asset('storage/' . $value);
     }
 }
