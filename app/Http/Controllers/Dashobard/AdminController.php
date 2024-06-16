@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashobard;
 
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\View;
 use App\Models\Video;
 use App\Models\Comment;
 use App\Http\Controllers\Controller;
@@ -14,7 +15,7 @@ class AdminController extends Controller
         $stats = [];
 
         $stats['users'] = User::count();
-        $stats['views'] = Video::sum('views');
+        $stats['views'] = View::count();
         $stats['comments'] = Comment::count();
         
         $stats['videos']['total'] = Video::count();

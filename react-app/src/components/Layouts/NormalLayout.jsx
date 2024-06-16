@@ -1,4 +1,5 @@
 import Header from "../Common/Header";
+import { Footer } from "../Common/Footer";
 import { ScrollRestoration, Outlet } from "react-router-dom";
 
 const NormalLayout = ({ searchQuery }) => {
@@ -7,6 +8,7 @@ const NormalLayout = ({ searchQuery }) => {
             <ScrollRestoration />
             <Header searchQuery={searchQuery} />
             <Outlet />
+            <Footer/>
         </>
     );
 };

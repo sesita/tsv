@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, useRef, useEffect } from "react";
+import { MdLogin } from "react-icons/md";
 import { CiSearch } from "react-icons/ci";
 import { FaTimes } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
@@ -7,6 +7,7 @@ import { VscSignOut } from "react-icons/vsc";
 import Skeleton from "react-loading-skeleton";
 import { BiSolidVideoPlus } from "react-icons/bi";
 import { IoMdNotifications } from "react-icons/io";
+import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { AiFillPlayCircle, AiFillSetting } from "react-icons/ai";
 import { Link, useNavigate, useLocation } from "react-router-dom";
@@ -168,13 +169,18 @@ const Header = ({ searchQuery }) => {
                                 </div>
                             ) : (
                                 <div className="flex md:gap-4 gap-1 items-center">
-                                    <Link to={`/Auth/Login`} className="sm:block hidden">
+                                    <Link to={`/Auth/Login`}>
                                         <BiSolidVideoPlus className="md:text-3xl text-xl cursor-pointer mr-6" />
                                     </Link>
-                                    <Link to="/Auth/Register" className="bg-[#C60C0D] text-white md:text-sm text-xs md:px-7 px-4 md:py-2 py-1 rounded-full">
-                                        Sign Up
-                                    </Link>
-                                    <Link to="/Auth/Login" className="text-[#0A2A8D] md:text-sm text-xs md:px-7 px-4 md:py-2 py-1 rounded-full border-[1px] border-[#CACACA]">
+                                    <div className="lg:flex gap-4 hidden">
+                                        <Link to="/Auth/Register" className="bg-[#C60C0D] text-white md:text-sm text-xs md:px-7 px-4 md:py-2 py-1 rounded-full">
+                                            Sign Up
+                                        </Link>
+                                        <Link to="/Auth/Login" className="text-[#0A2A8D] md:text-sm text-xs md:px-7 px-4 md:py-2 py-1 rounded-full border-[1px] border-[#CACACA]">
+                                            Sign In
+                                        </Link>
+                                    </div>
+                                    <Link to="/Auth/Login" className="lg:hidden bg-[#C60C0D] text-white md:text-sm text-xs md:px-7 px-4 md:py-2 py-1 rounded-full">
                                         Sign In
                                     </Link>
                                 </div>

@@ -25,7 +25,6 @@ return new class extends Migration
             $table->enum('package', ['free', 'standard', 'premium']);
             $table->text('description')->nullable();
             $table->text('thumbnail')->nullable();
-            $table->integer('views');
             $table->boolean('published')->default(0);
             $table->softDeletes();
             $table->timestamps();

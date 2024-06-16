@@ -91,6 +91,6 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     }
     public function getViewsAttribute($value)
     {
-        return Video::where('user_id', $this->id)->sum('views');
+        return 54;
     }
 }

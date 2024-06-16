@@ -375,15 +375,15 @@ const UploadPage = () => {
                                     <span>Include Promoting</span>
                                 </li>
                             </ul>
-                            <button onClick={() => setVideoPackage("standard")} className="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                            <a href="https://buy.stripe.com/4gwfZ39HsfzV6zu144" className="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                                 Continue
-                            </button>
+                            </a>
                         </div>
                         <div className="flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900 bg-white rounded-lg border h-fit">
                             <h3 className="mb-4 text-2xl font-semibold">Premium</h3>
                             <p className="font-light text-gray-500 sm:text-lg dark:text-gray-400">Best for promoting and custom editing your videos.</p>
                             <div className="flex justify-center items-baseline my-8">
-                                <span className="mr-2 text-5xl font-extrabold">$199</span>
+                                <span className="mr-2 text-5xl font-extrabold">$299</span>
                                 <span className="text-gray-500 dark:text-gray-400">/single</span>
                             </div>
                             <ul className="mb-8 space-y-4 text-left">
@@ -410,9 +410,9 @@ const UploadPage = () => {
                                     <span>Include Promoting</span>
                                 </li>
                             </ul>
-                            <button onClick={() => setVideoPackage("premium")} className="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                            <a href="https://buy.stripe.com/7sI4gldXIcnJcXS6op" className="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                                 Continue
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -447,7 +447,7 @@ const UploadPage = () => {
                                 <Select
                                     options={countryOptions}
                                     onChange={handleCountryChange}
-                                    placeholder="Country"
+                                    placeholder="State"
                                     classNamePrefix="react-select"
                                     styles={{
                                         control: (provided) => ({

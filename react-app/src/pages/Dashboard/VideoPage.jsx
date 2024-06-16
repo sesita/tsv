@@ -4,9 +4,11 @@ import Select from "react-select";
 import { toast } from "react-toastify";
 import { FaCheck } from "react-icons/fa";
 import { FaInfoCircle } from "react-icons/fa";
+import Skeleton from "react-loading-skeleton";
 import React, { useEffect, useState } from "react";
 import CreatableSelect from "react-select/creatable";
 import Graph from "../../components/Analytics/Graph";
+import { MdOutlineFileUpload } from "react-icons/md";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import Devices from "../../components/Analytics/Devices";
 import { useParams, useNavigate } from "react-router-dom";
@@ -115,23 +117,31 @@ const VideoPage = () => {
         <>
             <div className="flex justify-between gap-8 mb-10 border-b pb-10 rounded-2xl">
                 <div className="w-full">
-                    <div className="relative w-full group md:max-h-[355px] mb-4" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-                        <img src={thumbnail?.target?.files[0] ? URL.createObjectURL(thumbnail?.target?.files[0]) : videoInfo.thumbnail} onError={(e) => (e.target.src = require("../../assets/img/not-found.png"))} alt="Thumbnail" className="w-full md:h-[350px] object-cover rounded-xl" />
-                        {hover && (
-                            <>
-                                <label htmlFor="thumbnail" className="absolute inset-0 rounded-2xl cursor-pointer flex items-center justify-center bg-black bg-opacity-50 text-white shadow-xl font-medium text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    Change
-                                </label>
-                                <input type="file" id="thumbnail" name="thumbnail" className="hidden" accept="image/*" onChange={(e) => setThumbnail(e)} />
-                            </>
-                        )}
-                    </div>
+                    {videoInfo?.package === "free" ? (
+                        <div className="relative w-full group md:max-h-[355px] mb-4" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+                            <img src={thumbnail?.target?.files[0] ? URL.createObjectURL(thumbnail?.target?.files[0]) : videoInfo.thumbnail} onError={(e) => (e.target.src = require("../../assets/img/not-found.png"))} alt="Thumbnail" className="w-full md:h-[350px] object-cover rounded-xl" />
+                            {hover && (
+                                <>
+                                    <label htmlFor="thumbnail" className="absolute inset-0 rounded-2xl cursor-pointer flex items-center justify-center bg-black bg-opacity-50 text-white shadow-xl font-medium text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                        Change
+                                    </label>
+                                    <input type="file" id="thumbnail" name="thumbnail" className="hidden" accept="image/*" onChange={(e) => setThumbnail(e)} />
+                                </>
+                            )}
+                        </div>
+                    ) : videoInfo.video ? (
+                        <video className="w-full rounded-xl shadow h-fit md:h-[355px] mb-4" controls>
+                            <source src={videoInfo?.video} />
+                        </video>
+                    ) : (
+                        <Skeleton borderRadius={20} height={355} />
+                    )}
                     <div className="flex flex-col gap-2 mb-5">
                         <label className="text-sm font-medium text-gray-500 ml-1">Location</label>
                         <Select
                             options={countryOptions}
                             onChange={handleCountryChange}
-                            placeholder="Country"
+                            placeholder="State"
                             classNamePrefix="react-select"
                             styles={{
                                 control: (provided) => ({
@@ -241,19 +251,45 @@ const VideoPage = () => {
                                 }}
                             />
                         </div>
-                        <div className="flex flex-col gap-2">
-                            <label className="text-sm font-medium text-gray-500 ml-1 flex gap-1 cursor-pointer" data-tooltip-id="link">
-                                Video Link
-                                <FaInfoCircle className="mt-1" />
-                                <ReactTooltip id="link" content="Youtube Video Link or Iframe" />
-                            </label>
-                            <input type="text" className="rounded-2xl border py-3 px-4 outline-none font-medium" placeholder="Video Link..." name="iframe" value={videoInfo?.video} onChange={(e) => changeInput(e)} />
-                        </div>
+                        {videoInfo.package === "free" ? (
+                            <div className="flex flex-col gap-2">
+                                <label className="text-sm font-medium text-gray-500 ml-1 flex gap-1 cursor-pointer" data-tooltip-id="link">
+                                    Video Link
+                                    <FaInfoCircle className="mt-1" />
+                                    <ReactTooltip id="link" content="Youtube Video Link or Iframe" />
+                                </label>
+                                <input type="text" className="rounded-2xl border py-3 px-4 outline-none font-medium" placeholder="Video Link..." name="iframe" value={videoInfo?.video} onChange={(e) => changeInput(e)} />
+                            </div>
+                        ) : (
+                            <div className="flex flex-col gap-2">
+                                <label className="text-sm font-medium text-gray-500 ml-1 flex gap-1 cursor-pointer" data-tooltip-id="thumbnail">
+                                    Thumbnail
+                                    <FaInfoCircle className="mt-1" />
+                                    <ReactTooltip id="thumbnail" content="thumbnail that will appear on that video" />
+                                </label>
+                                <label htmlFor="thumbnail" className="justify-between rounded-2xl border py-3 px-4 outline-none flex items-center text-gray-500">
+                                    {videoInfo.thumbnail ? (
+                                        <>
+                                            <img src={thumbnail?.target?.files[0] ? URL.createObjectURL(thumbnail?.target?.files[0]) : videoInfo.thumbnail} alt="Thumbnail" className="w-full h-full object-cover rounded-xl hover:opacity-50 cursor-pointer transition-all max-h-80" />
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="font-medium flex gap-2">
+                                                Upload A Image
+                                                <MdOutlineFileUpload className="text-2xl" />
+                                            </div>
+                                            <span className="text-xs">Allowed: JPG,PNG,WEBP</span>
+                                        </>
+                                    )}
+                                </label>
+                                <input id="thumbnail" type="file" className="hidden" name="thumbnail" accept="image/*" onChange={(e) => setThumbnail(e)} />
+                            </div>
+                        )}
                         <div className="flex flex-col gap-2">
                             <label className="text-sm font-medium text-gray-500 ml-1 flex gap-1 cursor-pointer" data-tooltip-id="Description">
                                 Description
                                 <FaInfoCircle className="mt-1" />
-                                <ReactTooltip id="Description" content="This Description Field Is For Better Seo" />
+                                <ReactTooltip id="Description" content="For Seo" />
                             </label>
                             <textarea name="description" rows="3" className="text-lg font-medium rounded-2xl border py-2 px-4 outline-none" placeholder="Description..." value={videoInfo?.description} onChange={(e) => changeInput(e)}></textarea>
                         </div>

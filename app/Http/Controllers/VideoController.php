@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\View;
+use App\Models\Video;
 use App\Models\Comment;
 use App\Models\Interaction;
-use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,9 +15,9 @@ class VideoController extends Controller
     {
         $this->middleware(['auth:api'], ['only' => ['addComment', 'deleteComment', 'interaction']]);
     }
-    public function getVideo($slug)
+    public function getVideo($slug, Request $request)
     {
-        $res = Video::with([
+        $video = Video::with([
             'comments' => function ($query) {
                 $query->with('replies');
                 $query->where('parent_id', null);
@@ -25,18 +26,19 @@ class VideoController extends Controller
             'category',
         ])->where('slug', $slug)->first();
 
-        if ($res->id) {
-            Video::where('id', $res->id)->increment('views');
+        if ($video->id) {
+            $view = new View();
+            $view->setView($video->id, $request->ip());
         }
 
         if (Auth::user()) {
-            $interaction = Interaction::where('user_id', Auth::user()->id)->where('video_id', $res->id)->first();
-            if($interaction) $res['interaction'] = $interaction->is_liked ? 'like' : 'dislike';
+            $interaction = Interaction::where('user_id', Auth::user()->id)->where('video_id', $video->id)->first();
+            if($interaction) $video['interaction'] = $interaction->is_liked ? 'like' : 'dislike';
         } else {
-            $res['interaction'] = false;
+            $video['interaction'] = false;
         }
 
-        return $res;
+        return $video;
     }
     public function addComment(Request $request)
     {

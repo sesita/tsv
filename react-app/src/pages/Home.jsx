@@ -95,7 +95,7 @@ const Home = () => {
                                             <span className="drop-shadow">{video?.category?.title}</span>
                                             <AdsRibon />
                                         </h4>
-                                        <h1 className="md:text-5xl text-2xl font-semibold md:font-bold my-3 md:leading-tight text-white opacity-95 drop-shadow">{video.title}</h1>
+                                        <h1 className="md:text-5xl text-2xl font-semibold md:font-bold my-3 md:leading-tight text-white opacity-95 drop-shadow line-clamp-2">{video.title}</h1>
                                         <Link to={`/${video?.slug}`}>
                                             <img src={require("../assets/img/PlayIcon.png")} alt="Play Icon" className="inline w-full md:max-w-[100px] max-w-[45px]" />
                                         </Link>

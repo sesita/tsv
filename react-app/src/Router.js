@@ -22,6 +22,7 @@ import AnalyticsPage from "./pages/Dashboard/AnalyticsPage";
 
 // Admin Pages
 import Dashboard from "./pages/Dashboard/Admin/Dashboard";
+import AdminVideos from "./pages/Dashboard/Admin/Videos";
 
 const router = createBrowserRouter([
     {
@@ -80,6 +81,10 @@ const router = createBrowserRouter([
                     {
                         path: "",
                         element: <Dashboard />,
+                    },
+                    {
+                        path: "Videos",
+                        element: <AdminVideos />,
                     },
                 ],
             },

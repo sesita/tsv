@@ -29,7 +29,7 @@ const Banner = ({ pageTitle, children }) => {
                         <div>
                             <ul className="text-white text-2xl font-medium flex gap-10">
                                 <li>
-                                    <Link to={"/"} className="flex items-center gap-3">
+                                    <Link to={"/Admin/Videos"} className="flex items-center gap-3">
                                         Videos
                                         <MdOutlineVideoSettings className="mt-1" />
                                     </Link>

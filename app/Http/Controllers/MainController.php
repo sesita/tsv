@@ -22,7 +22,7 @@ class MainController extends Controller
         $query = Video::query();
 
         if ($orderBy == 'popular') {
-            $query->orderBy('views', 'desc');
+            // $query->orderBy('views', 'desc');
         } else {
             $query->orderBy('id', 'desc');
         }

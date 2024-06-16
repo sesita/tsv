@@ -87,7 +87,6 @@ class DashboardController extends Controller
         }
 
         $video = Video::create([
-            'views' => 0,
             'slug' => $videoSlug,
             'video' => $videoName,
             'user_id' => $userId,
@@ -104,7 +103,6 @@ class DashboardController extends Controller
     }
 
     public function UpdateVideo(Request $request){
-        $userId = Auth::user()->id;
         $request->validate([
             'title' =>'required',
             'description' =>'required',
@@ -125,9 +123,8 @@ class DashboardController extends Controller
 
         $updateData = [
             'video' => $videoName,
-            'user_id' => $userId,
-            'category_id' => $request->category_id,
             'title' => $request->title,
+            'category_id' => $request->category_id,
             'description' => $request->description,
         ];
 
@@ -135,7 +132,7 @@ class DashboardController extends Controller
             $updateData['thumbnail'] = $thumbnail;
         }
 
-        $video = Video::where('id', $request->id)->where('user_id', $userId)->firstOrFail();
+        $video = Video::where('id', $request->id)->firstOrFail();
         $video->update($updateData);
         $video->syncTags($request->tags);
 

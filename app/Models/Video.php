@@ -10,9 +10,9 @@ class Video extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['slug', 'title', 'description', 'video', 'user_id', 'thumbnail', 'views', 'category_id', 'location_id'];
+    protected $fillable = ['slug', 'title', 'description', 'video', 'user_id', 'thumbnail', 'category_id', 'location_id'];
 
-    public $appends = ['iframe', 'tags', 'likes', 'dislikes', 'comments_count', 'shares'];
+    public $appends = ['iframe', 'tags', 'likes', 'dislikes', 'comments_count', 'shares', 'views'];
 
     public function comments()
     {
@@ -118,5 +118,10 @@ class Video extends Model
             return $value;
         }
         return asset('storage/' . $value);
+    }
+
+    public function getViewsAttribute($value)
+    {
+        return View::where('video_id', $this->id)->count();
     }
 }
