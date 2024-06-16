@@ -41,7 +41,7 @@ export const Footer = () => {
                                     <a href="">Registration</a>
                                 </li>
                                 <li class="hover:text-red-600 transition-all">
-                                    <a href="">Upload video</a>
+                                    <a href="">Video Upload</a>
                                 </li>
                             </ul>
                         </div>
@@ -69,13 +69,10 @@ export const Footer = () => {
                             <a href="https://www.youtube.com/@meet-your-town-specialists/" rel="noreferrer" target="_blank" aria-label="Instagram Page">
                                 <FaYoutube />
                             </a>
-                            <a href="https://www.linkedin.com/company/ebsell" rel="noreferrer" target="_blank" aria-label="Linkedin Page">
-                                <i class="bi bi-linkedin fs-1 mx-1"></i>
-                            </a>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-12 mb-2 relative lg:flex flex-col">
+                <div class="col-lg-12 mb-6 relative lg:flex flex-col">
                     <p class="text-center text-dark-gray">
                         <span>© MyTSV.com - Meet Your Town Specialists</span>
                     </p>
