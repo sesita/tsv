@@ -1,5 +1,5 @@
 import React from "react";
-import Banner from "../User/Banner";
+import Banner from "../Common/Banner";
 import { Outlet } from "react-router-dom";
 
 const AdminLayout = ({ children }) => {

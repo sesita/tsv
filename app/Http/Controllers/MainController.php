@@ -69,17 +69,19 @@ class MainController extends Controller
         $res = Tag::withCount('videos')->orderBy('videos_count', 'desc')->get();
         return response($res);
     }
-    public function getLocations(Request $request)
+    public function getLocations(Request $request, $parent = null)
     {
-        $locations = Location::with('parent')->latest()->get();
+        $query = Location::with('parent');
 
-        $groupedLocations = $locations->groupBy(function ($location) {
-            return $location->parent->title ?? $location->title;
-        })->map(function ($group) {
-            return $group->pluck('title');
-        });
+        if($parent){
+            $query->where('parent_id', $parent);
+        } else {
+            $query->where('parent_id', null);
+        }
 
-        return response()->json($groupedLocations);
+        $locations = $query->pluck('title', 'id');
+
+        return response()->json($locations);
     }
 
 }

@@ -84,25 +84,29 @@ const VideoPage = () => {
             setTagOptions(res.data.map((val) => ({ label: val.title, value: val.title })));
         });
         axios.get("Main/getLocations").then((res) => {
-            setCountryCityData(res.data);
+            setCountryCityData(
+                Object.keys(res.data).map((key) => ({
+                    value: key,
+                    label: res.data[key],
+                }))
+            );
         });
     }, []);
-
-    const countryOptions = Object.keys(countryCityData).map((country) => ({
-        value: country,
-        label: country,
-    }));
 
     const [selectedCountry, setSelectedCountry] = useState(null);
     const [cityOptions, setCityOptions] = useState([]);
 
     const handleCountryChange = (selectedOption) => {
+        console.log(countryCityData)
         setSelectedCountry(selectedOption);
-        const cities = countryCityData[selectedOption.value].map((city) => ({
-            value: city,
-            label: city,
-        }));
-        setCityOptions(cities);
+        axios.get(`Main/getLocations/${selectedOption.value}`).then((res) => {
+            setCityOptions(
+                Object.keys(res.data).map((key) => ({
+                    value: key,
+                    label: res.data[key],
+                }))
+            );
+        });
         setVideoInfo({ ...videoInfo, location: selectedOption.value });
     };
 
@@ -139,7 +143,7 @@ const VideoPage = () => {
                     <div className="flex flex-col gap-2 mb-5">
                         <label className="text-sm font-medium text-gray-500 ml-1">Location</label>
                         <Select
-                            options={countryOptions}
+                            options={countryCityData}
                             onChange={handleCountryChange}
                             placeholder="State"
                             classNamePrefix="react-select"
