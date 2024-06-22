@@ -105,7 +105,7 @@ const Home = () => {
                         </SwiperSlide>
                     ))
                 ) : (
-                    <Skeleton className="rounded-2xl sm:h-96 h-72" />
+                    <Skeleton className="rounded-2xl h-[26rem] -top-2" />
                 )}
             </Swiper>
             <div className="mb-16 relative mx-auto sm:w-10/12 shadow-[0px_0px_14px_0px_rgba(0,0,0,0.25)] pt-8 sm:px-12 sm:rounded-[29px] -mt-24 z-10 bg-white pb-10">
