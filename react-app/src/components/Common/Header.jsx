@@ -85,7 +85,7 @@ const Header = ({ searchQuery }) => {
         <>
             <div className="sticky top-0 z-20">
                 <div className={`bg-white transition-all duration-300 ${showCategories ? "" : "shadow-[0px_5px_10px_0px_rgba(0,0,0,0.1)]"}`}>
-                    <header className="container mx-auto flex justify-between items-center py-5 md:px-0 px-4">
+                    <header className="container flex justify-between items-center py-5">
                         <Link to="/">
                             <img src="/logo.png" alt="Logo" className="w-full sm:max-w-[150px] max-w-[80px] min-w-[50px]" />
                         </Link>
@@ -190,7 +190,7 @@ const Header = ({ searchQuery }) => {
                     </header>
                 </div>
                 <div className={`bg-white border-t shadow-[0px_5px_10px_0px_rgba(0,0,0,0.1)] rounded-b-2xl transition-all duration-300 ${showCategories ? "translate-y-0" : "opacity-0 -translate-y-full"}`}>
-                    <div className="md:w-10/12 mx-auto p-4">
+                    <div className="container py-4 px-4 md:px-12">
                         <div className="flex md:gap-x-8 gap-x-4 md:text-lg">{renderCategoryLinks()}</div>
                     </div>
                 </div>

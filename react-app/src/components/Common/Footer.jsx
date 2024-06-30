@@ -6,14 +6,12 @@ export const Footer = () => {
     return (
         <footer class="border-t border-gray dark:border-dark rounded-t-3xl pt-12 pb-8">
             <div class="container mx-auto">
-                <div class="md:grid grid-cols-12 gap-12 mb-12 flex flex-col">
+                <div class="md:grid grid-cols-12 gap-12 mb-12 flex flex-col text-center md:text-start">
                     <div class="col-span-4">
-                        <div class="logo mb-4">
-                            <img src="/logo.png" alt="Logo" width="200" height="100" class="w-44" />
-                        </div>
+                        <img src="/logo.png" alt="Logo" width="200" height="100" class="w-44 block mb-4 mx-auto md:mx-0" />
                         <p class="text-dark-gray mb-8 capitalize">
                             Meet your town specialists <br />
-                            <span className="text-xs flex w-3/4 mt-1">Expanding from the Chicagoland area to a nationwide reach, we aim to simplify and enhance the way people find services and businesses in their local communities, fostering closer connections between businesses and residents.</span>
+                            <span className="text-xs flex md:w-3/4 mt-1">Expanding from the Chicagoland area to a nationwide reach, we aim to simplify and enhance the way people find services and businesses in their local communities, fostering closer connections between businesses and residents.</span>
                         </p>
                         <ul class="text-sm text-dark-gray flex flex-col gap-2">
                             <li>
@@ -33,7 +31,7 @@ export const Footer = () => {
                     <div class="col-span-3">
                         <div class="mx-md-5">
                             <h1 class="text-xl font-semibold text-dark mb-6">Useful Links</h1>
-                            <ul class="text-dark-gray  flex flex-col gap-6">
+                            <ul class="text-dark-gray flex flex-col gap-6">
                                 <li class="hover:text-red-600 transition-all">
                                     <a href="">FAQ</a>
                                 </li>
@@ -62,7 +60,7 @@ export const Footer = () => {
                     </div>
                     <div class="col-span-2">
                         <h1 class="text-xl font-medium text-dark mb-6">Follow Us</h1>
-                        <div class="flex flex-wrap gap-4 text-4xl ">
+                        <div class="flex gap-4 text-4xl justify-center md:justify-start">
                             <a href="https://www.facebook.com/meetyourtownspecialists" rel="noreferrer" target="_blank" aria-label="Facebook Page">
                                 <FaFacebook />
                             </a>

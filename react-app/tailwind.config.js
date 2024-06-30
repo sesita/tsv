@@ -3,32 +3,26 @@ module.exports = {
     content: ["./src/**/*.{js,jsx,ts,tsx}"],
     theme: {
         extend: {
-           
+            colors: {
+                primary: "#D83131",
+            },
+        },
+        container: {
+            center: true,
+            screens: {
+                sm: "100%",
+                md: "100%",
+                lg: "1024px",
+                xl: "1280px",
+                "2xl": "1536px",
+            },
+            padding: {
+                DEFAULT: "3%",
+                sm: "2rem",
+                md: "1.5rem",
+                lg: "1rem",
+                "2xl": "2rem",
+            },
         },
     },
-    daisyui: {
-        themes: [
-            {
-                mytheme: {
-                    primary: "#C60C0D",
-                    secondary: "#f87171",
-
-                    accent: "#37CDBE",
-
-                    neutral: "#3D4451",
-
-                    "base-100": "#FFFFFF",
-
-                    info: "#3ABFF8",
-
-                    success: "#36D399",
-
-                    warning: "#FBBD23",
-
-                    error: "#F87272",
-                },
-            },
-        ],
-    },
-    plugins: [require("daisyui")],
 };

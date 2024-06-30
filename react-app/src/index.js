@@ -1,5 +1,5 @@
 import "./index.css";
-import 'animate.css';
+import "animate.css";
 import App from "./App";
 import axios from "axios";
 import React from "react";
@@ -7,18 +7,18 @@ import ReactDOM from "react-dom/client";
 import reportWebVitals from "./reportWebVitals";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import 'react-loading-skeleton/dist/skeleton.css'
+import "react-loading-skeleton/dist/skeleton.css";
 import { AuthContextProvider } from "./context/AuthContext";
 
 let url = window.location.origin + "/api";
-if (process.env.NODE_ENV === "development"){
-    url =  "https://tsv.test/api/";
+if (process.env.NODE_ENV === "development") {
+    url = "https://tsv.test/api/";
 }
 
 axios.defaults.baseURL = url;
 axios.interceptors.request.use(
     (config) => {
-        const accessToken = localStorage.getItem('accessToken');
+        const accessToken = localStorage.getItem("accessToken");
         if (accessToken) {
             config.headers.Authorization = `Bearer ${accessToken}`;
         }

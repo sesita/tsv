@@ -108,7 +108,7 @@ const Home = () => {
                     <Skeleton className="rounded-2xl h-[26rem] -top-2" />
                 )}
             </Swiper>
-            <div className="mb-16 relative mx-auto sm:w-10/12 shadow-[0px_0px_14px_0px_rgba(0,0,0,0.25)] pt-8 sm:px-12 sm:rounded-[29px] -mt-24 z-10 bg-white pb-10">
+            <div className="mb-16 relative mx-auto container shadow-[0px_0px_14px_0px_rgba(0,0,0,0.25)] pt-8 sm:rounded-[29px] -mt-24 z-10 bg-white pb-10">
                 <h2 className="sm:text-[40px] sm:text-3xl mb-8 px-4 sm:px-0 flex justify-between sm:block">
                     Most Popular
                     <Link to={""} className="text-sm ml-4 font-normal text-[#C60C0D]">

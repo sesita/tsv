@@ -29,7 +29,7 @@ const VideoPage = () => {
 
     useEffect(() => {
         setPageTitle(videoInfo?.title);
-    }, [videoInfo.title]);
+    }, [videoInfo.title, setPageTitle]);
 
     const fetchVideo = async () => {
         try {
