@@ -1,4 +1,3 @@
-import React from "react";
 import NumberFormatter from "../Common/FormatNumber";
 
 const TotalInfo = ({ info }) => {

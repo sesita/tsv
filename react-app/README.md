@@ -1,1 +1,0 @@
-# After build this react-app move files to /public/* Directory
