@@ -106,7 +106,7 @@ const Signup = () => {
                             </div>
                         </div>
                         <div className="md:w-5/12 w-3/12">
-                            <img src={require("../../assets/img/Register.png")} alt="" className="w-full h-full object-cover md:rounded-r-3xl rounded-r-xl" />
+                            <img src={"../../assets/img/Register.png"} alt="" className="w-full h-full object-cover md:rounded-r-3xl rounded-r-xl" />
                         </div>
                     </div>
                 </div>

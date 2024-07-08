@@ -6,7 +6,7 @@ import AdsRibon from "../components/Common/AdsRibon";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import VideoBox from "../components/Common/VideoBox";
 import { Autoplay, EffectFade } from "swiper/modules";
@@ -31,7 +31,7 @@ const Home = () => {
         }
     };
 
-    const fetchPopular = async (page) => {
+    const fetchPopular = async () => {
         try {
             const response = await axios.get("Main/getVideos", {
                 params: {
@@ -63,7 +63,7 @@ const Home = () => {
         }
     };
 
-    const fetchNextData = async (e) => {
+    const fetchNextData = async () => {
         await fetchRecommended(2);
         return videosRecommended;
     };
@@ -86,7 +86,7 @@ const Home = () => {
             >
                 {sliderVideos?.data ? (
                     sliderVideos.data?.map((video) => (
-                        <SwiperSlide>
+                        <SwiperSlide key={video.id}>
                             <section className="pt-16 pb-32">
                                 <img src={video?.thumbnail} className="absolute w-full h-full top-0 object-cover" alt="Cover" />
                                 <div className="md:w-10/12 mx-auto text-white relative px-4">
@@ -97,7 +97,7 @@ const Home = () => {
                                         </h4>
                                         <h1 className="md:text-5xl text-2xl font-semibold md:font-bold my-3 md:leading-tight text-white opacity-95 drop-shadow line-clamp-2">{video.title}</h1>
                                         <Link to={`/${video?.slug}`}>
-                                            <img src={require("../assets/img/PlayIcon.png")} alt="Play Icon" className="inline w-full md:max-w-[100px] max-w-[45px]" />
+                                            <img src={"../assets/img/PlayIcon.png"} alt="Play Icon" className="inline w-full md:max-w-[100px] max-w-[45px]" />
                                         </Link>
                                     </div>
                                 </div>
@@ -117,18 +117,16 @@ const Home = () => {
                 </h2>
                 <div className="grid gap-6 xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 mb-12">
                     {videos.data?.length > 0 ? (
-                        videos?.data?.map((video, key) => <VideoBox info={video} />)
+                        videos?.data?.map((video, key) => <VideoBox info={video} key={key} />)
                     ) : (
                         <>
                             {Array(4)
                                 .fill()
                                 .map((_, key) => (
-                                    <>
-                                        <div className="flex flex-col gap-2">
-                                            <Skeleton height={200} borderRadius={15} className="rounded-2xl" />
-                                            <Skeleton height={40} borderRadius={15} className="rounded-2xl" />
-                                        </div>
-                                    </>
+                                    <div className="flex flex-col gap-2" key={key}>
+                                        <Skeleton height={200} borderRadius={15} className="rounded-2xl" />
+                                        <Skeleton height={40} borderRadius={15} className="rounded-2xl" />
+                                    </div>
                                 ))}
                         </>
                     )}
@@ -149,7 +147,7 @@ const Home = () => {
                             loader={Array(4)
                                 .fill()
                                 .map((_, key) => (
-                                    <div className="flex flex-col gap-2">
+                                    <div className="flex flex-col gap-2" key={key}>
                                         <Skeleton height={200} borderRadius={15} className="rounded-2xl" />
                                         <Skeleton height={40} borderRadius={15} className="rounded-2xl" />
                                     </div>
@@ -158,7 +156,7 @@ const Home = () => {
                             className="grid gap-6 xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 mb-16"
                         >
                             {videosRecommended?.data?.map((video, key) => (
-                                <VideoBox info={video} />
+                                <VideoBox info={video} key={key} />
                             ))}
                         </InfiniteScroll>
                     </>
@@ -168,7 +166,7 @@ const Home = () => {
                             {Array(8)
                                 .fill()
                                 .map((_, key) => (
-                                    <div className="flex flex-col gap-2">
+                                    <div className="flex flex-col gap-2" key={key}>
                                         <Skeleton height={200} borderRadius={15} className="rounded-2xl" />
                                         <Skeleton height={40} borderRadius={15} className="rounded-2xl" />
                                     </div>

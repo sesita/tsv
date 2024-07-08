@@ -1,4 +1,3 @@
-import React from "react";
 import { FaUserCog } from "react-icons/fa";
 import { FaAdversal } from "react-icons/fa";
 import { BiSolidCategory } from "react-icons/bi";
@@ -15,7 +14,7 @@ const Banner = ({ pageTitle, children }) => {
             <div
                 className="pt-12 pb-32"
                 style={{
-                    background: `url(${require("../../assets/img/User-page-banner.png")})`,
+                    background: `url("../../assets/img/User-page-banner.png"})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",

@@ -66,7 +66,7 @@ const Search = ({ searchQuery }) => {
             >
                 {sliderVideos?.data ? (
                     sliderVideos?.data?.map((video, key) => (
-                        <SwiperSlide>
+                        <SwiperSlide key={key}>
                             <section className="pt-16 pb-32">
                                 <img src={video?.thumbnail} className="absolute w-full h-full top-0 object-cover" alt="Cover" />
                                 <div className="md:w-10/12 mx-auto text-white relative px-4">
@@ -77,7 +77,7 @@ const Search = ({ searchQuery }) => {
                                         </h4>
                                         <h1 className="md:text-5xl text-2xl font-semibold md:font-bold my-3 md:leading-tight text-white opacity-95 drop-shadow line-clamp-2">{video.title}</h1>
                                         <Link to={`/${video?.slug}`}>
-                                            <img src={require("../assets/img/PlayIcon.png")} alt="Play Icon" className="inline w-full md:max-w-[100px] max-w-[45px]" />
+                                            <img src={"../assets/img/PlayIcon.png"} alt="Play Icon" className="inline w-full md:max-w-[100px] max-w-[45px]" />
                                         </Link>
                                     </div>
                                 </div>
@@ -97,14 +97,14 @@ const Search = ({ searchQuery }) => {
                                 {Array(4)
                                     .fill()
                                     .map((_, key) => (
-                                        <div className="flex flex-col gap-2">
+                                        <div className="flex flex-col gap-2" key={key}>
                                             <Skeleton height={200} borderRadius={15} className="rounded-2xl" />
                                             <Skeleton height={40} borderRadius={15} className="rounded-2xl" />
                                         </div>
                                     ))}
                             </>
                         ) : videos.data?.length > 0 ? (
-                            videos?.data?.map((video, key) => <VideoBox info={video} />)
+                            videos?.data?.map((video, key) => <VideoBox info={video} key={key} />)
                         ) : (
                             <>
                                 <h1 className="text-center mt-4 mb-4 items-center font-medium text-4xl col-span-8">Videos not found</h1>

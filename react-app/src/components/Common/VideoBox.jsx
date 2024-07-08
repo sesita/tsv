@@ -1,17 +1,15 @@
-import React from "react";
 import moment from "moment";
 import NumberFormatter from "./FormatNumber";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const VideoBox = ({ info, hidePlayBtn, analytics }) => {
-    const navigate = useNavigate();
 
     return (
         <>
             <div className="relative">
                 {!hidePlayBtn && (
                     <Link to={analytics ? `/User/Video/${info.id}` : `/${info.slug}`}>
-                        <img src={require("../../assets/img/PlayIcon2.png")} alt="Play Icon White" className="w-full max-w-[45px] absolute right-2 top-2" />
+                        <img src={"../../assets/img/PlayIcon2.png"} alt="Play Icon White" className="w-full max-w-[45px] absolute right-2 top-2" />
                     </Link>
                 )}
                 <Link to={analytics ? `/User/Video/${info.id}` : `/${info.slug}`}>
