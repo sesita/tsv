@@ -1,5 +1,3 @@
-import React from "react";
-
 const formatNumber = (number) => {
     if (number < 1000) {
         return number.toString();
@@ -15,9 +13,7 @@ const formatNumber = (number) => {
 const NumberFormatter = ({ value }) => {
     const formattedNumber = formatNumber(value);
 
-    return (
-        <span>{formattedNumber}</span>
-    );
+    return <span>{formattedNumber}</span>;
 };
 
 export default NumberFormatter;

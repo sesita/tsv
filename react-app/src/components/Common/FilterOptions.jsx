@@ -1,7 +1,7 @@
 import axios from "axios";
 import { RiFilter2Fill } from "react-icons/ri";
 import { FiChevronDown } from "react-icons/fi";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDetectClickOutside } from "react-detect-click-outside";
 
 const FilterOptions = ({ searchQuery, activeTag, setActiveTag }) => {
