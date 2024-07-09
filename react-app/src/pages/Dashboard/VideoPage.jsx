@@ -123,7 +123,7 @@ const VideoPage = () => {
                 <div className="w-full">
                     {videoInfo?.package === "free" ? (
                         <div className="relative w-full group md:max-h-[355px] mb-4" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-                            <img src={thumbnail?.target?.files[0] ? URL.createObjectURL(thumbnail?.target?.files[0]) : videoInfo.thumbnail} onError={(e) => (e.target.src = "../../assets/img/not-found.png")} alt="Thumbnail" className="w-full md:h-[350px] object-cover rounded-xl" />
+                            <img src={thumbnail?.target?.files[0] ? URL.createObjectURL(thumbnail?.target?.files[0]) : videoInfo.thumbnail} onError={(e) => (e.target.src = "/assets/img/not-found.png")} alt="Thumbnail" className="w-full md:h-[350px] object-cover rounded-xl" />
                             {hover && (
                                 <>
                                     <label htmlFor="thumbnail" className="absolute inset-0 rounded-2xl cursor-pointer flex items-center justify-center bg-black bg-opacity-50 text-white shadow-xl font-medium text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">

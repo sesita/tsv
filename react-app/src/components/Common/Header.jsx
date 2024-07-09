@@ -84,7 +84,7 @@ const Header = ({searchQuery}) => {
 				<div className={`bg-white transition-all duration-300 ${showCategories ? "" : "shadow-[0px_5px_10px_0px_rgba(0,0,0,0.1)]"}`}>
 					<header className="container flex justify-between items-center py-5">
 						<Link to="/">
-							<img src="/logo.png" alt="Logo" className="w-full sm:max-w-[150px] max-w-[80px] min-w-[50px]" />
+							<img src="/assets/logo.png" alt="Logo" className="w-full sm:max-w-[150px] max-w-[80px] min-w-[50px]" />
 						</Link>
 
 						<div className="md:w-1/2 px-4">

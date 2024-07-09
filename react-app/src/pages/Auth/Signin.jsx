@@ -86,7 +86,7 @@ const Signin = () => {
                             </div>
                         </div>
                         <div className="md:w-5/12 w-3/12">
-                            <img src={"../../assets/img/Login.png"} alt="" className="w-full h-full object-cover md:rounded-r-3xl rounded-r-xl" />
+                            <img src={"/assets/img/Login.png"} alt="" className="w-full h-full object-cover md:rounded-r-3xl rounded-r-xl" />
                         </div>
                     </div>
                 </div>

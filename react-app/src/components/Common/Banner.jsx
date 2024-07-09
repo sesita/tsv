@@ -14,7 +14,7 @@ const Banner = ({ pageTitle, children }) => {
             <div
                 className="pt-12 pb-32"
                 style={{
-                    background: `url("../../assets/img/User-page-banner.png"})`,
+                    background: `url("/assets/img/User-page-banner.png"})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
