@@ -84,7 +84,7 @@ const Signin = () => {
                                 </form>
                             </div>
                         </div>
-                        <div className="md:w-5/12 w-full pattern bg-red-800 flex flex-col justify-center items-center md:rounded-r-3xl rounded-r-xl p-6 text-white">
+                        <div className="md:w-5/12 w-full pattern bg-red-900 flex flex-col justify-center items-center md:rounded-r-3xl rounded-r-xl p-6 text-white">
                             <div className="mb-10 text-center">
                                 <h3 className="text-3xl font-bold mb-4">MyTSV.com</h3>
                                 <p className="text-xl text-center mb-6">Meet your Town Specialists Videos</p>
