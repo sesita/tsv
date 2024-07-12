@@ -89,7 +89,7 @@ const Home = () => {
                         <SwiperSlide key={video.id}>
                             <section className="pt-16 pb-32">
                                 <img src={video?.thumbnail} className="absolute w-full h-full top-0 object-cover" alt="Cover" />
-                                <div className="md:w-10/12 mx-auto text-white relative px-4">
+                                <div className="container text-white relative px-4">
                                     <div className="w-[100%] max-w-[450px]">
                                         <h4 className="md:text-3xl text-lg">
                                             <span className="drop-shadow">{video?.category?.title}</span>
@@ -108,7 +108,7 @@ const Home = () => {
                     <Skeleton className="rounded-2xl h-[26rem] -top-2" />
                 )}
             </Swiper>
-            <div className="mb-16 relative mx-auto container shadow-[0px_0px_14px_0px_rgba(0,0,0,0.25)] pt-8 sm:rounded-[29px] -mt-24 z-10 bg-white pb-10">
+            <div className="relative container shadow-[0px_0px_14px_0px_rgba(0,0,0,0.25)] pt-8 sm:rounded-3xl px-10 -mt-24 mb-16 z-10 bg-white pb-10">
                 <h2 className="sm:text-[40px] sm:text-3xl mb-8 px-4 sm:px-0 flex justify-between sm:block">
                     Most Popular
                     <Link to={""} className="text-sm ml-4 font-normal text-[#C60C0D]">

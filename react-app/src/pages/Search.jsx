@@ -51,7 +51,7 @@ const Search = ({ searchQuery }) => {
     useEffect(() => {
         getVideos();
         fetchSliderVideos();
-        console.log(searchQuery)
+        console.log(searchQuery);
     }, [searchQuery, activeTag]);
 
     return (
@@ -85,7 +85,7 @@ const Search = ({ searchQuery }) => {
                         </SwiperSlide>
                     ))
                 ) : (
-                    <Skeleton height={430} className="rounded-2xl" />
+                    <Skeleton className="rounded-2xl h-[26rem] -top-2" />
                 )}
             </Swiper>
             <section className="mb-16 md:px-0 px-3 relative z-10">
