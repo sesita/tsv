@@ -50,7 +50,7 @@ const Signin = () => {
 
     return (
         <>
-            <section className="min-h-screen h-full w-full bg-[#E3EAFF]">
+            <section className="w-full bg-[#E3EAFF]">
                 <div className="container mx-auto px-12 pt-5 pb-20 flex flex-col min-h-screen gap-5">
                     <div className="flex justify-between items-center gap-5 mb-3">
                         <BsArrowLeft className="text-5xl text-[#C60C0D] cursor-pointer" onClick={() => navigate(-1)} />
@@ -59,15 +59,14 @@ const Signin = () => {
                         </Link>
                         <span></span>
                     </div>
-                    <div className="bg-white md:rounded-3xl rounded-xl flex justify-between max-h-[700px]">
-                        <div className="mx-auto my-auto py-5 md:px-7 px-2">
+                    <div className="bg-white rounded-xl flex flex-col-reverse md:flex-row justify-between">
+                        <div className="mx-auto my-auto md:px-7 px-2 md:py-20 py-6">
                             <div className="flex flex-col gap-6">
-                                <h2 className="text-center md:text-5xl text-2xl font-bold text-[#C60C0D]">Account Login</h2>
+                                <h2 className="text-center text-5xl font-bold text-[#C60C0D]">Account Login</h2>
                                 <div className="flex gap-3 justify-center">
                                     <a href="https://mytsv.com/api/Auth/Social/Google/Redirect" className="border-[1px] border-red-700 rounded-full md:w-11 w-8 md:h-11 h-8 flex items-center justify-center">
                                         <BsGoogle className="text-[#C60C0D] md:text-2xl text-md" />
                                     </a>
-                                
                                 </div>
                                 <p className="text-center capitalize">or use your email for login:</p>
                                 <form method="post" className="flex flex-col gap-3 md:w-[400px] w-full" onSubmit={(e) => handleLogin(e)}>
@@ -85,8 +84,31 @@ const Signin = () => {
                                 </form>
                             </div>
                         </div>
-                        <div className="md:w-5/12 w-3/12">
-                            <img src={"/assets/img/Login.png"} alt="" className="w-full h-full object-cover md:rounded-r-3xl rounded-r-xl" />
+                        <div className="md:w-5/12 w-full pattern bg-red-800 flex flex-col justify-center items-center md:rounded-r-3xl rounded-r-xl p-6 text-white">
+                            <div className="mb-10 text-center">
+                                <h3 className="text-3xl font-bold mb-4">MyTSV.com</h3>
+                                <p className="text-xl text-center mb-6">Meet your Town Specialists Videos</p>
+                            </div>
+                            <div className="space-y-4">
+                                <div className="flex items-center">
+                                    <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                    </svg>
+                                    <span>Access your personalized feed</span>
+                                </div>
+                                <div className="flex items-center">
+                                    <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                    </svg>
+                                    <span>Interact with local experts</span>
+                                </div>
+                                <div className="flex items-center">
+                                    <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                    </svg>
+                                    <span>Stay updated with your town</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
