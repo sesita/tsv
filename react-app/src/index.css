@@ -8,6 +8,7 @@
     transition: all;
     transition-duration: 0.1s;
     --animate-duration: 500ms;
+    --swiper-pagination-color: #D83131;
 }
 
 body {

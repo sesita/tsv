@@ -2,6 +2,7 @@ import axios from "axios";
 import { CiSearch } from "react-icons/ci";
 import { CgProfile } from "react-icons/cg";
 import { FaBars } from "react-icons/fa6";
+import { LuLogIn } from "react-icons/lu";
 import { VscSignOut } from "react-icons/vsc";
 import Skeleton from "react-loading-skeleton";
 import { BiSolidVideoPlus } from "react-icons/bi";
@@ -95,7 +96,7 @@ const Header = ({ searchQuery }) => {
                             <img src="/assets/short-logo.png" alt="Logo" className="w-full md:hidden max-w-[50px]" />
                         </Link>
 
-                        <div className="md:w-1/2 px-4">
+                        <div className="sm:w-1/2 px-4">
                             <div className="w-full rounded-full border-[1px] border-[#CACACA] py-1 px-1 flex">
                                 <input type="text" className="outline-none border-none md:text-sm text-xs sm:pl-4 pl-2 flex-1 rounded-lg" placeholder="Search..." value={searchQuery || searchText} onChange={(e) => setSearchText(e.target.value)} />
                                 <button className="sm:w-9 sm:h-9 w-6 h-6 bg-[#C60C0D] flex justify-center items-center rounded-full text-white" onClick={handleSearch}>
@@ -103,10 +104,6 @@ const Header = ({ searchQuery }) => {
                                 </button>
                             </div>
                         </div>
-
-                        <button className="text-xl text-primary md:hidden">
-                            <FaBars />
-                        </button>
 
                         {currentUser ? (
                             <div className="flex gap-4 items-center relative">
@@ -174,11 +171,11 @@ const Header = ({ searchQuery }) => {
                                         <Skeleton borderRadius={150} width={150} height={30} />
                                     </div>
                                 ) : (
-                                    <div className="flex md:gap-4 gap-1 items-center">
-                                        <Link to={`/Auth/Login`} className="md:block hidden">
+                                    <div className="md:gap-4 gap-1 items-center md:flex hidden">
+                                        <Link to={`/Auth/Login`} className="lg:block hidden">
                                             <BiSolidVideoPlus className="md:text-3xl text-xl cursor-pointer mr-6" />
                                         </Link>
-                                        <div className="lg:flex gap-4 hidden">
+                                        <div className="md:flex gap-4 hidden">
                                             <Link to="/Auth/Register" className="bg-[#C60C0D] text-white md:text-sm text-xs md:px-7 px-4 md:py-2 py-1 rounded-full">
                                                 Sign Up
                                             </Link>
@@ -189,6 +186,15 @@ const Header = ({ searchQuery }) => {
                                     </div>
                                 )}
                             </>
+                        )}
+
+                        {!currentUser && (
+                            <div className="md:hidden text-xl text-black flex gap-6 items-center">
+                                <Link to={"/Auth/Login"}>
+                                    <LuLogIn className="text-red-700" />
+                                </Link>
+                                <FaBars className="text-red-700" />
+                            </div>
                         )}
                     </header>
                 </div>
