@@ -1,15 +1,15 @@
 import axios from "axios";
-import { IoMdPlay } from "react-icons/io";
-import { useParams, Link } from "react-router-dom";
-import Skeleton from "react-loading-skeleton";
-import { AiOutlineLoading, AiFillLike, AiFillDislike } from "react-icons/ai";
-import React, { useState, useEffect, useRef } from "react";
-import { BiLogoTelegram, BiSolidCommentDetail } from "react-icons/bi";
-import { BsEyeFill } from "react-icons/bs";
-import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
+import { IoMdPlay } from "react-icons/io";
+import { BsEyeFill } from "react-icons/bs";
+import Skeleton from "react-loading-skeleton";
+import { useAuth } from "../context/AuthContext";
+import { useParams, Link } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
 import VideoBox from "../components/Common/VideoBox";
 import NumberFormatter from "../components/Common/FormatNumber";
+import { AiOutlineLoading, AiFillLike, AiFillDislike } from "react-icons/ai";
+import { BiLogoTelegram, BiSolidCommentDetail } from "react-icons/bi";
 
 const SingleVideo = () => {
     const { slug } = useParams();
@@ -140,13 +140,13 @@ const SingleVideo = () => {
 
     return (
         <>
-            <div className="bg-gradient-to-r from-gray-900 via-gray-700 to-black pt-10 pb-20">
+            <div className="bg-gray-800 pt-10 pb-20 pattern">
                 <div className="mx-auto sm:w-10/12 px-2 sm:px-0">
                     <h2 className="text-white sm:text-5xl text-3xl font-semibold">{video?.category?.title ?? <Skeleton baseColor="#475569" borderRadius={30} width={250} height={50} />}</h2>
                 </div>
             </div>
             <div className="mx-auto sm:w-10/12 px-2 sm:px-0">
-                <div className="md:rounded-3xl md:py-8 py-4 md:px-8 shadow-[box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.25)] bg-white -mt-10">
+                <div className="md:rounded-3xl md:py-8 py-4 md:px-8 bg-white -mt-10">
                     <div className="max-h-[800px] md:h-[500px] w-full flex justify-center items-center relative">
                         {loading ? (
                             <>

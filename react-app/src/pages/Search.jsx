@@ -32,10 +32,6 @@ const Search = ({ searchQuery }) => {
         }
     };
 
-    useEffect(() => {
-        fetchSliderVideos();
-    }, []);
-
     const getVideos = async () => {
         setLoading(true);
         const res = await axios.get("Main/getVideos", {
@@ -51,7 +47,6 @@ const Search = ({ searchQuery }) => {
     useEffect(() => {
         getVideos();
         fetchSliderVideos();
-        console.log(searchQuery);
     }, [searchQuery, activeTag]);
 
     return (

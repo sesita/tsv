@@ -8,10 +8,10 @@ import { BiSolidVideoPlus } from "react-icons/bi";
 import { IoMdNotifications } from "react-icons/io";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
+import { BsChevronUp, BsGraphUpArrow } from "react-icons/bs";
 import { AiFillPlayCircle, AiFillSetting } from "react-icons/ai";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDetectClickOutside } from "react-detect-click-outside";
-import { BsChevronDown, BsChevronUp, BsGraphUpArrow } from "react-icons/bs";
 
 const Header = ({ searchQuery }) => {
     const location = useLocation();
@@ -57,11 +57,18 @@ const Header = ({ searchQuery }) => {
             );
         }
 
-        return categories.map((category) => (
-            <div key={category.id} className={location.search === `?q=${category.title}` ? "font-medium" : ""}>
-                <Link to={`/search?q=${category.title}`}>{category.title}</Link>
-            </div>
-        ));
+        return (
+            <>
+                <div className={`bg-gray-100 py-1 px-4 rounded-md ${!location.search && "bg-gray-600 text-white"}`}>
+                    <Link to={`/`}>All</Link>
+                </div>
+                {categories.map((category) => (
+                    <div key={category.id} className={`bg-gray-100 py-1 px-4 rounded-md ${location.search === `?q=${category.title}` ? "bg-gray-600 text-white" : ""}`}>
+                        <Link to={`/search?q=${category.title}`}>{category.title}</Link>
+                    </div>
+                ))}
+            </>
+        );
     };
 
     const handleScroll = () => {
@@ -82,9 +89,10 @@ const Header = ({ searchQuery }) => {
         <>
             <div className="sticky top-0 z-20">
                 <div className={`bg-white transition-all duration-300 ${!showCategories && "shadow-[0px_5px_10px_0px_rgba(0,0,0,0.1)]"}`}>
-                    <header className="container flex justify-between items-center py-5 px-0">
+                    <header className="container flex justify-between items-center py-5 md:px-0 px-2">
                         <Link to="/">
-                            <img src="/assets/logo.png" alt="Logo" className="w-full sm:max-w-[150px] max-w-[80px] min-w-[50px]" />
+                            <img src="/assets/logo.png" alt="Logo" className="w-full hidden md:inline max-w-[150px]" />
+                            <img src="/assets/short-logo.png" alt="Logo" className="w-full md:hidden max-w-[50px]" />
                         </Link>
 
                         <div className="md:w-1/2 px-4">
@@ -120,45 +128,43 @@ const Header = ({ searchQuery }) => {
                                 <div ref={userRef}>
                                     <div className="flex items-center cursor-pointer" onClick={() => setShowDropdown(!showDropdown)}>
                                         <img src={currentUser.avatar} className="rounded-full w-8 h-8 mr-2" alt={currentUser.name} />
-                                        {showDropdown ? <BsChevronUp /> : <BsChevronDown />}
+                                        <BsChevronUp className={!showDropdown && "rotate-180"} />
                                     </div>
 
-                                    {showDropdown && (
-                                        <div className="shadow-[0px_0px_14px_0px_rgba(0,0,0,0.2)] rounded-xl py-4 px-5 absolute right-0 top-12 w-48 z-20 bg-white">
-                                            <span className="font-medium text-xl text-red-600 capitalize">{currentUser.name}</span>
-                                            <hr className="my-2.5" />
-                                            <Link to={`/User/Profile`} className="flex items-center gap-3 text-blue-900 text-sm mb-2">
-                                                <CgProfile className="text-[#C60C0D] text-lg" />
-                                                Profile
-                                            </Link>
-                                            <button className="flex items-center gap-3 text-blue-900 text-sm mb-2" onClick={() => logout({})}>
-                                                <VscSignOut className="text-[#C60C0D] text-lg" />
-                                                Sign Out
-                                            </button>
-                                            <hr className="my-3" />
-                                            <Link to={`/User/Videos`} className="flex items-center gap-3 text-blue-900 text-sm mb-1">
-                                                <AiFillPlayCircle className="text-[#C60C0D] text-lg" />
-                                                My Videos
-                                            </Link>
-                                            <Link to={`/User/Analytics`} className="flex items-center gap-3 text-blue-900 text-sm mb-1">
-                                                <BsGraphUpArrow className="text-[#C60C0D] text-lg" />
-                                                Analytics
-                                            </Link>
-                                            <Link to={`/User/Upload`} className="flex items-center gap-3 text-blue-900 text-sm mb-1">
-                                                <CgProfile className="text-[#C60C0D] text-lg" />
-                                                Promotion
-                                            </Link>
-                                            <Link to={`/User/Settings`} className="flex items-center gap-3 text-blue-900 text-sm mb-1">
-                                                <AiFillSetting className="text-[#C60C0D] text-lg" />
-                                                Settings
-                                            </Link>
-                                            <hr className="my-3" />
-                                            <Link to={`/Admin`} className="flex items-center gap-3 text-blue-900 text-sm mb-1">
-                                                <CgProfile className="text-[#C60C0D] text-lg" />
-                                                Admin Panel
-                                            </Link>
-                                        </div>
-                                    )}
+                                    <div className={`animate__animated animate__fadeIn shadow-[0px_0px_14px_0px_rgba(0,0,0,0.2)] rounded-xl py-4 px-5 absolute right-0 top-12 w-48 z-20 bg-white ${!showDropdown && "hidden"} `}>
+                                        <span className="font-medium text-xl text-red-600 capitalize">{currentUser.name}</span>
+                                        <hr className="my-2.5" />
+                                        <Link to={`/User/Profile`} className="flex items-center gap-3 text-blue-900 text-sm mb-2">
+                                            <CgProfile className="text-[#C60C0D] text-lg" />
+                                            Profile
+                                        </Link>
+                                        <button className="flex items-center gap-3 text-blue-900 text-sm mb-2" onClick={() => logout({})}>
+                                            <VscSignOut className="text-[#C60C0D] text-lg" />
+                                            Sign Out
+                                        </button>
+                                        <hr className="my-3" />
+                                        <Link to={`/User/Videos`} className="flex items-center gap-3 text-blue-900 text-sm mb-1">
+                                            <AiFillPlayCircle className="text-[#C60C0D] text-lg" />
+                                            My Videos
+                                        </Link>
+                                        <Link to={`/User/Analytics`} className="flex items-center gap-3 text-blue-900 text-sm mb-1">
+                                            <BsGraphUpArrow className="text-[#C60C0D] text-lg" />
+                                            Analytics
+                                        </Link>
+                                        <Link to={`/User/Upload`} className="flex items-center gap-3 text-blue-900 text-sm mb-1">
+                                            <CgProfile className="text-[#C60C0D] text-lg" />
+                                            Promotion
+                                        </Link>
+                                        <Link to={`/User/Settings`} className="flex items-center gap-3 text-blue-900 text-sm mb-1">
+                                            <AiFillSetting className="text-[#C60C0D] text-lg" />
+                                            Settings
+                                        </Link>
+                                        <hr className="my-3" />
+                                        <Link to={`/Admin`} className="flex items-center gap-3 text-blue-900 text-sm mb-1">
+                                            <CgProfile className="text-[#C60C0D] text-lg" />
+                                            Admin Panel
+                                        </Link>
+                                    </div>
                                 </div>
                             </div>
                         ) : (
@@ -186,9 +192,9 @@ const Header = ({ searchQuery }) => {
                         )}
                     </header>
                 </div>
-                <div className={`bg-white border-t shadow-[0px_5px_10px_0px_rgba(0,0,0,0.1)] rounded-b-2xl transition-all duration-300 ${showCategories ? "translate-y-0" : "opacity-0 -translate-y-full"}`}>
-                    <div className="container py-4 px-0">
-                        <div className="flex md:gap-x-8 gap-x-4 md:text-lg">{renderCategoryLinks()}</div>
+                <div className={`bg-white border-t shadow-[0px_5px_10px_0px_rgba(0,0,0,0.1)] md:rounded-b-2xl transition-all duration-300 ${showCategories ? "translate-y-0" : "opacity-0 -translate-y-full"}`}>
+                    <div className="container md:py-4 py-3 md:px-0 px-2 overflow-x-scroll no-scrollbar">
+                        <div className="flex md:gap-x-4 gap-x-2 md:text-lg text-sm">{renderCategoryLinks()}</div>
                     </div>
                 </div>
             </div>

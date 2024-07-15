@@ -5,8 +5,9 @@
 * {
     margin: 0;
     padding: 0;
-    transition: all ease-in-out;
-    transition-duration: 0.3s;
+    transition: all;
+    transition-duration: 0.1s;
+    --animate-duration: 500ms;
 }
 
 body {
@@ -33,9 +34,12 @@ code {
         monospace;
 }
 
-/* Hide scrollbar */
-.hide-scrollbar::-webkit-scrollbar {
-    width: 0;
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
 
 .react-tagsinput {
