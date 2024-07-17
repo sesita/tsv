@@ -6,9 +6,15 @@ export default {
             colors: {
                 primary: "#D83131",
             },
-        },
-        container: {
-            center: true
+            container: {
+                center: true,
+                padding: {
+                    DEFAULT: "3%",
+                    sm: "1rem",
+                    xl: "2rem",
+                    "2xl": "4rem",
+                },
+            },
         },
     },
 };
