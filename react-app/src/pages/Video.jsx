@@ -140,12 +140,12 @@ const SingleVideo = () => {
 
     return (
         <>
-            <div className="bg-gray-800 pt-10 pb-20 pattern">
-                <div className="mx-auto sm:w-10/12 px-2 sm:px-0">
-                    <h2 className="text-white sm:text-5xl text-3xl font-semibold">{video?.category?.title ?? <Skeleton baseColor="#475569" borderRadius={30} width={250} height={50} />}</h2>
+            <div className="bg-gray-800 sm:pt-10 sm:pb-20 pattern">
+                <div className="sm:container">
+                    <h2 className="text-white sm:text-5xl text-3xl font-semibold px-2">{video?.category?.title ?? <Skeleton baseColor="#475569" borderRadius={30} width={250} height={50} />}</h2>
                 </div>
             </div>
-            <div className="mx-auto sm:w-10/12 px-2 sm:px-0">
+            <div className="sm:container">
                 <div className="md:rounded-3xl md:py-8 py-4 md:px-8 bg-white -mt-10">
                     <div className="max-h-[800px] md:h-[500px] w-full flex justify-center items-center relative">
                         {loading ? (

@@ -60,19 +60,19 @@ const Search = ({ searchQuery }) => {
                 modules={[Autoplay, EffectFade]}
             >
                 {sliderVideos?.data ? (
-                    sliderVideos?.data?.map((video, key) => (
-                        <SwiperSlide key={key}>
-                            <section className="pt-16 pb-32">
+                    sliderVideos?.data?.map((video) => (
+                        <SwiperSlide key={video.id}>
+                            <section className="md:pt-16 pt-8 md:pb-32 pb-28">
                                 <img src={video?.thumbnail} className="absolute w-full h-full top-0 object-cover" alt="Cover" />
-                                <div className="md:w-10/12 mx-auto text-white relative px-4">
+                                <div className="container text-white relative">
                                     <div className="w-[100%] max-w-[450px]">
                                         <h4 className="md:text-3xl text-lg">
-                                            <span className="drop-shadow">{video?.category?.title}</span>
+                                            <span className="drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">{video?.category?.title}</span>
                                             <AdsRibon />
                                         </h4>
-                                        <h1 className="md:text-5xl text-2xl font-semibold md:font-bold my-3 md:leading-tight text-white opacity-95 drop-shadow line-clamp-2">{video.title}</h1>
+                                        <h1 className="md:text-5xl text-2xl font-semibold md:font-bold my-3 md:leading-tight opacity-95 text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] line-clamp-2">{video.title}</h1>
                                         <Link to={`/${video?.slug}`}>
-                                            <img src={"../assets/img/PlayIcon.png"} alt="Play Icon" className="inline w-full md:max-w-[100px] max-w-[45px]" />
+                                            <img src={"/assets/img/PlayIcon.png"} alt="Play Icon" className="inline w-full md:max-w-[100px] max-w-[45px]" />
                                         </Link>
                                     </div>
                                 </div>
@@ -83,27 +83,29 @@ const Search = ({ searchQuery }) => {
                     <Skeleton className="rounded-2xl h-[26rem] -top-2" />
                 )}
             </Swiper>
-            <div className="relative container shadow-[0px_0px_14px_0px_rgba(0,0,0,0.25)] sm:pt-8 pt-6 sm:rounded-3xl sm:px-10 -mt-24 mb-16 z-10 bg-white pb-10">
-                <FilterOptions searchQuery={searchQuery} getVideos={getVideos} activeTag={activeTag} setActiveTag={setActiveTag} />
-                <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2">
-                    {loading ? (
-                        <>
-                            {Array(4)
-                                .fill()
-                                .map((_, key) => (
-                                    <div className="flex flex-col gap-2" key={key}>
-                                        <Skeleton height={200} borderRadius={15} className="rounded-2xl" />
-                                        <Skeleton height={40} borderRadius={15} className="rounded-2xl" />
-                                    </div>
-                                ))}
-                        </>
-                    ) : videos.data?.length > 0 ? (
-                        videos?.data?.map((video, key) => <VideoBox info={video} key={key} />)
-                    ) : (
-                        <>
-                            <h1 className="text-center mt-4 mb-4 items-center font-medium text-4xl col-span-8">Videos not found</h1>
-                        </>
-                    )}
+            <div className="sm:container">
+                <div className="relative shadow-[0px_0px_14px_0px_rgba(0,0,0,0.25)] sm:pt-8 pt-6 sm:rounded-3xl sm:px-10 -mt-24 mb-16 z-10 bg-white pb-10">
+                    <FilterOptions searchQuery={searchQuery} getVideos={getVideos} activeTag={activeTag} setActiveTag={setActiveTag} />
+                    <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2">
+                        {loading ? (
+                            <>
+                                {Array(4)
+                                    .fill()
+                                    .map((_, key) => (
+                                        <div className="flex flex-col gap-2" key={key}>
+                                            <Skeleton height={200} borderRadius={15} className="rounded-2xl" />
+                                            <Skeleton height={40} borderRadius={15} className="rounded-2xl" />
+                                        </div>
+                                    ))}
+                            </>
+                        ) : videos.data?.length > 0 ? (
+                            videos?.data?.map((video, key) => <VideoBox info={video} key={key} />)
+                        ) : (
+                            <>
+                                <h1 className="text-center mt-4 mb-4 items-center font-medium text-4xl col-span-8">Videos not found</h1>
+                            </>
+                        )}
+                    </div>
                 </div>
             </div>
         </>

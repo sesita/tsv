@@ -29,7 +29,7 @@ const UploadPage = () => {
     const [selectedFile, setSelectedFile] = useState({});
     const [thumbnail, setThumbnail] = useState({});
     const [countryCityData, setCountryCityData] = useState([]);
-    
+
     useEffect(() => {
         axios.get("Main/getCategories").then((res) => {
             setCategories(res.data.map((val) => ({ label: val.title, value: val.id })));
@@ -311,7 +311,7 @@ const UploadPage = () => {
             ) : !videoPackage ? (
                 <div className="flex flex-col items-center gap-4 mb-6 mt-2">
                     <h1 className="text-4xl text-black font-medium">Video Package</h1>
-                    <p class="font-light text-gray-500 sm:text-xl dark:text-gray-400 mb-6">Choose a video package based on your requirements</p>
+                    <p className="font-light text-gray-500 sm:text-xl dark:text-gray-400 mb-6">Choose a video package based on your requirements</p>
                     <div className="space-y-8 lg:grid lg:grid-cols-3 sm:gap-6 xl:gap-10 lg:space-y-0 items-center">
                         <div className="flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900 bg-white rounded-lg border border-gray-100 shadow h-fit">
                             <h3 className="mb-4 text-2xl font-semibold">Starter</h3>

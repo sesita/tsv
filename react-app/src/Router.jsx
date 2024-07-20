@@ -7,11 +7,11 @@ import NormalLayout from "./components/Layouts/NormalLayout";
 
 // Main Pages
 import Home from "./pages/Home";
+import Video from "./pages/Video";
 import Search from "./pages/Search";
 import Signin from "./pages/Auth/Signin";
 import Signup from "./pages/Auth/Signup";
 import UploadPage from "./pages/UploadPage";
-import SingleVideo from "./pages/SingleVideo";
 
 // Dashboard Pages
 import VideoPage from "./pages/Dashboard/VideoPage";
@@ -38,7 +38,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/:slug",
-                element: <SingleVideo />,
+                element: <Video />,
             },
             {
                 path: "/User",
