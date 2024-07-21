@@ -1,5 +1,5 @@
 import Banner from "../Common/Banner";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { Outlet, useOutletContext } from "react-router-dom";
@@ -39,7 +39,7 @@ const UserLayout = () => {
                     </div>
                 )}
             </Banner>
-            <section className="mx-auto sm:w-10/12 sm:px-0 px-2 -mt-28 mb-14">
+            <section className="sm:container -mt-28 mb-14">
                 <div className="shadow-lg rounded-2xl py-10 px-12 bg-white">
                     <Outlet context={setPageTitle} />
                 </div>

@@ -12,7 +12,7 @@ const Banner = ({ pageTitle, children }) => {
     return (
         <>
             <div className="pt-12 pb-28 pattern bg-red-950">
-                <div className="mx-auto sm:w-10/12 sm:px-0 px-2 flex justify-between items-center">
+                <div className="sm:container flex justify-between items-center">
                     {pageTitle && <h2 className="text-white md:text-6xl text-3xl font-medium mb-14 mt-6">{pageTitle}</h2>}
                     {children}
                     {isAdminRoute && (
