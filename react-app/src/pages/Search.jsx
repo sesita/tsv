@@ -80,7 +80,7 @@ const Search = ({ searchQuery }) => {
                         </SwiperSlide>
                     ))
                 ) : (
-                    <Skeleton className="rounded-2xl h-[26rem] -top-2" />
+                    <Skeleton className="rounded-2xl sm:h-[30rem] h-[19rem] -top-2" />
                 )}
             </Swiper>
             <div className="sm:container">
