@@ -83,7 +83,7 @@ class DashboardController extends Controller
         } while (Video::where('slug', $videoSlug)->exists());
 
         if($request->location){
-            $location = Location::where('title', $request->location)->first();
+            $location = Location::find($request->location);
         }
 
         $video = Video::create([
@@ -93,7 +93,7 @@ class DashboardController extends Controller
             'title' => $request->title,
             'thumbnail' => $thumbnail ?? null,
             'category_id' => $request->category,
-            'location_id' => $location->id ?? null,
+            'location_id' => $location->id ?? 1,
             'description' => $request->description,
         ]);
 
@@ -137,5 +137,23 @@ class DashboardController extends Controller
         $video->syncTags($request->tags);
 
         return response(['status' =>'success', 'message'=> 'Video Updated Successfully']);
+    }
+
+    public function Checkout(Request $request){
+        //one time payment
+        $price_ids = ['price_1OtHN8B9uNXBCzh8jLbp55iv' => 1];
+
+        if($request->promoted){
+            //Subscription $99/monthly
+            // $price_ids['price_1OtHpWB9uNXBCzh8HQqQhzCq'] = 1;
+        }
+
+ 
+        $checkoutSession = $request->user()->checkout($price_ids, [
+            'success_url' => 'https://mytsv.com/success',
+            'cancel_url' => 'https://mytsv.com/',
+        ]);
+    
+        return response()->json(['url' => $checkoutSession->url]);
     }
 }

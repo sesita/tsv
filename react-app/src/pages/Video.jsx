@@ -1,5 +1,6 @@
 import axios from "axios";
 import { toast } from "react-toastify";
+import ReactPlayer from "react-player";
 import { IoMdPlay } from "react-icons/io";
 import { BsEyeFill } from "react-icons/bs";
 import Skeleton from "react-loading-skeleton";
@@ -153,12 +154,8 @@ const SingleVideo = () => {
                                 <img src={video.thumbnail} alt="" className="w-full h-full object-cover md:rounded-2xl" />
                                 <button className="absolute bg-red-600 text-white text-[65px] p-5 rounded-full">{loading ? <AiOutlineLoading className="animate-spin" /> : <IoMdPlay className="pl-2" />}</button>
                             </>
-                        ) : video.iframe ? (
-                            <div dangerouslySetInnerHTML={{ __html: video.iframe }} className="w-full h-full"></div>
                         ) : (
-                            <video className="w-full h-full object-cover md:rounded-2xl" controls autoPlay muted>
-                                <source src={video.video} type="video/mp4" />
-                            </video>
+                            <ReactPlayer className="object-cover md:rounded-2xl" url={video.video} width='100%' height='100%' controls />
                         )}
                     </div>
                     <div className="flex flex-col lg:flex-row gap-6 mt-5">

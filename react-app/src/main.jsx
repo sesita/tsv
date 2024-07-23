@@ -10,7 +10,7 @@ import { AuthContextProvider } from "./context/AuthContext";
 
 let url = window.location.origin + "/api";
 if (import.meta.env.DEV) {
-    url = "https://mytsv.com/api/";
+    url = "https://tsv.test/api/";
 }
 
 axios.defaults.baseURL = url;

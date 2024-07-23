@@ -97,7 +97,6 @@ const VideoPage = () => {
     const [cityOptions, setCityOptions] = useState([]);
 
     const handleCountryChange = (selectedOption) => {
-        console.log(countryCityData)
         setSelectedCountry(selectedOption);
         axios.get(`Main/getLocations/${selectedOption.value}`).then((res) => {
             setCityOptions(

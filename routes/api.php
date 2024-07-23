@@ -52,6 +52,7 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'Dashboard'], function ($r
     Route::post('Settings', [DashboardController::class, 'Settings']);
     Route::post('Upload', [DashboardController::class, 'UploadVideo']);
     Route::post('Update', [DashboardController::class, 'UpdateVideo']);
+    Route::get('Checkout', [DashboardController::class, 'Checkout']);
     Route::get('MyVideos', [DashboardController::class, 'MyVideos']);
     Route::get('MyVideo/{id}', [DashboardController::class, 'MyVideo']);
 

@@ -1,5 +1,6 @@
 import axios from "axios";
 import Select from "react-select";
+import ReactPlayer from "react-player";
 import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import { BsMegaphone } from "react-icons/bs";
@@ -36,7 +37,12 @@ const UploadPage = () => {
             setTagOptions(res.data.map((val) => ({ label: val.title, value: val.title })));
         });
         axios.get("Main/getLocations").then((res) => {
-            setCountryCityData(res.data);
+            setCountryCityData(
+                Object.keys(res.data).map((key) => ({
+                    value: key,
+                    label: res.data[key],
+                }))
+            );
         });
     }, []);
 
@@ -61,46 +67,49 @@ const UploadPage = () => {
     const uploadVideo = async (e) => {
         e.preventDefault();
 
-        try {
-            const formData = new FormData();
-            Object.keys(videoInfo).forEach((key) => formData.append(key, videoInfo[key]));
-            tags.forEach((tag) => formData.append("tags[]", tag));
-            if (uploadType === "file") {
-                formData.append("video", selectedFile);
-            } else {
-                formData.append("iframe", videoInfo.iframe);
+        if (isPayable) {
+            try {
+                const res = await axios.get("Dashboard/Checkout", {
+                    params: {
+                        promoted: isPromoted,
+                    },
+                });
+                window.location.href = res.data.url;
+            } catch (error) {
+                toast.error(error);
             }
-            if (thumbnail) {
-                formData.append("thumbnail", thumbnail);
-            }
-            formData.append("isPromoted", isPromoted);
+        }
 
-            await axios.post("Dashboard/Upload", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            });
+        try {
+            await axios.post(
+                "Dashboard/Upload",
+                { ...videoInfo, tags: tags, video: selectedFile?.target?.files[0], thumbnail: thumbnail.target?.files[0] },
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
             toast.success("Video Uploaded");
             navigate("/User/Videos");
         } catch (e) {
             toast.error(e.response?.data?.message);
         }
     };
-    const countryOptions = Object.keys(countryCityData).map((country) => ({
-        value: country,
-        label: country,
-    }));
 
     const [selectedCountry, setSelectedCountry] = useState(null);
     const [cityOptions, setCityOptions] = useState([]);
 
     const handleCountryChange = (selectedOption) => {
         setSelectedCountry(selectedOption);
-        const cities = countryCityData[selectedOption.value].map((city) => ({
-            value: city,
-            label: city,
-        }));
-        setCityOptions(cities);
+        axios.get(`Main/getLocations/${selectedOption.value}`).then((res) => {
+            setCityOptions(
+                Object.keys(res.data).map((key) => ({
+                    value: key,
+                    label: res.data[key],
+                }))
+            );
+        });
         setVideoInfo({ ...videoInfo, location: selectedOption.value });
     };
 
@@ -125,7 +134,7 @@ const UploadPage = () => {
     };
 
     const isPayable = isPromoted || uploadType == "file";
-    const price = (isPromoted ? 50 : 0) + (uploadType == "file" ? 99 : 0);
+    const price = (isPromoted ? 99 : 0) + (uploadType == "file" ? 99 : 0);
 
     return (
         <form onSubmit={uploadVideo}>
@@ -141,16 +150,27 @@ const UploadPage = () => {
                             File Upload ($99)
                         </button>
                     </div>
-                    <div className="relative w-full group flex items-center justify-center bg-red-950 pattern rounded-2xl cursor-pointer mb-4" onDragOver={handleDragOver} onDrop={handleDrop}>
+                    <div className="relative w-full group rounded-2xl cursor-pointer mb-4" onDragOver={handleDragOver} onDrop={handleDrop}>
                         {uploadType === "file" ? (
                             selectedFile ? (
-                                <video className="w-full h-full rounded-xl" controls>
-                                    <source src={URL.createObjectURL(selectedFile)} type="video/mp4" />
-                                </video>
+                                <ReactPlayer className="w-full h-full rounded-xl" url={URL.createObjectURL(selectedFile)} />
                             ) : (
-                                <label htmlFor="file-input" className="cursor-pointer rounded-full w-fit py-12 my-10 px-12 md:text-2xl bg-red-950 border-2 shadow border-red-950 pattern text-white font-bold flex gap-3 items-center">
-                                    <MdOutlineFileUpload className="text-[70px]" />
-                                </label>
+                                <>
+                                    <span className="text-gray-400 text-xs flex gap-3">
+                                        <FaInfoCircle className="mt-1 text-3xl" />
+                                        <span className="line-clamp-2 hover:line-clamp-none">Upon receiving your video, Our Expert editors cut and arrange the content. Color correction, enhance the visual and audio quality. Finally, the video is uploaded to our web, readily accessible for viewing and sharing.</span>
+                                    </span>
+                                    <label htmlFor="file-input" className="cursor-pointer flex flex-col py-10 mt-3 items-center justify-center w-full bg-white border rounded-lg">
+                                        <svg className="w-16 h-16 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                        </svg>
+                                        <p className="mb-4 text-lg font-semibold text-gray-700">Choose a video file to upload</p>
+                                        <label htmlFor="file-input" className="px-4 py-2 text-sm font-medium text-white bg-primary rounded-md cursor-pointer hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                            Select File
+                                            <input type="file" className="hidden" accept="video/*" onChange={handleDrop} />
+                                        </label>
+                                    </label>
+                                </>
                             )
                         ) : (
                             <input type="text" className="w-full rounded-xl p-4 border-2 border-gray-300 focus:border-blue-500 focus:outline-none" placeholder="Enter YouTube video link or iframe..." name="iframe" value={videoInfo?.iframe || ""} onChange={changeInput} />
@@ -162,16 +182,16 @@ const UploadPage = () => {
                         <input type="checkbox" id="promote" checked={isPromoted} onChange={() => setIsPromoted(!isPromoted)} className="hidden" />
                         <label htmlFor="promote" className={`flex items-center px-4 py-2 rounded-full cursor-pointer transition-all ${isPromoted ? "bg-primary text-white" : "bg-gray-200 text-gray-700"}`}>
                             <BsMegaphone className={`mr-2 ${isPromoted ? "animate-pulse" : ""}`} />
-                            Promote for 1 Month
+                            Promote for $99/month
                         </label>
                     </div>
 
                     <div className="flex flex-col gap-2 mb-5">
                         <label className="text-sm font-medium text-gray-500 ml-1">Location</label>
                         <Select
-                            options={countryOptions}
+                            options={countryCityData}
                             onChange={handleCountryChange}
-                            placeholder="Country"
+                            placeholder="State"
                             classNamePrefix="react-select"
                             styles={{
                                 control: (provided) => ({
@@ -286,7 +306,7 @@ const UploadPage = () => {
                             <ReactTooltip id="thumbnail" content="thumbnail that will appear on that video" />
                         </label>
                         <label htmlFor="thumbnail" className="justify-between rounded-2xl border py-3 px-4 outline-none flex items-center text-gray-500">
-                            {videoInfo.thumbnail ? (
+                            {thumbnail ? (
                                 <>
                                     <img src={thumbnail?.target?.files[0] ? URL.createObjectURL(thumbnail?.target?.files[0]) : videoInfo.thumbnail} alt="Thumbnail" className="w-full h-full object-cover rounded-xl hover:opacity-50 cursor-pointer transition-all max-h-80" />
                                 </>

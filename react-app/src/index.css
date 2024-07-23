@@ -38,9 +38,69 @@ code {
 .no-scrollbar::-webkit-scrollbar {
     display: none;
 }
+
 .no-scrollbar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+.player-wrapper {
+    position: relative;
+    padding-top: 56.25%;
+    z-index: 20;
+    /* 16:9 Aspect Ratio */
+    background: #000;
+}
+
+.react-player {
+    z-index: 40;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.controls {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.control-btn {
+    background: #fff;
+    border: none;
+    padding: 10px;
+    margin: 0 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.volume-slider,
+.seek-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 5px;
+    background: #ddd;
+    border-radius: 5px;
+    outline: none;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb,
+.seek-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #fff;
+    border-radius: 50%;
+    cursor: pointer;
 }
 
 .react-tagsinput {

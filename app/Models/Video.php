@@ -12,7 +12,7 @@ class Video extends Model
 
     protected $fillable = ['slug', 'title', 'description', 'video', 'user_id', 'thumbnail', 'category_id', 'location_id'];
 
-    public $appends = ['iframe', 'tags', 'likes', 'dislikes', 'comments_count', 'shares', 'views'];
+    public $appends = ['tags', 'likes', 'dislikes', 'comments_count', 'shares', 'views'];
 
     public function comments()
     {
@@ -55,28 +55,6 @@ class Video extends Model
     public function interactions()
     {
         return $this->hasMany(Interaction::class);
-    }
-
-    public function getIframeAttribute()
-    {
-        $value = $this->video;
-        if ($value) {
-            $value = str_replace(asset('storage/') . '/', '', $value);
-            if (str_contains($value, 'watch?v=')) {
-                $parsedUrl = parse_url($value);
-                $queryString = $parsedUrl['query'];
-                parse_str($queryString, $queryParams);
-                if (isset($queryParams['v'])) {
-                    return "<iframe src='https://www.youtube.com/embed/{$queryParams['v']}'>";
-                }
-            }
-            $value = preg_replace_callback('/<iframe[^>]+src="([^"]+)"[^>]*>/', function ($matches) {
-                $src = $matches[1];
-                return '<iframe src="' . $src . '">';
-            }, $value);
-
-            return false;
-        }
     }
 
     public function getTagsAttribute($value)
