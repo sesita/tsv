@@ -11,11 +11,11 @@ import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { BsChevronUp, BsGraphUpArrow } from "react-icons/bs";
 import { AiFillPlayCircle, AiFillSetting } from "react-icons/ai";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDetectClickOutside } from "react-detect-click-outside";
 
 const Header = ({ searchQuery }) => {
-    const location = useLocation();
+    const { query } = useParams();
     const navigate = useNavigate();
 
     const [searchText, setSearchText] = useState("");
@@ -60,12 +60,12 @@ const Header = ({ searchQuery }) => {
 
         return (
             <>
-                <div className={`bg-gray-100 py-1 px-4 rounded-md ${!location.search && "bg-gray-600 text-white"}`}>
+                <div className={`bg-gray-100 py-1 px-4 rounded-md ${!query && "bg-gray-600 text-white"}`}>
                     <Link to={`/`}>All</Link>
                 </div>
                 {categories.map((category) => (
-                    <div key={category.id} className={`bg-gray-100 py-1 px-4 rounded-md ${location.search === `?q=${category.title}` ? "bg-gray-600 text-white" : ""}`}>
-                        <Link to={`/search?q=${category.title}`}>{category.title}</Link>
+                    <div key={category.id} className={`bg-gray-100 py-1 px-4 rounded-md ${query === `${category.title}` ? "bg-gray-600 text-white" : ""}`}>
+                        <Link to={`/search/${category.title}`}>{category.title}</Link>
                     </div>
                 ))}
             </>

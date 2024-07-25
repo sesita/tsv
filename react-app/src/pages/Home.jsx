@@ -66,7 +66,8 @@ const Home = () => {
     };
 
     const fetchNextData = async () => {
-        await fetchRecommended(2);
+        const nextPage = Math.ceil(videosRecommended.data.length / 4) + 1;
+        await fetchRecommended(nextPage);
         return videosRecommended;
     };
 
@@ -171,9 +172,9 @@ const Home = () => {
                     {videosRecommended?.data?.length > 0 ? (
                         <>
                             <InfiniteScroll
-                                dataLength={videosRecommended?.total}
+                                dataLength={videosRecommended.data.length}
                                 next={fetchNextData}
-                                hasMore={videosRecommended?.total !== videosRecommended?.data?.length}
+                                hasMore={videosRecommended.total > videosRecommended.data.length}
                                 loader={Array(4)
                                     .fill()
                                     .map((_, key) => (

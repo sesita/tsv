@@ -27,7 +27,7 @@ const VideoBox = ({ info, hidePlayBtn, analytics }) => {
                 <div className="flex items-center gap-3 mx-2 sm:mx-0">
                     <img src={info.user?.avatar} className="rounded-full w-10 h-10 object-cover" alt="Avatar" />
                     <div className="flex flex-col gap-0.5">
-                        <h2 className="text-md text-[#232323] font-semibold">{analytics ? <Link to={`/User/Video/${info.id}`}>{info.title}</Link> : <Link to={`/${info.slug}`}>{info.title}</Link>}</h2>
+                        <h2 className="text-md text-[#232323] font-semibold line-clamp-2">{analytics ? <Link to={`/User/Video/${info.id}`}>{info.title}</Link> : <Link to={`/${info.slug}`}>{info.title}</Link>}</h2>
                         <span className="text-xs">{info.user?.name}</span>
                         <span className="text-xs flex items-center gap-1">
                             <NumberFormatter value={info?.views} /> views

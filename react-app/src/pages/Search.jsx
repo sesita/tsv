@@ -2,7 +2,7 @@ import "swiper/css";
 import axios from "axios";
 import "swiper/css/navigation";
 import "swiper/css/effect-fade";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
@@ -18,6 +18,8 @@ const Search = ({ searchQuery }) => {
     const [activeTag, setActiveTag] = useState(null);
     const [sliderVideos, setSliderVideos] = useState([]);
 
+    const { query } = useParams();
+
     const fetchSliderVideos = async () => {
         try {
             const response = await axios.get("Main/getVideos", {
@@ -32,11 +34,11 @@ const Search = ({ searchQuery }) => {
         }
     };
 
-    const getVideos = async () => {
+    const getVideos = async (search) => {
         setLoading(true);
         const res = await axios.get("Main/getVideos", {
             params: {
-                search: searchQuery,
+                search: search,
                 tag: activeTag,
             },
         });
@@ -45,9 +47,10 @@ const Search = ({ searchQuery }) => {
     };
 
     useEffect(() => {
-        getVideos();
+        getVideos(query);
         fetchSliderVideos();
-    }, [searchQuery, activeTag]);
+        console.log(query);
+    }, [searchQuery, activeTag, query]);
 
     return (
         <>

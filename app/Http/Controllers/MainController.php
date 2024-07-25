@@ -19,10 +19,10 @@ class MainController extends Controller
         $search = $request->search ?? null;
         $tag = $request->tag ?? [];
 
-        $query = Video::query();
+        $query = Video::withCount('views');
 
         if ($orderBy == 'popular') {
-            // $query->orderBy('views', 'desc');
+            $query->orderBy('views_count', 'desc');
         } else {
             $query->orderBy('id', 'desc');
         }

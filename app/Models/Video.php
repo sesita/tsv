@@ -14,6 +14,16 @@ class Video extends Model
 
     public $appends = ['tags', 'likes', 'dislikes', 'comments_count', 'shares', 'views'];
 
+    public function views()
+    {
+        return $this->hasMany(View::class);
+    }
+
+    public function getViewsAttribute()
+    {
+        return $this->views()->count();
+    }
+
     public function comments()
     {
         return $this->hasMany(Comment::class)->orderBy('created_at', 'desc');
@@ -96,10 +106,5 @@ class Video extends Model
             return $value;
         }
         return asset('storage/' . $value);
-    }
-
-    public function getViewsAttribute($value)
-    {
-        return View::where('video_id', $this->id)->count();
     }
 }
