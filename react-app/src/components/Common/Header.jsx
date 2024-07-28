@@ -156,11 +156,15 @@ const Header = ({ searchQuery }) => {
                                             <AiFillSetting className="text-[#C60C0D] text-lg" />
                                             Settings
                                         </Link>
-                                        <hr className="my-3" />
-                                        <Link to={`/Admin`} className="flex items-center gap-3 text-blue-900 text-sm mb-1">
-                                            <CgProfile className="text-[#C60C0D] text-lg" />
-                                            Admin Panel
-                                        </Link>
+                                        {currentUser?.admin && (
+                                            <>
+                                                <hr className="my-3" />
+                                                <Link to={`/Admin`} className="flex items-center gap-3 text-blue-900 text-sm mb-1">
+                                                    <CgProfile className="text-[#C60C0D] text-lg" />
+                                                    Admin Panel
+                                                </Link>
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -198,7 +202,7 @@ const Header = ({ searchQuery }) => {
                         )}
                     </header>
                 </div>
-                <div className={`bg-white border-t shadow-[0px_5px_10px_0px_rgba(0,0,0,0.1)] md:rounded-b-2xl transition-all duration-300 ${showCategories ? "translate-y-0" : "opacity-0 -translate-y-full"}`}>
+                <div className={`bg-white border-t shadow-[0px_5px_10px_0px_rgba(0,0,0,0.1)] z-10 md:rounded-b-2xl transition-all duration-300 ${showCategories ? "translate-y-0" : "opacity-0 -translate-y-full"}`}>
                     <div className="container md:py-4 py-3 overflow-x-scroll no-scrollbar">
                         <div className="flex md:gap-x-4 gap-x-2 md:text-lg text-sm">{renderCategoryLinks()}</div>
                     </div>

@@ -34,6 +34,7 @@ export const AuthContextProvider = ({ children }) => {
     };
 
     const setUser = async (token) => {
+        setCurrentUser(false);
         try {
             const { data } = await axios.post("Auth/Me", {}, {
                     headers: {

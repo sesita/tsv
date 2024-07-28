@@ -40,7 +40,6 @@ const Signin = () => {
         } else {
             const res = await login({ email, password });
             if (res.data.status !== "error") {
-                toast.success("Login successfully");
                 navigate("/");
             } else {
                 toast.error(res?.data?.message);
