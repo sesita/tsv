@@ -63,8 +63,9 @@ const Signin = () => {
                             <div className="flex flex-col gap-6">
                                 <h2 className="text-center text-5xl font-bold text-[#C60C0D]">Account Login</h2>
                                 <div className="flex gap-3 justify-center">
-                                    <a href="https://mytsv.com/api/Auth/Social/Google/Redirect" className="border-[1px] border-red-700 rounded-full md:w-11 w-8 md:h-11 h-8 flex items-center justify-center">
-                                        <BsGoogle className="text-[#C60C0D] md:text-2xl text-md" />
+                                    <a href="https://mytsv.com/api/Auth/Social/Google/Redirect" className="border-[1px] border-red-700 rounded-full md:w-auto w-full md:h-auto h-full flex items-center justify-center px-4 py-2">
+                                        <BsGoogle className="text-[#C60C0D] md:text-2xl text-md mr-2" />
+                                        <span className="text-[#C60C0D] md:text-lg text-sm font-medium">Sign in with Google</span>
                                     </a>
                                 </div>
                                 <p className="text-center capitalize">or use your email for login:</p>

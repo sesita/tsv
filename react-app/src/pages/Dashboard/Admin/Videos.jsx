@@ -1,7 +1,6 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-import { FaEdit } from "react-icons/fa";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import VideoBox from "../../../components/Common/VideoBox";
 
 const VideosPage = () => {
@@ -28,7 +27,7 @@ const VideosPage = () => {
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {videos?.map((video, key) => (
-                    <VideoBox info={video} hidePlayBtn={true} analytics={true} />
+                    <VideoBox key={key} info={video} hidePlayBtn={true} analytics={true} />
                 ))}
             </div>
         </>

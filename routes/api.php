@@ -59,6 +59,6 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'Dashboard'], function ($r
     
     Route::any('Admin/{method}', function ($method, Request $request) {
         $controller = new AdminController();
-        return $controller->callAction($method, [$request->all()]);
+        return $controller->callAction($method, [$request]);
     })->middleware('admin');
 });

@@ -25,13 +25,13 @@ const Banner = ({ pageTitle, children }) => {
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link to={"/"} className="flex items-center gap-3">
+                                    <Link to={"/Admin/Users"} className="flex items-center gap-3">
                                         Users
                                         <FaUserCog className="mt-1" />
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link to={"/"} className="flex items-center gap-3">
+                                    <Link to={"/Admin/Categories"} className="flex items-center gap-3">
                                         Categories
                                         <BiSolidCategory className="mt-1" />
                                     </Link>

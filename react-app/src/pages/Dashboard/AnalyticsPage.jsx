@@ -1,6 +1,6 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Graph from "../../components/Analytics/Graph";
 import VideoBox from "../../components/Common/VideoBox";
 import Devices from "../../components/Analytics/Devices";
