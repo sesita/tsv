@@ -1,4 +1,7 @@
+import "swiper/css";
 import axios from "axios";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 import { CiSearch } from "react-icons/ci";
 import { CgProfile } from "react-icons/cg";
 import { FaBars } from "react-icons/fa6";
@@ -6,6 +9,7 @@ import { LuLogIn } from "react-icons/lu";
 import { VscSignOut } from "react-icons/vsc";
 import Skeleton from "react-loading-skeleton";
 import { BiSolidVideoPlus } from "react-icons/bi";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { IoMdNotifications } from "react-icons/io";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
@@ -63,11 +67,16 @@ const Header = ({ searchQuery }) => {
                 <div className={`bg-gray-100 py-1 px-4 rounded-md ${!query && "bg-gray-600 text-white"}`}>
                     <Link to={`/`}>All</Link>
                 </div>
-                {categories.map((category) => (
-                    <div key={category.id} className={`bg-gray-100 py-1 px-4 rounded-md ${query === `${category.title}` ? "bg-gray-600 text-white" : ""}`}>
-                        <Link to={`/search/${category.title}`}>{category.title}</Link>
-                    </div>
-                ))}
+
+                <Swiper spaceBetween={10} slidesPerView="auto" freeMode={true}>
+                    {categories.map((category) => (
+                        <SwiperSlide key={category.id} style={{ width: "auto" }}>
+                            <div className={`bg-gray-100 py-1 px-4 rounded-md ${query === `${category.title}` ? "bg-gray-600 text-white" : ""}`}>
+                                <Link to={`/search/${category.title}`}>{category.title}</Link>
+                            </div>
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
             </>
         );
     };
@@ -202,9 +211,9 @@ const Header = ({ searchQuery }) => {
                         )}
                     </header>
                 </div>
-                <div className={`bg-white border-t shadow-[0px_5px_10px_0px_rgba(0,0,0,0.1)] z-10 md:rounded-b-2xl transition-all duration-300 ${showCategories ? "translate-y-0" : "opacity-0 -translate-y-full"}`}>
-                    <div className="container md:py-4 py-3 overflow-x-scroll no-scrollbar">
-                        <div className="flex md:gap-x-4 gap-x-2 md:text-lg text-sm">{renderCategoryLinks()}</div>
+                <div className={`bg-white border-t shadow-[0px_5px_10px_0px_rgba(0,0,0,0.1)] z-30 md:rounded-b-2xl transition-all duration-300 ${showCategories ? "translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-full pointer-events-none"}`}>
+                    <div className="sm:container md:py-4 py-3 overflow-hidden">
+                        <div className="flex md:gap-x-4 pl-2 sm:pl-0 gap-x-2 md:text-lg text-sm whitespace-nowrap">{renderCategoryLinks()}</div>
                     </div>
                 </div>
             </div>
