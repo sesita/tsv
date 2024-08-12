@@ -1,16 +1,14 @@
+import axios from "axios";
 import { useEffect } from "react";
-import { BsArrowLeft, BsGoogle } from "react-icons/bs";
-import { Link, useNavigate } from "react-router-dom";
+import { FaGoogle } from "react-icons/fa";
+import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthContext";
-import { useParams, useLocation } from "react-router-dom";
-import axios from "axios";
 
 const Signin = () => {
     const navigate = useNavigate();
     const params = useParams();
-    const router = useLocation();
-
+    const location = useLocation();
     const { login, currentUser, setUser } = useAuth();
 
     useEffect(() => {
@@ -18,7 +16,7 @@ const Signin = () => {
             navigate("/");
         }
         if (params?.social) {
-            axios.post(`/Auth/Social/${params.social}/Callback${router?.search}`).then((response) => {
+            axios.post(`/Auth/Social/${params.social}/Callback${location?.search}`).then((response) => {
                 if (response.data?.access_token) {
                     localStorage.setItem("accessToken", response.data.access_token);
                     setUser(response.data.access_token);
@@ -28,92 +26,97 @@ const Signin = () => {
                 }
             });
         }
-    }, []);
+    }, [currentUser, navigate, params, location, setUser]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
         const email = e.target.email.value;
         const password = e.target.password.value;
 
-        if (!email || !password || email === "" || password === "") {
-            toast.error("All field are required!");
+        if (!email || !password) {
+            toast.error("All fields are required!");
         } else {
-            const res = await login({ email, password });
-            if (res.data.status !== "error") {
-                navigate("/");
-            } else {
-                toast.error(res?.data?.message);
+            try {
+                const res = await login({ email, password });
+                if (res.data.status !== "error") {
+                    navigate("/");
+                } else {
+                    toast.error(res?.data?.message);
+                }
+            } catch (error) {
+                toast.error("An error occurred during login.");
             }
         }
     };
 
     return (
-        <>
-            <section className="w-full bg-[#E3EAFF]">
-                <div className="container mx-auto px-12 pt-5 pb-20 flex flex-col min-h-screen gap-5">
-                    <div className="flex justify-between items-center gap-5 mb-3">
-                        <BsArrowLeft className="text-5xl text-[#C60C0D] cursor-pointer" onClick={() => navigate(-1)} />
-                        <Link to="/">
-                            <img src="/assets/logo.png" alt="" className="w-54 h-24 object-contain" />
-                        </Link>
-                        <span></span>
+        <div className="flex min-h-screen bg-gray-100">
+            <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-8 bg-white">
+                <Link to="/" className="mb-8">
+                    <img src="/assets/logo.png" alt="Logo" className="w-40 h-auto" />
+                </Link>
+
+                <h2 className="text-4xl font-bold text-primary mb-6">Welcome Back</h2>
+
+                <div className="flex gap-4 mb-6">
+                    <a href="https://mytsv.com/api/Auth/Social/Google/Redirect" className="p-3 bg-primary text-white rounded-full hover:bg-opacity-90 transition-all">
+                        <FaGoogle />
+                    </a>
+                </div>
+
+                <p className="text-gray-600 mb-6">or use your email to sign in</p>
+
+                <form onSubmit={handleLogin} className="w-full max-w-md">
+                    <div className="mb-6 relative">
+                        <input type="email" name="email" required className="w-full px-3 py-2 border-b-2 border-gray-300 focus:border-primary outline-none transition-all peer placeholder-transparent" placeholder="Email" />
+                        <label className="absolute left-3 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Email</label>
                     </div>
-                    <div className="bg-white rounded-xl flex flex-col-reverse md:flex-row justify-between">
-                        <div className="mx-auto my-auto md:px-7 px-2 md:py-20 py-6">
-                            <div className="flex flex-col gap-6">
-                                <h2 className="text-center text-5xl font-bold text-[#C60C0D]">Account Login</h2>
-                                <div className="flex gap-3 justify-center">
-                                    <a href="https://mytsv.com/api/Auth/Social/Google/Redirect" className="border-[1px] border-red-700 rounded-full md:w-auto w-full md:h-auto h-full flex items-center justify-center px-4 py-2">
-                                        <BsGoogle className="text-[#C60C0D] md:text-2xl text-md mr-2" />
-                                        <span className="text-[#C60C0D] md:text-lg text-sm font-medium">Sign in with Google</span>
-                                    </a>
-                                </div>
-                                <p className="text-center capitalize">or use your email for login:</p>
-                                <form method="post" className="flex flex-col gap-3 md:w-[400px] w-full" onSubmit={(e) => handleLogin(e)}>
-                                    <input type="email" className="rounded-full border-[1px] border-[#0A2A8D52] bg-[#E3EAFF52] outline-none py-3 md:px-4 px-2 md:text-md text-xs w-full" placeholder="Email" name="email" />
-                                    <input type="password" className="rounded-full border-[1px] border-[#0A2A8D52] bg-[#E3EAFF52] outline-none py-3 md:px-4 px-2 md:text-md text-xs w-full" placeholder="Password" name="password" />
-                                    <button className="w-full md:py-3 py-2 md:px-4 px-2 md:text-md text-sm rounded-full bg-[#C60C0D] text-white font-semibold" type="submit">
-                                        Sign In
-                                    </button>
-                                    <span className="md:text-md text-xs">
-                                        Need an account?{" "}
-                                        <Link to="/Auth/Register" className="text-[#C60C0D] font-semibold">
-                                            Register here.
-                                        </Link>
-                                    </span>
-                                </form>
-                            </div>
+
+                    <div className="mb-6 relative">
+                        <input type="password" name="password" required className="w-full px-3 py-2 border-b-2 border-gray-300 focus:border-primary outline-none transition-all peer placeholder-transparent" placeholder="Password" />
+                        <label className="absolute left-3 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Password</label>
+                    </div>
+
+                    <button type="submit" className="w-full py-3 bg-primary text-white rounded-full hover:bg-opacity-90 transition-all text-lg font-semibold">
+                        Sign In
+                    </button>
+                </form>
+
+                <p className="mt-6 text-gray-600">
+                    Need an account?{" "}
+                    <Link to="/Auth/Register" className="font-semibold">
+                        Register here
+                    </Link>
+                </p>
+            </div>
+
+            <div className="hidden lg:flex w-1/2 bg-red-900 pattern justify-center items-center p-8">
+                <div className="text-white text-center">
+                    <h3 className="text-4xl font-bold mb-4">MyTSV</h3>
+                    <p className="text-xl mb-8">Connect with your town like never before</p>
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-center">
+                            <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                            </svg>
+                            <span>Access your personalized feed</span>
                         </div>
-                        <div className="md:w-5/12 w-full pattern bg-red-900 flex flex-col justify-center items-center md:rounded-r-3xl rounded-r-xl p-6 text-white">
-                            <div className="mb-10 text-center">
-                                <h3 className="text-3xl font-bold mb-4">MyTSV.com</h3>
-                                <p className="text-xl text-center mb-6">Meet your Town Specialists Videos</p>
-                            </div>
-                            <div className="space-y-4">
-                                <div className="flex items-center">
-                                    <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                    </svg>
-                                    <span>Access your personalized feed</span>
-                                </div>
-                                <div className="flex items-center">
-                                    <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                    </svg>
-                                    <span>Interact with local experts</span>
-                                </div>
-                                <div className="flex items-center">
-                                    <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                    </svg>
-                                    <span>Stay updated with your town</span>
-                                </div>
-                            </div>
+                        <div className="flex items-center justify-center">
+                            <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                            </svg>
+                            <span>Interact with local experts</span>
+                        </div>
+                        <div className="flex items-center justify-center">
+                            <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                            </svg>
+                            <span>Stay updated with your town</span>
                         </div>
                     </div>
                 </div>
-            </section>
-        </>
+            </div>
+        </div>
     );
 };
 

@@ -2,17 +2,21 @@ import "swiper/css";
 import axios from "axios";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { CiSearch } from "react-icons/ci";
-import { CgProfile } from "react-icons/cg";
+import Select from "react-select";
 import { FaBars } from "react-icons/fa6";
 import { LuLogIn } from "react-icons/lu";
+import { CiSearch } from "react-icons/ci";
+import { IoMdClose } from "react-icons/io";
+import { CgProfile } from "react-icons/cg";
 import { VscSignOut } from "react-icons/vsc";
+import { FaInfoCircle } from "react-icons/fa";
 import Skeleton from "react-loading-skeleton";
 import { BiSolidVideoPlus } from "react-icons/bi";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { IoMdNotifications } from "react-icons/io";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
+import { Tooltip as ReactTooltip } from "react-tooltip";
 import { BsChevronUp, BsGraphUpArrow } from "react-icons/bs";
 import { AiFillPlayCircle, AiFillSetting } from "react-icons/ai";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -22,18 +26,23 @@ const Header = ({ searchQuery }) => {
     const { query } = useParams();
     const navigate = useNavigate();
 
-    const [searchText, setSearchText] = useState("");
-    const [showDropdown, setShowDropdown] = useState(false);
-    const [notificationDropdown, setNotificationDropdown] = useState(false);
-    const [showCategories, setShowCategories] = useState(true);
     const prevScrollY = useRef(0);
-
     const { currentUser, logout } = useAuth();
-
+    const [searchText, setSearchText] = useState("");
+    const [categories, setCategories] = useState([]);
+    const [cityOptions, setCityOptions] = useState([]);
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [countryCityData, setCountryCityData] = useState([]);
+    const [showCategories, setShowCategories] = useState(true);
+    const [selectedCountry, setSelectedCountry] = useState(null);
+    const [notificationDropdown, setNotificationDropdown] = useState(false);
     const userRef = useDetectClickOutside({ onTriggered: () => setShowDropdown(false) });
     const notificationRef = useDetectClickOutside({ onTriggered: () => setNotificationDropdown(false) });
 
-    const [categories, setCategories] = useState([]);
+    const toggleSidebar = () => {
+        setIsSidebarOpen(!isSidebarOpen);
+    };
 
     useEffect(() => {
         const getCategories = async () => {
@@ -45,6 +54,17 @@ const Header = ({ searchQuery }) => {
             }
         };
         getCategories();
+
+        axios.get("Main/getLocations").then((res) => {
+            setCountryCityData(
+                Object.keys(res.data).map((key) => ({
+                    value: key,
+                    label: res.data[key],
+                }))
+            );
+        });
+
+        window.addEventListener("scroll", handleScroll);
     }, []);
 
     const handleSearch = () => {
@@ -91,12 +111,102 @@ const Header = ({ searchQuery }) => {
         prevScrollY.current = currentScrollY;
     };
 
-    useEffect(() => {
-        window.addEventListener("scroll", handleScroll);
-    }, []);
+    const handleCountryChange = (selectedOption) => {
+        setSelectedCountry(selectedOption);
+        axios.get(`Main/getLocations/${selectedOption.value}`).then((res) => {
+            setCityOptions(
+                Object.keys(res.data).map((key) => ({
+                    value: key,
+                    label: res.data[key],
+                }))
+            );
+        });
+    };
+
+    const handleCityChange = (selectedOption) => {
+        console.log(selectedOption);
+    };
 
     return (
         <>
+            <div className={`fixed top-0 left-0 w-full h-full bg-white z-30 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:hidden`}>
+                <div className="flex justify-between items-center p-4 border-b">
+                    <img src="/assets/logo.png" alt="Logo" className="max-w-[120px]" />
+                    <button onClick={toggleSidebar} className="text-red-700 text-2xl">
+                        <IoMdClose className="text-3xl" />
+                    </button>
+                </div>
+                <div className="p-4">
+                    <div className="flex flex-col gap-2 mb-4">
+                        <label className="font-medium text-gray-500 ml-1 flex gap-2 cursor-pointer" data-tooltip-id="location">
+                            Location
+                            <FaInfoCircle className="mt-1" />
+                            <ReactTooltip id="location" content="For Show Related Videos" />
+                        </label>
+                        <div className="flex gap-4 w-full">
+                            <div className="flex-1">
+                                <Select
+                                    options={countryCityData}
+                                    onChange={handleCountryChange}
+                                    placeholder="State"
+                                    classNamePrefix="react-select"
+                                    styles={{
+                                        control: (provided) => ({
+                                            ...provided,
+                                            borderRadius: "1rem",
+                                            padding: "0.3rem 0.5rem",
+                                            outline: "none",
+                                            fontWeight: "500",
+                                            width: "100%", // Ensure full width
+                                            boxSizing: "border-box",
+                                        }),
+                                        placeholder: (provided) => ({
+                                            ...provided,
+                                            color: "#6b7280",
+                                        }),
+                                    }}
+                                />
+                            </div>
+                            <div className="flex-1">
+                                <Select
+                                    options={cityOptions}
+                                    isDisabled={!selectedCountry}
+                                    onChange={handleCityChange}
+                                    placeholder="City"
+                                    classNamePrefix="react-select"
+                                    styles={{
+                                        control: (provided) => ({
+                                            ...provided,
+                                            borderRadius: "1rem",
+                                            padding: "0.3rem 0.5rem",
+                                            outline: "none",
+                                            fontWeight: "500",
+                                            width: "100%", // Ensure full width
+                                            boxSizing: "border-box",
+                                        }),
+                                        placeholder: (provided) => ({
+                                            ...provided,
+                                            color: "#6b7280",
+                                        }),
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex flex-col p-2 gap-6 text-2xl font-medium text-gray-600">
+                        <Link to="/" onClick={toggleSidebar}>
+                            Home
+                        </Link>
+                        <Link to="/User/Profile" onClick={toggleSidebar}>
+                            Profile
+                        </Link>
+                        <Link to="/User/Settings" onClick={toggleSidebar}>
+                            Settings
+                        </Link>
+                    </div>
+                </div>
+            </div>
+
             <div className="sticky top-0 z-20">
                 <div className={`bg-white transition-all duration-300 ${!showCategories && "shadow-[0px_5px_10px_0px_rgba(0,0,0,0.1)]"}`}>
                     <header className="container flex justify-between items-center py-5">
@@ -206,7 +316,7 @@ const Header = ({ searchQuery }) => {
                                 <Link to={"/Auth/Login"}>
                                     <LuLogIn className="text-red-700" />
                                 </Link>
-                                <FaBars className="text-red-700" />
+                                <FaBars className="text-red-700" onClick={toggleSidebar} />
                             </div>
                         )}
                     </header>

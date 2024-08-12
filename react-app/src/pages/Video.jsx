@@ -160,7 +160,7 @@ const SingleVideo = () => {
                     </div>
                     <div className="flex flex-col lg:flex-row gap-6 mt-5">
                         <div className="flex-1">
-                            <h2 className="text-3xl font-semibold mx-1.5 md:mx-0">{data.title}</h2>
+                            <h1 className="text-3xl font-semibold mx-1.5 md:mx-0">{data.title}</h1>
                             <div className="sm:flex grid grid-cols-4 gap-8 items-center my-4 mb-5 mx-1.5 md:mx-0">
                                 <div className="flex gap-2 items-center">
                                     <BsEyeFill className="text-[#8B8B8B] text-3xl" />

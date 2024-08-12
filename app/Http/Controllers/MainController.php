@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Category;
-use App\Models\Location;
-use App\Models\Tag;
 use App\Models\User;
 use App\Models\Video;
+use App\Models\Category;
+use App\Models\Location;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class MainController extends Controller
 {
@@ -17,7 +16,6 @@ class MainController extends Controller
         $paginate = $request->paginate ?? 15;
         $orderBy = $request->orderBy ?? 'id';
         $search = $request->search ?? null;
-        $tag = $request->tag ?? [];
 
         $query = Video::withCount('views');
 
@@ -34,17 +32,7 @@ class MainController extends Controller
                 });
             });
         }
-
-        if ($tag) {
-            if (!is_array($tag)) {
-                $tag = [$tag];
-            }
-
-            $query->whereHas('tags', function ($query) use ($tag) {
-                $query->whereIn('tags.id', $tag);
-            });
-        }
-
+        
         $list = $query->with(['category', 'user'])->paginate($paginate);
 
         return response($list);
@@ -62,11 +50,6 @@ class MainController extends Controller
     public function getCategories(Request $request)
     {
         $res = Category::withCount('videos')->orderBy('videos_count', 'desc')->get();
-        return response($res);
-    }
-    public function getTags(Request $request)
-    {
-        $res = Tag::withCount('videos')->orderBy('videos_count', 'desc')->get();
         return response($res);
     }
     public function getLocations(Request $request, $parent = null)
