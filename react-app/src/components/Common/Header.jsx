@@ -6,31 +6,33 @@ import Select from "react-select";
 import { FaBars } from "react-icons/fa6";
 import { LuLogIn } from "react-icons/lu";
 import { CiSearch } from "react-icons/ci";
-import { IoMdClose } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 import { VscSignOut } from "react-icons/vsc";
 import { FaInfoCircle } from "react-icons/fa";
 import Skeleton from "react-loading-skeleton";
 import { BiSolidVideoPlus } from "react-icons/bi";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { IoMdNotifications } from "react-icons/io";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
+import { IoLocationOutline } from "react-icons/io5";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import { BsChevronUp, BsGraphUpArrow } from "react-icons/bs";
+import { IoMdClose, IoMdNotifications } from "react-icons/io";
 import { AiFillPlayCircle, AiFillSetting } from "react-icons/ai";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDetectClickOutside } from "react-detect-click-outside";
 
 const Header = ({ searchQuery }) => {
     const { query } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const prevScrollY = useRef(0);
     const { currentUser, logout } = useAuth();
     const [searchText, setSearchText] = useState("");
     const [categories, setCategories] = useState([]);
     const [cityOptions, setCityOptions] = useState([]);
+    const [width, setWidth] = useState(window.innerWidth);
     const [showDropdown, setShowDropdown] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [countryCityData, setCountryCityData] = useState([]);
@@ -39,10 +41,6 @@ const Header = ({ searchQuery }) => {
     const [notificationDropdown, setNotificationDropdown] = useState(false);
     const userRef = useDetectClickOutside({ onTriggered: () => setShowDropdown(false) });
     const notificationRef = useDetectClickOutside({ onTriggered: () => setNotificationDropdown(false) });
-
-    const toggleSidebar = () => {
-        setIsSidebarOpen(!isSidebarOpen);
-    };
 
     useEffect(() => {
         const getCategories = async () => {
@@ -65,9 +63,22 @@ const Header = ({ searchQuery }) => {
         });
 
         window.addEventListener("scroll", handleScroll);
+        window.addEventListener("resize", handleWindowSizeChange);
+        return () => {
+            window.removeEventListener("resize", handleWindowSizeChange);
+        };
     }, []);
 
-    const handleSearch = () => {
+    useEffect(() => {
+        setIsSidebarOpen(false);
+    }, [location]);
+
+    const handleWindowSizeChange = () => {
+        setWidth(window.innerWidth);
+    };
+
+    const handleSearch = (e) => {
+        e.preventDefault();
         navigate(`/search?q=${searchText}`);
     };
 
@@ -127,22 +138,53 @@ const Header = ({ searchQuery }) => {
         console.log(selectedOption);
     };
 
+    const isMobile = width <= 768;
+
+    const toggleSidebar = () => {
+        setIsSidebarOpen(!isSidebarOpen);
+    };
+
+    const showUserDropdown = () => {
+        if (isMobile) {
+            setIsSidebarOpen(!isSidebarOpen);
+        } else {
+            setShowDropdown(!showDropdown);
+        }
+    };
+
     return (
         <>
             <div className={`fixed top-0 left-0 w-full h-full bg-white z-30 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:hidden`}>
                 <div className="flex justify-between items-center p-4 border-b">
-                    <img src="/assets/logo.png" alt="Logo" className="max-w-[120px]" />
+                    <Link to={"/"}>
+                        <img src="/assets/logo.png" alt="Logo" className="max-w-[120px]" />
+                    </Link>
                     <button onClick={toggleSidebar} className="text-red-700 text-2xl">
                         <IoMdClose className="text-3xl" />
                     </button>
                 </div>
                 <div className="p-4">
                     <div className="flex flex-col gap-2 mb-4">
-                        <label className="font-medium text-gray-500 ml-1 flex gap-2 cursor-pointer" data-tooltip-id="location">
+                        {currentUser && (
+                            <div className="flex justify-between items-center border-b mb-2 pb-4">
+                                <div className="flex">
+                                    <img src={currentUser?.avatar} className="w-12 h-12 rounded-full mr-3 object-cover" />
+                                    <div className="block text-dark-white">
+                                        <p className="text-sm text-gray-700"> Welcome, Back </p>
+                                        <p className="text-lg font-medium">Test </p>
+                                    </div>
+                                </div>
+                                <Link to={"/User/Profile"} className="h-full text-2xl">
+                                    <BsChevronUp className="text-primary rotate-90" />
+                                </Link>
+                            </div>
+                        )}
+                        <label className="font-medium text-2xl text-gray-600 items-center mx-1 flex gap-2 cursor-pointer mb-2" data-tooltip-id="location">
+                            <IoLocationOutline className="text-primary" />
                             Location
-                            <FaInfoCircle className="mt-1" />
-                            <ReactTooltip id="location" content="For Show Related Videos" />
+                            <FaInfoCircle className="mt-1 text-sm" />
                         </label>
+                        <ReactTooltip id="location" content="For Show Related Videos" />
                         <div className="flex gap-4 w-full">
                             <div className="flex-1">
                                 <Select
@@ -193,17 +235,38 @@ const Header = ({ searchQuery }) => {
                             </div>
                         </div>
                     </div>
-                    <div className="flex flex-col p-2 gap-6 text-2xl font-medium text-gray-600">
-                        <Link to="/" onClick={toggleSidebar}>
-                            Home
-                        </Link>
-                        <Link to="/User/Profile" onClick={toggleSidebar}>
-                            Profile
-                        </Link>
-                        <Link to="/User/Settings" onClick={toggleSidebar}>
-                            Settings
-                        </Link>
-                    </div>
+                    {currentUser && (
+                        <div className="flex flex-col p-2 gap-6 text-2xl font-medium text-gray-600 border-t mt-6 pt-6">
+                            <Link to={`/User/Profile`} className="flex items-center gap-3">
+                                <CgProfile className="text-primary" />
+                                Profile
+                            </Link>
+                            <Link to={`/User/Profile`} className="flex items-center gap-3">
+                                <IoMdNotifications className="text-primary" />
+                                Notifications
+                            </Link>
+                            <Link to={`/User/Videos`} className="flex items-center gap-3">
+                                <AiFillPlayCircle className="text-primary" />
+                                My Videos
+                            </Link>
+                            <Link to={`/User/Analytics`} className="flex items-center gap-3">
+                                <BsGraphUpArrow className="text-primary" />
+                                Analytics
+                            </Link>
+                            <Link to={`/User/Upload`} className="flex items-center gap-3">
+                                <CgProfile className="text-primary" />
+                                Promotion
+                            </Link>
+                            <Link to={`/User/Settings`} className="flex items-center gap-3 border-b pb-6">
+                                <AiFillSetting className="text-primary" />
+                                Settings
+                            </Link>
+                            <button className="flex items-center gap-3" onClick={() => logout({})}>
+                                <VscSignOut className="text-primary" />
+                                Sign Out
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -215,36 +278,39 @@ const Header = ({ searchQuery }) => {
                             <img src="/assets/short-logo.png" alt="Logo" className="w-full md:hidden max-w-[50px]" />
                         </Link>
 
-                        <div className="sm:w-1/2 px-4">
-                            <div className="w-full rounded-full border-[1px] border-[#CACACA] py-1 px-1 flex">
+                        <div className="w-2/3 md:w-1/2 px-4">
+                            <form className="w-full rounded-full border-[1px] border-[#CACACA] py-1 px-1 flex" onSubmit={handleSearch}>
                                 <input type="text" className="outline-none border-none md:text-sm text-xs sm:pl-4 pl-2 flex-1 rounded-lg" placeholder="Search..." value={searchQuery || searchText} onChange={(e) => setSearchText(e.target.value)} />
-                                <button className="sm:w-9 sm:h-9 w-6 h-6 bg-[#C60C0D] flex justify-center items-center rounded-full text-white" onClick={handleSearch}>
+                                <button className="md:w-9 md:h-9 w-6 h-6 bg-[#C60C0D] flex justify-center items-center rounded-full text-white" onClick={handleSearch}>
                                     <CiSearch className="md:text-xl text-sm" />
                                 </button>
-                            </div>
+                            </form>
                         </div>
 
                         {currentUser ? (
                             <div className="flex gap-4 items-center relative">
-                                <Link to={`/User/Upload`}>
-                                    <BiSolidVideoPlus className="md:text-3xl text-xl cursor-pointer" />
-                                </Link>
-                                <div className="relative cursor-pointer" ref={notificationRef} onClick={() => setNotificationDropdown(!notificationDropdown)}>
-                                    <span className="absolute border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-[#C60C0D] text-white text-[11px] -top-1.5 -right-1.5">0</span>
-                                    <IoMdNotifications className="md:text-3xl text-xl" />
+                                <div className="hidden md:flex gap-4 items-center relative">
+                                    <Link to={`/User/Upload`}>
+                                        <BiSolidVideoPlus className="md:text-3xl text-xl cursor-pointer" />
+                                    </Link>
+                                    <div className="relative cursor-pointer" ref={notificationRef} onClick={() => setNotificationDropdown(!notificationDropdown)}>
+                                        <span className="absolute border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-[#C60C0D] text-white text-[11px] -top-1.5 -right-1.5">0</span>
+                                        <IoMdNotifications className="md:text-3xl text-xl" />
 
-                                    {notificationDropdown && (
-                                        <div className="shadow-[0px_0px_5px_0px_rgba(0,0,0,0.2)] rounded-xl py-4 px-4 absolute right-0 top-12 w-52 z-20 text-center bg-white">
-                                            <span className="font-medium text-xl text-red-600 capitalize">Notifications</span>
-                                            <hr className="my-2.5" />
-                                            <h1>No New Notifications</h1>
-                                        </div>
-                                    )}
+                                        {notificationDropdown && (
+                                            <div className="shadow-[0px_0px_5px_0px_rgba(0,0,0,0.2)] rounded-xl py-4 px-4 absolute right-0 top-12 w-52 z-20 text-center bg-white">
+                                                <span className="font-medium text-xl text-red-600 capitalize">Notifications</span>
+                                                <hr className="my-2.5" />
+                                                <h1>No New Notifications</h1>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                                 <div ref={userRef}>
-                                    <div className="flex items-center cursor-pointer" onClick={() => setShowDropdown(!showDropdown)}>
+                                    <div className="flex items-center cursor-pointer" onClick={showUserDropdown}>
+                                        <span className="md:hidden absolute border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-[#C60C0D] text-white text-[11px] -top-1.5 -right-1">0</span>
                                         <img src={currentUser.avatar} className="rounded-full w-8 h-8 mr-2" alt={currentUser.name} />
-                                        <BsChevronUp className={!showDropdown && "rotate-180"} />
+                                        <BsChevronUp className={!showDropdown && "rotate-180 hidden md:block"} />
                                     </div>
 
                                     <div className={`animate__animated animate__fadeIn shadow-[0px_0px_14px_0px_rgba(0,0,0,0.2)] rounded-xl py-4 px-5 absolute right-0 top-12 w-48 z-20 bg-white ${!showDropdown && "hidden"} `}>
@@ -275,7 +341,7 @@ const Header = ({ searchQuery }) => {
                                             <AiFillSetting className="text-[#C60C0D] text-lg" />
                                             Settings
                                         </Link>
-                                        {currentUser?.admin && (
+                                        {currentUser?.admin === 1 && (
                                             <>
                                                 <hr className="my-3" />
                                                 <Link to={`/Admin`} className="flex items-center gap-3 text-blue-900 text-sm mb-1">

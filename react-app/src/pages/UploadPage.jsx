@@ -1,12 +1,12 @@
 import axios from "axios";
 import Select from "react-select";
+import classNames from "classnames";
 import ReactPlayer from "react-player";
 import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import { BsMegaphone } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { MdOutlineFileUpload } from "react-icons/md";
-import CreatableSelect from "react-select/creatable";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import { usePageTitle } from "../components/Layouts/UserLayout";
 import { FaInfoCircle, FaYoutube, FaUpload } from "react-icons/fa";
@@ -18,23 +18,19 @@ const UploadPage = () => {
     useEffect(() => {
         setPageTitle("Upload New Video 🥳");
     }, [setPageTitle]);
-
-    const [tags, setTags] = useState([]);
+    
     const [videoInfo, setVideoInfo] = useState({});
-    const [tagOptions, setTagOptions] = useState([]);
     const [categories, setCategories] = useState([]);
     const [thumbnail, setThumbnail] = useState(null);
     const [isPromoted, setIsPromoted] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
+    const [selectedPrice, setSelectedPrice] = useState('');
     const [uploadType, setUploadType] = useState("youtube");
     const [countryCityData, setCountryCityData] = useState([]);
 
     useEffect(() => {
         axios.get("Main/getCategories").then((res) => {
             setCategories(res.data.map((val) => ({ label: val.title, value: val.id })));
-        });
-        axios.get("Main/getTags").then((res) => {
-            setTagOptions(res.data.map((val) => ({ label: val.title, value: val.title })));
         });
         axios.get("Main/getLocations").then((res) => {
             setCountryCityData(
@@ -50,11 +46,6 @@ const UploadPage = () => {
         const file = e.target.files[0];
         if (!file.type.startsWith("video/")) return toast.error("Please upload a video");
         setSelectedFile(file);
-    };
-
-    const tagsInputChange = (selectedOptions) => {
-        const selectedTags = selectedOptions.map((option) => option.value);
-        setTags(selectedTags);
     };
 
     const changeInput = (e) => {
@@ -83,7 +74,7 @@ const UploadPage = () => {
         try {
             await axios.post(
                 "Dashboard/Upload",
-                { ...videoInfo, tags: tags, video: selectedFile?.target?.files[0], thumbnail: thumbnail.target?.files[0] },
+                { ...videoInfo, video: selectedFile?.target?.files[0], thumbnail: thumbnail.target?.files[0] },
                 {
                     headers: {
                         "Content-Type": "multipart/form-data",
@@ -131,6 +122,10 @@ const UploadPage = () => {
         const file = e.dataTransfer.files[0];
         if (!file.type.startsWith("video/")) return toast.error("Please upload a video");
         setSelectedFile(file);
+    };
+
+    const handleSelection = (value) => {
+        setSelectedPrice(value);
     };
 
     const isPayable = isPromoted || uploadType == "file";
@@ -257,47 +252,23 @@ const UploadPage = () => {
                         />
                     </div>
                     <div className="flex flex-col gap-2">
-                        <label className="text-sm font-medium text-gray-500 ml-1">Tags</label>
-                        <CreatableSelect
-                            isMulti
-                            value={tags.map((tag) => ({ label: tag, value: tag }))}
-                            onChange={tagsInputChange}
-                            options={tagOptions}
-                            placeholder="Tags"
-                            classNamePrefix="react-select"
-                            styles={{
-                                control: (provided) => ({
-                                    ...provided,
-                                    borderRadius: "1rem",
-                                    padding: "0.3rem 0.5rem",
-                                    outline: "none",
-                                    fontWeight: "500",
-                                }),
-                                placeholder: (provided) => ({
-                                    ...provided,
-                                    color: "#6b7280",
-                                    padding: "0.4rem 0rem",
-                                }),
-                                multiValue: (provided) => ({
-                                    ...provided,
-                                    backgroundColor: "#e5e7eb",
-                                    borderRadius: "0.375rem",
-                                    padding: "0.2rem",
-                                }),
-                                multiValueLabel: (provided) => ({
-                                    ...provided,
-                                    fontWeight: "500",
-                                }),
-                                multiValueRemove: (provided) => ({
-                                    ...provided,
-                                    color: "#9ca3af",
-                                    ":hover": {
-                                        backgroundColor: "#d1d5db",
-                                        color: "#374151",
-                                    },
-                                }),
-                            }}
-                        />
+                        <label className="text-sm font-medium text-gray-500 ml-1">Average Price</label>
+                        <div className="flex items-center gap-4">
+                            <input type="radio" id="priceOne" name="average_price" value="one" className="hidden peer" onChange={() => handleSelection("one")} checked={selectedPrice === "one"} />
+                            <label htmlFor="priceOne" className={classNames("flex items-center px-4 py-2 rounded-full cursor-pointer transition-all", selectedPrice === "one" ? "bg-primary text-white" : "bg-gray-200 text-gray-700")}>
+                                $
+                            </label>
+
+                            <input type="radio" id="priceTwo" name="average_price" value="two" className="hidden peer" onChange={() => handleSelection("two")} checked={selectedPrice === "two"} />
+                            <label htmlFor="priceTwo" className={classNames("flex items-center px-4 py-2 rounded-full cursor-pointer transition-all", selectedPrice === "two" ? "bg-primary text-white" : "bg-gray-200 text-gray-700")}>
+                                $$
+                            </label>
+
+                            <input type="radio" id="priceThree" name="average_price" value="three" className="hidden peer" onChange={() => handleSelection("three")} checked={selectedPrice === "three"} />
+                            <label htmlFor="priceThree" className={classNames("flex items-center px-4 py-2 rounded-full cursor-pointer transition-all", selectedPrice === "three" ? "bg-primary text-white" : "bg-gray-200 text-gray-700")}>
+                                $$$
+                            </label>
+                        </div>
                     </div>
                     <div className="flex flex-col gap-2">
                         <label className="text-sm font-medium text-gray-500 ml-1 flex gap-1 cursor-pointer" data-tooltip-id="thumbnail">
