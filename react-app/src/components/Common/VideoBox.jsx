@@ -1,16 +1,18 @@
 import moment from "moment";
 import NumberFormatter from "./FormatNumber";
 import { Link } from "react-router-dom";
+import { LuDollarSign } from "react-icons/lu";
 
 const VideoBox = ({ info, hidePlayBtn, analytics }) => {
-
     return (
         <>
             <div className="relative">
                 {!hidePlayBtn && (
                     <Link to={analytics ? `/User/Video/${info.id}` : `/${info.slug}`}>
-                        <span className="py-2.5 px-2 min-w-12 text-lg text-center text-ellipsis tracking-widest absolute right-2 top-2 bg-primary text-white rounded-full">
-                            $$
+                        <span className="py-4 w-12 flex items-center justify-center absolute right-2 top-2 bg-primary text-white rounded-full">
+                            <LuDollarSign />
+                            <LuDollarSign />
+                            <LuDollarSign />
                         </span>
                     </Link>
                 )}

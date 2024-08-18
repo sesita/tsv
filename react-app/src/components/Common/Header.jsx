@@ -14,7 +14,7 @@ import { BiSolidVideoPlus } from "react-icons/bi";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { IoHomeOutline, IoLocationOutline } from "react-icons/io5";
+import { IoClose, IoHomeOutline, IoLocationOutline } from "react-icons/io5";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import { BsChevronUp, BsGraphUpArrow } from "react-icons/bs";
 import { IoMdClose, IoMdNotifications, IoMdNotificationsOutline } from "react-icons/io";
@@ -31,16 +31,18 @@ const Header = ({ searchQuery }) => {
     const { currentUser, logout } = useAuth();
     const [searchText, setSearchText] = useState("");
     const [categories, setCategories] = useState([]);
-    const [cityOptions, setCityOptions] = useState([]);
+    const [citiesData, setCitiesData] = useState([]);
+    const [statesData, setStatesData] = useState([]);
     const [width, setWidth] = useState(window.innerWidth);
     const [showDropdown, setShowDropdown] = useState(false);
+    const [selectedState, setSelectedState] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const [countryCityData, setCountryCityData] = useState([]);
+    const [locationModal, setLocationModal] = useState(false);
     const [showCategories, setShowCategories] = useState(true);
-    const [selectedCountry, setSelectedCountry] = useState(null);
     const [notificationDropdown, setNotificationDropdown] = useState(false);
     const userRef = useDetectClickOutside({ onTriggered: () => setShowDropdown(false) });
     const notificationRef = useDetectClickOutside({ onTriggered: () => setNotificationDropdown(false) });
+    const locationModalRef = useDetectClickOutside({ onTriggered: () => console.log('test') });
 
     useEffect(() => {
         const getCategories = async () => {
@@ -54,7 +56,7 @@ const Header = ({ searchQuery }) => {
         getCategories();
 
         axios.get("Main/getLocations").then((res) => {
-            setCountryCityData(
+            setStatesData(
                 Object.keys(res.data).map((key) => ({
                     value: key,
                     label: res.data[key],
@@ -122,10 +124,10 @@ const Header = ({ searchQuery }) => {
         prevScrollY.current = currentScrollY;
     };
 
-    const handleCountryChange = (selectedOption) => {
-        setSelectedCountry(selectedOption);
+    const stateChange = (selectedOption) => {
+        setSelectedState(selectedOption);
         axios.get(`Main/getLocations/${selectedOption.value}`).then((res) => {
-            setCityOptions(
+            setCitiesData(
                 Object.keys(res.data).map((key) => ({
                     value: key,
                     label: res.data[key],
@@ -134,7 +136,7 @@ const Header = ({ searchQuery }) => {
         });
     };
 
-    const handleCityChange = (selectedOption) => {
+    const cityChange = (selectedOption) => {
         console.log(selectedOption);
     };
 
@@ -154,7 +156,85 @@ const Header = ({ searchQuery }) => {
 
     return (
         <>
-         <div className={`fixed top-0 left-0 w-full h-full bg-white z-30 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:hidden`}>
+            {/* Location Modal */}
+            <div className={`flex items-center justify-center z-20 left-0 top-0 bottom-0 right-0 animate__animated ${locationModal ? "fixed animate__fadeIn" : "hidden"}`} ref={locationModalRef}>
+                <div className="bg-white w-1/3 md:mt-32 p-6 rounded-3xl border mx-4 border-gray-200 shadow-[0px_0px_100px_1px_rgba(0,0,0,1)]">
+                    <div className="flex flex-col text-center text-2xl">
+                        <div className="px-6">
+                            <div className="flex justify-between items-center mb-10">
+                                <span className="font-medium flex items-center gap-2 text-2xl">
+                                    <IoLocationOutline className="text-primary text-4xl" />
+                                    <div className="flex flex-col items-start">
+                                        <span>Choose Location</span>
+                                        <span className="text-xs">For show related videos depended on location</span>
+                                    </div>
+                                </span>
+                                <IoClose className="text-3xl cursor-pointer" onClick={() => setLocationModal(false)} />
+                            </div>
+                            <div className="flex gap-6 w-full mb-10">
+                                <div className="flex-1">
+                                    <Select
+                                        options={statesData}
+                                        onChange={stateChange}
+                                        placeholder="State"
+                                        classNamePrefix="react-select"
+                                        styles={{
+                                            control: (provided) => ({
+                                                ...provided,
+                                                borderRadius: "1rem",
+                                                padding: "0.3rem 0.5rem",
+                                                outline: "none",
+                                                fontWeight: "500",
+                                                width: "100%",
+                                                maxMenuHeight: "10px",
+                                                boxSizing: "border-box",
+                                            }),
+                                            placeholder: (provided) => ({
+                                                ...provided,
+                                                color: "#6b7280",
+                                            }),
+                                        }}
+                                    />
+                                </div>
+                                <div className="flex-1">
+                                    <Select
+                                        options={citiesData}
+                                        isDisabled={!selectedState}
+                                        onChange={cityChange}
+                                        placeholder="City"
+                                        classNamePrefix="react-select"
+                                        styles={{
+                                            control: (provided) => ({
+                                                ...provided,
+                                                borderRadius: "1rem",
+                                                padding: "0.3rem 0.5rem",
+                                                outline: "none",
+                                                fontWeight: "500",
+                                                width: "100%", // Ensure full width
+                                                boxSizing: "border-box",
+                                            }),
+                                            placeholder: (provided) => ({
+                                                ...provided,
+                                                color: "#6b7280",
+                                            }),
+                                        }}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex justify-between text-base font-medium text-center gap-4">
+                                <button className="bg-white border rounded-xl px-8 py-2" onClick={() => setLocationModal(false)}>
+                                    Close
+                                </button>
+                                <button className="bg-primary text-white rounded-xl px-8 py-2">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* Location Modal end */}
+
+            <div className={`fixed top-0 left-0 w-full h-full bg-white z-30 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:hidden`}>
                 <div className="flex justify-between items-center p-4 border-b">
                     <Link to={"/"}>
                         <img src="/assets/logo.png" alt="Logo" className="max-w-[120px]" />
@@ -188,8 +268,8 @@ const Header = ({ searchQuery }) => {
                         <div className="flex gap-4 w-full">
                             <div className="flex-1">
                                 <Select
-                                    options={countryCityData}
-                                    onChange={handleCountryChange}
+                                    options={statesData}
+                                    onChange={stateChange}
                                     placeholder="State"
                                     classNamePrefix="react-select"
                                     styles={{
@@ -211,9 +291,9 @@ const Header = ({ searchQuery }) => {
                             </div>
                             <div className="flex-1">
                                 <Select
-                                    options={cityOptions}
-                                    isDisabled={!selectedCountry}
-                                    onChange={handleCityChange}
+                                    options={citiesData}
+                                    isDisabled={!selectedState}
+                                    onChange={cityChange}
                                     placeholder="City"
                                     classNamePrefix="react-select"
                                     styles={{
@@ -237,27 +317,27 @@ const Header = ({ searchQuery }) => {
                     </div>
                     {currentUser && (
                         <div className="flex flex-col p-2 gap-6 text-2xl font-medium text-gray-600 border-t mt-6 pt-6">
-                            <Link to={'/User/Profile'} className="flex items-center gap-3">
+                            <Link to={"/User/Profile"} className="flex items-center gap-3">
                                 <CgProfile className="text-primary" />
                                 Profile
                             </Link>
-                            <Link to={'/User/Profile'} className="flex items-center gap-3">
+                            <Link to={"/User/Profile"} className="flex items-center gap-3">
                                 <IoMdNotifications className="text-primary" />
                                 Notifications
                             </Link>
-                            <Link to={'/User/Videos'} className="flex items-center gap-3">
+                            <Link to={"/User/Videos"} className="flex items-center gap-3">
                                 <AiFillPlayCircle className="text-primary" />
                                 My Videos
                             </Link>
-                            <Link to={'/User/Analytics'} className="flex items-center gap-3">
+                            <Link to={"/User/Analytics"} className="flex items-center gap-3">
                                 <BsGraphUpArrow className="text-primary" />
                                 Analytics
                             </Link>
-                            <Link to={'/User/Upload'} className="flex items-center gap-3">
+                            <Link to={"/User/Upload"} className="flex items-center gap-3">
                                 <CgProfile className="text-primary" />
                                 Promotion
                             </Link>
-                            <Link to={'/User/Settings'} className="flex items-center gap-3 border-b pb-6">
+                            <Link to={"/User/Settings"} className="flex items-center gap-3 border-b pb-6">
                                 <AiFillSetting className="text-primary" />
                                 Settings
                             </Link>
@@ -361,6 +441,7 @@ const Header = ({ searchQuery }) => {
                                     </div>
                                 ) : (
                                     <div className="md:gap-4 gap-1 items-center md:flex hidden">
+                                        <IoLocationOutline className="md:text-3xl text-xl cursor-pointer" onClick={() => setLocationModal(!locationModal)} />
                                         <Link to={`/Auth/Login`} className="lg:block hidden">
                                             <BiSolidVideoPlus className="md:text-3xl text-xl cursor-pointer mr-6" />
                                         </Link>
