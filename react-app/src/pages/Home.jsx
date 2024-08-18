@@ -4,7 +4,6 @@ import "swiper/css/scrollbar";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
-import AdsRibon from "../components/Common/AdsRibon";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
@@ -96,7 +95,7 @@ const Home = () => {
                                     <div className="w-[100%] max-w-[450px]">
                                         <h4 className="md:text-3xl text-lg">
                                             <span className="drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">{video?.category?.title}</span>
-                                            <AdsRibon />
+                                            <span className="text-[12px] bg-[#c70b0d] font-italic rounded-[4px] py-[4px] px-[12px] ml-5 font-semibold shadow-lg">Ads</span>{" "}
                                         </h4>
                                         <h1 className="md:text-5xl text-2xl font-semibold md:font-bold my-3 md:leading-tight opacity-95 text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] line-clamp-2">{video.title}</h1>
                                         <Link to={`/${video?.slug}`}>

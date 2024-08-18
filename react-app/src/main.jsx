@@ -7,10 +7,11 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-loading-skeleton/dist/skeleton.css";
 import { AuthContextProvider } from "./context/AuthContext";
+import Modal from "./components/Common/Modal";
 
 let url = window.location.origin + "/api";
 if (import.meta.env.DEV) {
-    url = "https://tsv.test/api/";
+    url = "https://mytsv.com/api/";
 }
 
 axios.defaults.baseURL = url;
@@ -29,6 +30,7 @@ axios.interceptors.request.use(
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <AuthContextProvider>
+        <Modal />
         <App />
         <ToastContainer />
     </AuthContextProvider>

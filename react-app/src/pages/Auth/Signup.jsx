@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { FaGoogle, FaArrowLeft } from "react-icons/fa";
+import { useEffect } from "react";
+import { FaGoogle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthContext";
@@ -120,7 +120,7 @@ const Signup = () => {
             {/* Right side - Visual Element */}
             <div className="hidden lg:flex w-1/2 bg-red-900 pattern justify-center items-center p-8">
                 <div className="text-white text-center">
-                    <h3 className="text-4xl font-bold mb-4">MyTSV.com</h3>
+                    <h3 className="text-4xl font-bold mb-4">MyTSV</h3>
                     <p className="text-xl mb-8">Meet your Town Specialists Videos</p>
                     <div className="space-y-4">
                         <div className="flex items-center justify-center">

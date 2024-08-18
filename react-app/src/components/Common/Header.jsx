@@ -154,6 +154,121 @@ const Header = ({ searchQuery }) => {
 
     return (
         <>
+         <div className={`fixed top-0 left-0 w-full h-full bg-white z-30 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:hidden`}>
+                <div className="flex justify-between items-center p-4 border-b">
+                    <Link to={"/"}>
+                        <img src="/assets/logo.png" alt="Logo" className="max-w-[120px]" />
+                    </Link>
+                    <button onClick={toggleSidebar} className="text-red-700 text-2xl">
+                        <IoMdClose className="text-3xl" />
+                    </button>
+                </div>
+                <div className="p-4">
+                    <div className="flex flex-col gap-2 mb-4">
+                        {currentUser && (
+                            <div className="flex justify-between items-center border-b mb-2 pb-4">
+                                <div className="flex">
+                                    <img src={currentUser?.avatar} className="w-12 h-12 rounded-full mr-3 object-cover" />
+                                    <div className="block text-dark-white">
+                                        <p className="text-sm text-gray-700"> Welcome, Back </p>
+                                        <p className="text-lg font-medium">Test </p>
+                                    </div>
+                                </div>
+                                <Link to={"/User/Profile"} className="h-full text-2xl">
+                                    <BsChevronUp className="text-primary rotate-90" />
+                                </Link>
+                            </div>
+                        )}
+                        <label className="font-medium text-2xl text-gray-600 items-center mx-1 flex gap-2 cursor-pointer mb-2" data-tooltip-id="location">
+                            <IoLocationOutline className="text-primary" />
+                            Location
+                            <FaInfoCircle className="mt-1 text-sm" />
+                        </label>
+                        <ReactTooltip id="location" content="For Show Related Videos" />
+                        <div className="flex gap-4 w-full">
+                            <div className="flex-1">
+                                <Select
+                                    options={countryCityData}
+                                    onChange={handleCountryChange}
+                                    placeholder="State"
+                                    classNamePrefix="react-select"
+                                    styles={{
+                                        control: (provided) => ({
+                                            ...provided,
+                                            borderRadius: "1rem",
+                                            padding: "0.3rem 0.5rem",
+                                            outline: "none",
+                                            fontWeight: "500",
+                                            width: "100%", // Ensure full width
+                                            boxSizing: "border-box",
+                                        }),
+                                        placeholder: (provided) => ({
+                                            ...provided,
+                                            color: "#6b7280",
+                                        }),
+                                    }}
+                                />
+                            </div>
+                            <div className="flex-1">
+                                <Select
+                                    options={cityOptions}
+                                    isDisabled={!selectedCountry}
+                                    onChange={handleCityChange}
+                                    placeholder="City"
+                                    classNamePrefix="react-select"
+                                    styles={{
+                                        control: (provided) => ({
+                                            ...provided,
+                                            borderRadius: "1rem",
+                                            padding: "0.3rem 0.5rem",
+                                            outline: "none",
+                                            fontWeight: "500",
+                                            width: "100%", // Ensure full width
+                                            boxSizing: "border-box",
+                                        }),
+                                        placeholder: (provided) => ({
+                                            ...provided,
+                                            color: "#6b7280",
+                                        }),
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    {currentUser && (
+                        <div className="flex flex-col p-2 gap-6 text-2xl font-medium text-gray-600 border-t mt-6 pt-6">
+                            <Link to={'/User/Profile'} className="flex items-center gap-3">
+                                <CgProfile className="text-primary" />
+                                Profile
+                            </Link>
+                            <Link to={'/User/Profile'} className="flex items-center gap-3">
+                                <IoMdNotifications className="text-primary" />
+                                Notifications
+                            </Link>
+                            <Link to={'/User/Videos'} className="flex items-center gap-3">
+                                <AiFillPlayCircle className="text-primary" />
+                                My Videos
+                            </Link>
+                            <Link to={'/User/Analytics'} className="flex items-center gap-3">
+                                <BsGraphUpArrow className="text-primary" />
+                                Analytics
+                            </Link>
+                            <Link to={'/User/Upload'} className="flex items-center gap-3">
+                                <CgProfile className="text-primary" />
+                                Promotion
+                            </Link>
+                            <Link to={'/User/Settings'} className="flex items-center gap-3 border-b pb-6">
+                                <AiFillSetting className="text-primary" />
+                                Settings
+                            </Link>
+                            <button className="flex items-center gap-3" onClick={() => logout({})}>
+                                <VscSignOut className="text-primary" />
+                                Sign Out
+                            </button>
+                        </div>
+                    )}
+                </div>
+            </div>
             <div className="sticky top-0 z-20">
                 <div className={`bg-white transition-all duration-300 ${!showCategories && "shadow-[0px_5px_10px_0px_rgba(0,0,0,0.1)]"}`}>
                     <header className="container flex justify-between items-center py-5">
