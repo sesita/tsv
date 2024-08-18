@@ -14,7 +14,7 @@ import { BiSolidVideoPlus } from "react-icons/bi";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { IoClose, IoHomeOutline, IoLocationOutline } from "react-icons/io5";
+import { IoClose, IoLocationOutline } from "react-icons/io5";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import { BsChevronUp, BsGraphUpArrow } from "react-icons/bs";
 import { IoMdClose, IoMdNotifications, IoMdNotificationsOutline } from "react-icons/io";
@@ -42,7 +42,6 @@ const Header = ({ searchQuery }) => {
     const [notificationDropdown, setNotificationDropdown] = useState(false);
     const userRef = useDetectClickOutside({ onTriggered: () => setShowDropdown(false) });
     const notificationRef = useDetectClickOutside({ onTriggered: () => setNotificationDropdown(false) });
-    const locationModalRef = useDetectClickOutside({ onTriggered: () => console.log('test') });
 
     useEffect(() => {
         const getCategories = async () => {
@@ -157,22 +156,22 @@ const Header = ({ searchQuery }) => {
     return (
         <>
             {/* Location Modal */}
-            <div className={`flex items-center justify-center z-20 left-0 top-0 bottom-0 right-0 animate__animated ${locationModal ? "fixed animate__fadeIn" : "hidden"}`} ref={locationModalRef}>
-                <div className="bg-white w-1/3 md:mt-32 p-6 rounded-3xl border mx-4 border-gray-200 shadow-[0px_0px_100px_1px_rgba(0,0,0,1)]">
+            <div className={`flex items-center justify-center z-20 left-0 top-0 bottom-0 right-0 animate__animated ${locationModal ? "fixed animate__fadeIn" : "hidden"}`}>
+                <div className="bg-white lg:w-1/3 md:mt-32 p-6 rounded-3xl border mx-4 border-gray-200 shadow-[0px_0px_100px_1px_rgba(0,0,0,1)]">
                     <div className="flex flex-col text-center text-2xl">
-                        <div className="px-6">
+                        <div className="sm:px-6 px-2">
                             <div className="flex justify-between items-center mb-10">
-                                <span className="font-medium flex items-center gap-2 text-2xl">
+                                <span className="font-medium flex items-center gap-2 md:text-2xl">
                                     <IoLocationOutline className="text-primary text-4xl" />
                                     <div className="flex flex-col items-start">
                                         <span>Choose Location</span>
-                                        <span className="text-xs">For show related videos depended on location</span>
+                                        <span className="text-xs hidden sm:block">For show related videos depended on location</span>
                                     </div>
                                 </span>
                                 <IoClose className="text-3xl cursor-pointer" onClick={() => setLocationModal(false)} />
                             </div>
                             <div className="flex gap-6 w-full mb-10">
-                                <div className="flex-1">
+                                <div className="flex-1 h-4">
                                     <Select
                                         options={statesData}
                                         onChange={stateChange}
@@ -388,8 +387,8 @@ const Header = ({ searchQuery }) => {
                                     </div>
                                 </div>
                                 <div ref={userRef}>
-                                    <div className="flex items-center cursor-pointer" onClick={showUserDropdown}>
-                                        <span className="md:hidden absolute border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-[#C60C0D] text-white text-[11px] -top-1.5 -right-1">0</span>
+                                    <div className="md:flex items-center cursor-pointer hidden" onClick={showUserDropdown}>
+                                        <span className="absolute md:hidden border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-[#C60C0D] text-white text-[11px] -top-1.5 -right-1">0</span>
                                         <img src={currentUser.avatar} className="rounded-full w-8 h-8 mr-2" alt={currentUser.name} />
                                         <BsChevronUp className={!showDropdown && "rotate-180 hidden md:block"} />
                                     </div>
@@ -458,31 +457,33 @@ const Header = ({ searchQuery }) => {
                             </>
                         )}
 
-                        {!currentUser && (
-                            <div className="md:hidden text-xl text-black flex gap-6 items-center">
-                                <Link to={"/Auth/Login"}>
-                                    <LuLogIn className="text-red-700" />
-                                </Link>
-                                <FaBars className="text-red-700" onClick={toggleSidebar} />
-                            </div>
-                        )}
+                        <div className="md:hidden text-xl flex">
+                            <FaBars className="text-primary" onClick={toggleSidebar} />
+                        </div>
                     </header>
-                </div>
 
-                {/* Mobile Icons Section */}
-                <div className="md:hidden flex justify-around items-center py-3 bg-gray-100 border-t">
-                    <Link to="/home">
-                        <IoHomeOutline className="text-2xl text-primary" />
-                    </Link>
-                    <Link to="/search">
-                        <CiSearch className="text-2xl text-primary" />
-                    </Link>
-                    <Link to="/notifications">
-                        <IoMdNotificationsOutline className="text-2xl text-primary" />
-                    </Link>
-                    <Link to="/profile">
-                        <CgProfile className="text-2xl text-primary" />
-                    </Link>
+                    {/* Mobile Icons Section */}
+                    <div className="container md:px-0 flex justify-between items-center text-2xl md:hidden py-3 border-t">
+                        <Link to="/User/Upload">
+                            <BiSolidVideoPlus className="text-primary" />
+                        </Link>
+                        <button type="button" onClick={() => setLocationModal(true)}>
+                            <IoLocationOutline className="text-primary" />
+                        </button>
+                        <Link to="/User/Profile" className="relative">
+                            <span className="absolute border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-[#C60C0D] text-white text-[11px] -top-1.5 -right-1.5">0</span>
+                            <IoMdNotificationsOutline className="text-primary" />
+                        </Link>
+                        {!currentUser ? (
+                            <Link to={"/Auth/Login"}>
+                                <LuLogIn className="text-primary" />
+                            </Link>
+                        ) : (
+                            <button type="button" onClick={showUserDropdown}>
+                                <img src={currentUser.avatar} className="rounded-full w-8 h-8" alt={currentUser.name} />
+                            </button>
+                        )}
+                    </div>
                 </div>
 
                 {/* Categories Section */}
