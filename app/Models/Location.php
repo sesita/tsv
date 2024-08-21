@@ -16,6 +16,7 @@ class Location extends Model
         $response = Http::get("http://ip-api.com/json/{$ip}")->json();
         if ($response['status'] == 'success') {
             $location = Location::where('title', 'like', $response['city'])->first();
+            if(!$location) return null;
             return ['state' => $location->parent()->first()->title, 'city' => $location->title];
         }
         return null;
