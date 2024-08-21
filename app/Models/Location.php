@@ -2,13 +2,24 @@
 
 namespace App\Models;
 
+use Http;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Location extends Model
 {
     use HasFactory, SoftDeletes;
+
+    public static function location($ip)
+    {
+        $response = Http::get("http://ip-api.com/json/{$ip}")->json();
+        if ($response['status'] == 'success') {
+            $location = Location::where('title', 'like', $response['city'])->first();
+            return ['state' => $location->parent()->first()->title, 'city' => $location->title];
+        }
+        return null;
+    }
 
     public function parent()
     {

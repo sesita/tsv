@@ -8,9 +8,31 @@ use App\Models\Category;
 use App\Models\Location;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class MainController extends Controller
 {
+    public function primary(Request $request){
+
+        $data['user'] = Auth::user() ?? null;
+        
+        $location = Session::get('location') ? json_decode(Session::get('location')) : Location::location($request->ip());
+
+        if($location){
+            Session::put('location', json_encode($location));
+        }
+
+        $data['location'] = $location;
+        $data['locations'] = $this->getLocations();
+        $data['categories'] = $this->getCategories();
+        $data['videos'] = [
+            'slider' => $this->getVideos($request),
+            'popular' => $this->getVideos($request)
+        ];
+
+        return response($data);
+    }
     public function getVideos(Request $request)
     {
         $paginate = $request->paginate ?? 15;
@@ -35,7 +57,7 @@ class MainController extends Controller
         
         $list = $query->with(['category', 'user'])->paginate($paginate);
 
-        return response($list);
+        return $list;
     }
     public function getUser(Request $request)
     {
@@ -47,12 +69,12 @@ class MainController extends Controller
 
         return response($res);
     }
-    public function getCategories(Request $request)
+    public function getCategories()
     {
         $res = Category::withCount('videos')->orderBy('videos_count', 'desc')->get();
-        return response($res);
+        return $res;
     }
-    public function getLocations(Request $request, $parent = null)
+    public function getLocations($parent = null)
     {
         $query = Location::with('parent');
 
@@ -64,7 +86,12 @@ class MainController extends Controller
 
         $locations = $query->pluck('title', 'id');
 
-        return response()->json($locations);
+        return $locations;
     }
 
+    public function updateLocation(Request $request)
+    {
+ 
+        return response();
+    }
 }

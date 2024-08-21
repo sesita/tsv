@@ -14,13 +14,14 @@ import { BiSolidVideoPlus } from "react-icons/bi";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
-import { IoClose, IoLocationOutline } from "react-icons/io5";
+import { IoClose, IoLocationSharp } from "react-icons/io5";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import { BsChevronUp, BsGraphUpArrow } from "react-icons/bs";
 import { IoMdClose, IoMdNotifications, IoMdNotificationsOutline } from "react-icons/io";
 import { AiFillPlayCircle, AiFillSetting } from "react-icons/ai";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDetectClickOutside } from "react-detect-click-outside";
+import { toast } from "react-toastify";
 
 const Header = ({ searchQuery }) => {
     const { query } = useParams();
@@ -44,24 +45,21 @@ const Header = ({ searchQuery }) => {
     const notificationRef = useDetectClickOutside({ onTriggered: () => setNotificationDropdown(false) });
 
     useEffect(() => {
-        const getCategories = async () => {
+        const getPrimary = async () => {
             try {
-                const res = await axios.get("Main/getCategories");
-                setCategories(res.data);
+                const res = await axios.get("Main/primary");
+                setCategories(res.data?.categories);
+                setStatesData(
+                    Object.keys(res.data?.locations).map((key) => ({
+                        value: key,
+                        label: res.data[key],
+                    }))
+                );
             } catch (error) {
-                console.error("Failed to fetch categories", error);
+                toast.error(error.respo);
             }
         };
-        getCategories();
-
-        axios.get("Main/getLocations").then((res) => {
-            setStatesData(
-                Object.keys(res.data).map((key) => ({
-                    value: key,
-                    label: res.data[key],
-                }))
-            );
-        });
+        getPrimary();
 
         window.addEventListener("scroll", handleScroll);
         window.addEventListener("resize", handleWindowSizeChange);
@@ -162,7 +160,7 @@ const Header = ({ searchQuery }) => {
                         <div className="sm:px-6 px-2">
                             <div className="flex justify-between items-center mb-10">
                                 <span className="font-medium flex items-center gap-2 md:text-2xl">
-                                    <IoLocationOutline className="text-primary text-4xl" />
+                                    <IoLocationSharp className="text-primary text-4xl" />
                                     <div className="flex flex-col items-start">
                                         <span>Choose Location</span>
                                         <span className="text-xs hidden sm:block">For show related videos depended on location</span>
@@ -259,7 +257,7 @@ const Header = ({ searchQuery }) => {
                             </div>
                         )}
                         <label className="font-medium text-2xl text-gray-600 items-center mx-1 flex gap-2 cursor-pointer mb-2" data-tooltip-id="location">
-                            <IoLocationOutline className="text-primary" />
+                            <IoLocationSharp className="text-primary" />
                             Location
                             <FaInfoCircle className="mt-1 text-sm" />
                         </label>
@@ -440,15 +438,15 @@ const Header = ({ searchQuery }) => {
                                     </div>
                                 ) : (
                                     <div className="md:gap-4 gap-1 items-center md:flex hidden">
-                                        <IoLocationOutline className="md:text-3xl text-xl cursor-pointer" onClick={() => setLocationModal(!locationModal)} />
-                                        <Link to={`/Auth/Login`} className="lg:block hidden">
+                                        <IoLocationSharp className="md:text-3xl text-xl cursor-pointer mr-0 xl:mr-4" onClick={() => setLocationModal(!locationModal)} />
+                                        <Link to={`/Auth/Login`} className="md:block hidden">
                                             <BiSolidVideoPlus className="md:text-3xl text-xl cursor-pointer mr-6" />
                                         </Link>
                                         <div className="md:flex gap-4 hidden">
                                             <Link to="/Auth/Register" className="bg-[#C60C0D] text-white md:text-sm text-xs md:px-7 px-4 md:py-2 py-1 rounded-full">
                                                 Sign Up
                                             </Link>
-                                            <Link to="/Auth/Login" className="text-[#0A2A8D] md:text-sm text-xs md:px-7 px-4 md:py-2 py-1 rounded-full border-[1px] border-[#CACACA]">
+                                            <Link to="/Auth/Login" className="text-[#0A2A8D] md:text-sm text-xs md:px-7 px-4 md:py-2 py-1 rounded-full border-[1px] border-[#CACACA] lg:block hidden">
                                                 Sign In
                                             </Link>
                                         </div>
@@ -468,7 +466,7 @@ const Header = ({ searchQuery }) => {
                             <BiSolidVideoPlus className="text-primary" />
                         </Link>
                         <button type="button" onClick={() => setLocationModal(true)}>
-                            <IoLocationOutline className="text-primary" />
+                            <IoLocationSharp className="text-primary" />
                         </button>
                         <Link to="/User/Profile" className="relative">
                             <span className="absolute border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-[#C60C0D] text-white text-[11px] -top-1.5 -right-1.5">0</span>

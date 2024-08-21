@@ -33,6 +33,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'Auth'], function ($router) {
 });
 
 Route::prefix('Main')->group(function () {
+    Route::get('primary', [MainController::class, 'primary']);
     Route::get('getUser', [MainController::class, 'getUser']);
     Route::get('getTags', [MainController::class, 'getTags']);
     Route::get('getVideos', [MainController::class, 'getVideos']);
