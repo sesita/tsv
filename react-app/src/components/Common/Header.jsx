@@ -52,7 +52,7 @@ const Header = ({ searchQuery }) => {
                 setStatesData(
                     Object.keys(res.data?.locations).map((key) => ({
                         value: key,
-                        label: res.data[key],
+                        label: res.data?.locations[key],
                     }))
                 );
             } catch (error) {
