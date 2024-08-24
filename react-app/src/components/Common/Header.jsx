@@ -21,9 +21,8 @@ import { IoMdClose, IoMdNotifications, IoMdNotificationsOutline } from "react-ic
 import { AiFillPlayCircle, AiFillSetting } from "react-icons/ai";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDetectClickOutside } from "react-detect-click-outside";
-import { toast } from "react-toastify";
 
-const Header = ({ searchQuery }) => {
+const Header = ({ searchQuery, states, categories }) => {
     const { query } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
@@ -31,9 +30,7 @@ const Header = ({ searchQuery }) => {
     const prevScrollY = useRef(0);
     const { currentUser, logout } = useAuth();
     const [searchText, setSearchText] = useState("");
-    const [categories, setCategories] = useState([]);
     const [citiesData, setCitiesData] = useState([]);
-    const [statesData, setStatesData] = useState([]);
     const [width, setWidth] = useState(window.innerWidth);
     const [showDropdown, setShowDropdown] = useState(false);
     const [selectedState, setSelectedState] = useState(null);
@@ -45,22 +42,6 @@ const Header = ({ searchQuery }) => {
     const notificationRef = useDetectClickOutside({ onTriggered: () => setNotificationDropdown(false) });
 
     useEffect(() => {
-        const getPrimary = async () => {
-            try {
-                const res = await axios.get("Main/primary");
-                setCategories(res.data?.categories);
-                setStatesData(
-                    Object.keys(res.data?.locations).map((key) => ({
-                        value: key,
-                        label: res.data?.locations[key],
-                    }))
-                );
-            } catch (error) {
-                toast.error(error.respo);
-            }
-        };
-        getPrimary();
-
         window.addEventListener("scroll", handleScroll);
         window.addEventListener("resize", handleWindowSizeChange);
         return () => {
@@ -171,7 +152,7 @@ const Header = ({ searchQuery }) => {
                             <div className="flex gap-6 w-full mb-10">
                                 <div className="flex-1 h-4">
                                     <Select
-                                        options={statesData}
+                                        options={states}
                                         onChange={stateChange}
                                         placeholder="State"
                                         classNamePrefix="react-select"
@@ -265,7 +246,7 @@ const Header = ({ searchQuery }) => {
                         <div className="flex gap-4 w-full">
                             <div className="flex-1">
                                 <Select
-                                    options={statesData}
+                                    options={states}
                                     onChange={stateChange}
                                     placeholder="State"
                                     classNamePrefix="react-select"

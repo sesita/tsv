@@ -4,8 +4,7 @@ import "swiper/css/scrollbar";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
-import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -14,37 +13,11 @@ import { Autoplay, EffectFade, Navigation, Pagination, Scrollbar, A11y } from "s
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const Home = () => {
-    const [videos, setVideos] = useState([]);
-    const [videosRecommended, setVideosRecommended] = useState({ data: [], total: 0 });
+    const [videos] = useOutletContext();
     const [sliderVideos, setSliderVideos] = useState([]);
+    const [PopularVideos, setPopularVideos] = useState([]);
+    const [RecommendedVideos, setRecommendedVideos] = useState({});
 
-    const fetchSliderVideos = async () => {
-        try {
-            const response = await axios.get("Main/getVideos", {
-                params: {
-                    orderBy: "featured",
-                    paginate: 3,
-                },
-            });
-            setSliderVideos(response.data);
-        } catch (error) {
-            toast.error(error.response?.data?.message ?? "Caught error");
-        }
-    };
-
-    const fetchPopular = async () => {
-        try {
-            const response = await axios.get("Main/getVideos", {
-                params: {
-                    orderBy: "popular",
-                    paginate: 4,
-                },
-            });
-            setVideos(response.data);
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
-    };
     const fetchRecommended = async (page) => {
         const recommendedTags = JSON.parse(localStorage.getItem("recommendedTags"));
         try {
@@ -55,8 +28,8 @@ const Home = () => {
                     page,
                 },
             });
-            setVideosRecommended((videosRecommended) => ({
-                data: [...videosRecommended.data, ...(response.data?.data || [])],
+            setRecommendedVideos((RecommendedVideos) => ({
+                data: [...RecommendedVideos.data, ...(response.data?.data || [])],
                 total: response.data?.total || 0,
             }));
         } catch (error) {
@@ -65,16 +38,16 @@ const Home = () => {
     };
 
     const fetchNextData = async () => {
-        const nextPage = Math.ceil(videosRecommended.data.length / 4) + 1;
+        const nextPage = Math.ceil(RecommendedVideos.data.length / 4) + 1;
         await fetchRecommended(nextPage);
-        return videosRecommended;
+        return RecommendedVideos;
     };
 
     useEffect(() => {
-        fetchPopular(1);
-        fetchRecommended(1);
-        fetchSliderVideos();
-    }, []);
+        setSliderVideos(videos?.slider);
+        setPopularVideos(videos?.popular);
+        setRecommendedVideos(videos?.recommended);
+    }, [videos]);
 
     return (
         <>
@@ -140,8 +113,8 @@ const Home = () => {
                             }}
                             modules={[Navigation, Pagination, Scrollbar, A11y]}
                         >
-                            {videos.data?.length > 0 ? (
-                                videos.data?.map((video) => (
+                            {PopularVideos?.data?.length > 0 ? (
+                                PopularVideos?.data?.map((video) => (
                                     <SwiperSlide key={video.id}>
                                         <VideoBox info={video} />
                                     </SwiperSlide>
@@ -168,12 +141,12 @@ const Home = () => {
                             View All Videos
                         </Link>
                     </h2>
-                    {videosRecommended?.data?.length > 0 ? (
+                    {RecommendedVideos?.data?.length > 0 ? (
                         <>
                             <InfiniteScroll
-                                dataLength={videosRecommended.data.length}
+                                dataLength={RecommendedVideos.data.length}
                                 next={fetchNextData}
-                                hasMore={videosRecommended.total > videosRecommended.data.length}
+                                hasMore={RecommendedVideos.total > RecommendedVideos.data.length}
                                 loader={Array(4)
                                     .fill()
                                     .map((_, key) => (
@@ -185,7 +158,7 @@ const Home = () => {
                                 refreshFunction={fetchRecommended}
                                 className="grid gap-6 xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 mb-16"
                             >
-                                {videosRecommended?.data?.map((video, key) => (
+                                {RecommendedVideos?.data?.map((video, key) => (
                                     <VideoBox info={video} key={key} />
                                 ))}
                             </InfiniteScroll>

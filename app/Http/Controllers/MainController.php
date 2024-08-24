@@ -28,14 +28,15 @@ class MainController extends Controller
         $data['categories'] = $this->getCategories();
         $data['videos'] = [
             'slider' => $this->getVideos($request),
-            'popular' => $this->getVideos($request)
+            'popular' => $this->getVideos($request),
+            'recommended' => $this->getVideos($request)
         ];
 
         return response($data);
     }
     public function getVideos(Request $request)
     {
-        $paginate = $request->paginate ?? 15;
+        $paginate = $request->paginate ?? 8;
         $orderBy = $request->orderBy ?? 'id';
         $search = $request->search ?? null;
 
