@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug')->unique();
             $table->enum('package', ['free', 'standard', 'premium']);
+            $table->integer('price');
             $table->text('description')->nullable();
             $table->text('thumbnail')->nullable();
             $table->boolean('published')->default(0);

@@ -14,6 +14,33 @@ class Video extends Model
 
     public $appends = ['likes', 'dislikes', 'comments_count', 'shares', 'views'];
 
+    public function getVideos($params = [])
+    {
+        $paginate = $params['paginate'] ?? 8;
+        $orderBy = $params['orderBy'] ?? 'id';
+        $search = $params['search'] ?? null;
+
+        $query = Video::withCount('views');
+
+        if ($orderBy == 'popular') {
+            $query->orderBy('views_count', 'desc');
+        } else {
+            $query->orderBy('id', 'desc');
+        }
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")->orwhereHas('category', function ($query) use ($search) {
+                    $query->where('title', 'like', "%{$search}%");
+                });
+            });
+        }
+        
+        $list = $query->with(['category', 'user'])->paginate($paginate);
+
+        return $list;
+    }
+
     public function views()
     {
         return $this->hasMany(View::class);

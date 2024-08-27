@@ -23,42 +23,29 @@ class MainController extends Controller
             Session::put('location', json_encode($location));
         }
 
+        $video = new Video();
+
+        $sliderParams[] = $request->all();
+        $sliderParams['orderBy'] = 'slider';
+        $popularParams[] = $request->all();
+        $popularParams['orderBy'] = 'popular';
+
         $data['location'] = $location;
         $data['locations'] = $this->getLocations();
         $data['categories'] = $this->getCategories();
         $data['videos'] = [
-            'slider' => $this->getVideos($request),
-            'popular' => $this->getVideos($request),
-            'recommended' => $this->getVideos($request)
+            'slider' => $video->getVideos($sliderParams),
+            'popular' => $video->getVideos($popularParams),
+            'recommended' => $video->getVideos($request)
         ];
 
         return response($data);
     }
     public function getVideos(Request $request)
     {
-        $paginate = $request->paginate ?? 8;
-        $orderBy = $request->orderBy ?? 'id';
-        $search = $request->search ?? null;
-
-        $query = Video::withCount('views');
-
-        if ($orderBy == 'popular') {
-            $query->orderBy('views_count', 'desc');
-        } else {
-            $query->orderBy('id', 'desc');
-        }
-
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")->orwhereHas('category', function ($query) use ($search) {
-                    $query->where('title', 'like', "%{$search}%");
-                });
-            });
-        }
-        
-        $list = $query->with(['category', 'user'])->paginate($paginate);
-
-        return $list;
+        $video = new Video();
+        $videos = $video->getVideos($request->all());
+        return response($videos);
     }
     public function getUser(Request $request)
     {

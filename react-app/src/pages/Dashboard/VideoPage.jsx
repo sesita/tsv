@@ -1,12 +1,13 @@
 import axios from "axios";
 import moment from "moment";
 import Select from "react-select";
+import classNames from "classnames";
 import { toast } from "react-toastify";
+import ReactPlayer from "react-player";
 import { FaCheck } from "react-icons/fa";
 import { FaInfoCircle } from "react-icons/fa";
 import Skeleton from "react-loading-skeleton";
 import { useEffect, useState } from "react";
-import CreatableSelect from "react-select/creatable";
 import Graph from "../../components/Analytics/Graph";
 import { MdOutlineFileUpload } from "react-icons/md";
 import { Tooltip as ReactTooltip } from "react-tooltip";
@@ -19,12 +20,9 @@ const VideoPage = () => {
     const params = useParams();
     const navigate = useNavigate();
     const setPageTitle = usePageTitle();
-    const [tags, setTags] = useState([]);
-    const [hover, setHover] = useState(false);
     const [videoInfo, setVideoInfo] = useState([]);
     const [thumbnail, setThumbnail] = useState({});
     const [categories, setCategories] = useState([]);
-    const [tagOptions, setTagOptions] = useState([]);
     const [countryCityData, setCountryCityData] = useState([]);
 
     useEffect(() => {
@@ -35,9 +33,6 @@ const VideoPage = () => {
         try {
             const response = await axios.get(`Dashboard/MyVideo/${params.id}`);
             setVideoInfo(response.data);
-            if (response.data?.tags) {
-                setTags(response.data.tags.map((tag) => tag.title));
-            }
         } catch (error) {
             toast.error(error.response?.data?.message ?? "Caught error");
         }
@@ -49,7 +44,7 @@ const VideoPage = () => {
         try {
             await axios.post(
                 "Dashboard/Update",
-                { ...videoInfo, tags: tags, thumbnail: thumbnail.target?.files[0] },
+                { ...videoInfo, thumbnail: thumbnail.target?.files[0] },
                 {
                     headers: {
                         "Content-Type": "multipart/form-data",
@@ -62,12 +57,6 @@ const VideoPage = () => {
             toast.error(e.response?.data?.message);
         }
     };
-
-    const handleChange = (selectedOptions) => {
-        const selectedTags = selectedOptions.map((option) => option.value);
-        setTags(selectedTags);
-    };
-
     const changeInput = (e) => {
         setVideoInfo({
             ...videoInfo,
@@ -79,9 +68,6 @@ const VideoPage = () => {
         fetchVideo();
         axios.get("Main/getCategories").then((res) => {
             setCategories(res.data.map((val) => ({ label: val.title, value: val.id })));
-        });
-        axios.get("Main/getTags").then((res) => {
-            setTagOptions(res.data.map((val) => ({ label: val.title, value: val.title })));
         });
         axios.get("Main/getLocations").then((res) => {
             setCountryCityData(
@@ -120,25 +106,7 @@ const VideoPage = () => {
         <>
             <div className="flex justify-between gap-8 mb-10 border-b pb-10 rounded-2xl">
                 <div className="w-full">
-                    {videoInfo?.package === "free" ? (
-                        <div className="relative w-full group md:max-h-[355px] mb-4" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-                            <img src={thumbnail?.target?.files[0] ? URL.createObjectURL(thumbnail?.target?.files[0]) : videoInfo.thumbnail} onError={(e) => (e.target.src = "/assets/img/not-found.png")} alt="Thumbnail" className="w-full md:h-[350px] object-cover rounded-xl" />
-                            {hover && (
-                                <>
-                                    <label htmlFor="thumbnail" className="absolute inset-0 rounded-2xl cursor-pointer flex items-center justify-center bg-black bg-opacity-50 text-white shadow-xl font-medium text-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        Change
-                                    </label>
-                                    <input type="file" id="thumbnail" name="thumbnail" className="hidden" accept="image/*" onChange={(e) => setThumbnail(e)} />
-                                </>
-                            )}
-                        </div>
-                    ) : videoInfo.video ? (
-                        <video className="w-full rounded-xl shadow h-fit md:h-[355px] mb-4" controls>
-                            <source src={videoInfo?.video} />
-                        </video>
-                    ) : (
-                        <Skeleton borderRadius={20} height={355} />
-                    )}
+                    {videoInfo?.video ? <ReactPlayer className="w-full rounded-xl shadow h-fit md:h-[355px] mb-4" url={videoInfo?.video} width="100%" controls /> : <Skeleton borderRadius={20} height={355} />}
                     <div className="flex flex-col gap-2 mb-5">
                         <label className="text-sm font-medium text-gray-500 ml-1">Location</label>
                         <Select
@@ -212,82 +180,47 @@ const VideoPage = () => {
                             />
                         </div>
                         <div className="flex flex-col gap-2">
-                            <label className="text-sm font-medium text-gray-500 ml-1">Tags</label>
-                            <CreatableSelect
-                                isMulti
-                                value={tags.map((tag) => ({ label: tag, value: tag }))}
-                                onChange={handleChange}
-                                options={tagOptions}
-                                placeholder="Tags"
-                                classNamePrefix="react-select"
-                                styles={{
-                                    control: (provided) => ({
-                                        ...provided,
-                                        borderRadius: "1rem", // Rounded-2xl
-                                        padding: "0.3rem 0.5rem", // Py-2 Px-4
-                                        outline: "none",
-                                        fontWeight: "500", // Font-medium
-                                    }),
-                                    placeholder: (provided) => ({
-                                        ...provided,
-                                        color: "#6b7280", // Text-gray-500
-                                        padding: "0.4rem 0rem", // Py-2 Px-4
-                                    }),
-                                    multiValue: (provided) => ({
-                                        ...provided,
-                                        backgroundColor: "#e5e7eb", // Background gray-200
-                                        borderRadius: "0.375rem", // Rounded-md
-                                        padding: "0.2rem",
-                                    }),
-                                    multiValueLabel: (provided) => ({
-                                        ...provided,
-                                        fontWeight: "500", // Font-medium
-                                    }),
-                                    multiValueRemove: (provided) => ({
-                                        ...provided,
-                                        color: "#9ca3af", // Text-gray-400
-                                        ":hover": {
-                                            backgroundColor: "#d1d5db", // Hover:bg-gray-300
-                                            color: "#374151", // Hover:text-gray-700
-                                        },
-                                    }),
-                                }}
-                            />
+                            <label className="text-sm font-medium text-gray-500 ml-1">Average Price</label>
+                            <div className="flex items-center gap-4">
+                                <input type="radio" id="priceOne" name="price" value="1" className="hidden peer" onChange={(e) => changeInput(e)} checked={videoInfo?.price == 1} />
+                                <label htmlFor="priceOne" className={classNames("flex items-center px-4 py-2 rounded-full cursor-pointer transition-all", videoInfo?.price == 1 ? "bg-primary text-white" : "bg-gray-200 text-gray-700")}>
+                                    $
+                                </label>
+
+                                <input type="radio" id="priceTwo" name="price" value="2" className="hidden peer" onChange={(e) => changeInput(e)} checked={videoInfo?.price == 2} />
+                                <label htmlFor="priceTwo" className={classNames("flex items-center px-4 py-2 rounded-full cursor-pointer transition-all", videoInfo?.price == 2 ? "bg-primary text-white" : "bg-gray-200 text-gray-700")}>
+                                    $$
+                                </label>
+
+                                <input type="radio" id="priceThree" name="price" value="3" className="hidden peer" onChange={(e) => changeInput(e)} checked={videoInfo?.price == 3} />
+                                <label htmlFor="priceThree" className={classNames("flex items-center px-4 py-2 rounded-full cursor-pointer transition-all", videoInfo?.price == 3 ? "bg-primary text-white" : "bg-gray-200 text-gray-700")}>
+                                    $$$
+                                </label>
+                            </div>
                         </div>
-                        {videoInfo.package === "free" ? (
-                            <div className="flex flex-col gap-2">
-                                <label className="text-sm font-medium text-gray-500 ml-1 flex gap-1 cursor-pointer" data-tooltip-id="link">
-                                    Video Link
-                                    <FaInfoCircle className="mt-1" />
-                                    <ReactTooltip id="link" content="Youtube Video Link or Iframe" />
-                                </label>
-                                <input type="text" className="rounded-2xl border py-3 px-4 outline-none font-medium" placeholder="Video Link..." name="iframe" value={videoInfo?.video} onChange={(e) => changeInput(e)} />
-                            </div>
-                        ) : (
-                            <div className="flex flex-col gap-2">
-                                <label className="text-sm font-medium text-gray-500 ml-1 flex gap-1 cursor-pointer" data-tooltip-id="thumbnail">
-                                    Thumbnail
-                                    <FaInfoCircle className="mt-1" />
-                                    <ReactTooltip id="thumbnail" content="thumbnail that will appear on that video" />
-                                </label>
-                                <label htmlFor="thumbnail" className="justify-between rounded-2xl border py-3 px-4 outline-none flex items-center text-gray-500">
-                                    {videoInfo.thumbnail ? (
-                                        <>
-                                            <img src={thumbnail?.target?.files[0] ? URL.createObjectURL(thumbnail?.target?.files[0]) : videoInfo.thumbnail} alt="Thumbnail" className="w-full h-full object-cover rounded-xl hover:opacity-50 cursor-pointer transition-all max-h-80" />
-                                        </>
-                                    ) : (
-                                        <>
-                                            <div className="font-medium flex gap-2">
-                                                Upload A Image
-                                                <MdOutlineFileUpload className="text-2xl" />
-                                            </div>
-                                            <span className="text-xs">Allowed: JPG,PNG,WEBP</span>
-                                        </>
-                                    )}
-                                </label>
-                                <input id="thumbnail" type="file" className="hidden" name="thumbnail" accept="image/*" onChange={(e) => setThumbnail(e)} />
-                            </div>
-                        )}
+                        <div className="flex flex-col gap-2">
+                            <label className="text-sm font-medium text-gray-500 ml-1 flex gap-1 cursor-pointer" data-tooltip-id="thumbnail">
+                                Thumbnail
+                                <FaInfoCircle className="mt-1" />
+                                <ReactTooltip id="thumbnail" content="thumbnail that will appear on that video" />
+                            </label>
+                            <label htmlFor="thumbnail" className="justify-between rounded-2xl border py-3 px-4 outline-none flex items-center text-gray-500">
+                                {videoInfo.thumbnail ? (
+                                    <>
+                                        <img src={thumbnail?.target?.files[0] ? URL.createObjectURL(thumbnail?.target?.files[0]) : videoInfo.thumbnail} alt="Thumbnail" className="w-full h-full object-cover rounded-xl hover:opacity-50 cursor-pointer transition-all max-h-80" />
+                                    </>
+                                ) : (
+                                    <>
+                                        <div className="font-medium flex gap-2">
+                                            Upload A Image
+                                            <MdOutlineFileUpload className="text-2xl" />
+                                        </div>
+                                        <span className="text-xs">Allowed: JPG,PNG,WEBP</span>
+                                    </>
+                                )}
+                            </label>
+                            <input id="thumbnail" type="file" className="hidden" name="thumbnail" accept="image/*" onChange={(e) => setThumbnail(e)} />
+                        </div>
                         <div className="flex flex-col gap-2">
                             <label className="text-sm font-medium text-gray-500 ml-1 flex gap-1 cursor-pointer" data-tooltip-id="Description">
                                 Description

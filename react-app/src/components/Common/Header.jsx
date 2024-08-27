@@ -22,7 +22,7 @@ import { AiFillPlayCircle, AiFillSetting } from "react-icons/ai";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDetectClickOutside } from "react-detect-click-outside";
 
-const Header = ({ searchQuery, states, categories }) => {
+const Header = ({ searchQuery, states, categories, locator }) => {
     const { query } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
@@ -144,7 +144,7 @@ const Header = ({ searchQuery, states, categories }) => {
                                     <IoLocationSharp className="text-primary text-4xl" />
                                     <div className="flex flex-col items-start">
                                         <span>Choose Location</span>
-                                        <span className="text-xs hidden sm:block">For show related videos depended on location</span>
+                                        {locator ? <span className="text-xs hidden sm:block">For show related videos depended on location</span> : <span className="text-xs hidden sm:block text-primary">Location only working in USA</span>}
                                     </div>
                                 </span>
                                 <IoClose className="text-3xl cursor-pointer" onClick={() => setLocationModal(false)} />
@@ -153,6 +153,7 @@ const Header = ({ searchQuery, states, categories }) => {
                                 <div className="flex-1 h-4">
                                     <Select
                                         options={states}
+                                        isDisabled={!locator}
                                         onChange={stateChange}
                                         placeholder="State"
                                         classNamePrefix="react-select"

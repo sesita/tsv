@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 class DashboardController extends Controller
 {
     public function MyVideo($id){
-        $video = Video::with('tags')->find($id);
+        $video = Video::find($id);
         return response($video);
     }
     public function MyVideos(Request $request){
@@ -58,6 +58,7 @@ class DashboardController extends Controller
         $request->validate([
             'title' =>'required',
             'description' =>'required',
+            'price' =>'required|integer|max:3',
             'video' =>'nullable|mimes:mp4,mov,ogg,webm',
             'thumbnail' =>'required',
             'category' =>'required',
@@ -91,13 +92,12 @@ class DashboardController extends Controller
             'video' => $videoName,
             'user_id' => $userId,
             'title' => $request->title,
+            'price' => $request->price,
             'thumbnail' => $thumbnail ?? null,
             'category_id' => $request->category,
             'location_id' => $location->id ?? 1,
             'description' => $request->description,
         ]);
-
-        $video->syncTags($request->tags);
 
         return response(['status' =>'success', 'message'=> 'Video Uploaded Successfully']);
     }
@@ -105,16 +105,10 @@ class DashboardController extends Controller
     public function UpdateVideo(Request $request){
         $request->validate([
             'title' =>'required',
+            'price' =>'required|integer|max:3',
             'description' =>'required',
             'category_id' =>'required',
         ]);
-
-        if($request->file('video')){   
-            $videoName = 'videos/'. Str::random(). time(). '.mp4';
-            $request->video->move(public_path('storage/videos'), $videoName);
-        } else {
-            $videoName = $request->iframe;
-        }
 
         if($request->file('thumbnail')){
             $thumbnail = 'thumbnails/'. Str::random(). time(). '.webp';
@@ -122,8 +116,8 @@ class DashboardController extends Controller
         }
 
         $updateData = [
-            'video' => $videoName,
             'title' => $request->title,
+            'price' => $request->price,
             'category_id' => $request->category_id,
             'description' => $request->description,
         ];
@@ -134,7 +128,6 @@ class DashboardController extends Controller
 
         $video = Video::where('id', $request->id)->firstOrFail();
         $video->update($updateData);
-        $video->syncTags($request->tags);
 
         return response(['status' =>'success', 'message'=> 'Video Updated Successfully']);
     }

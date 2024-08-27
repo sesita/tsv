@@ -8,6 +8,7 @@ import { ScrollRestoration, Outlet } from "react-router-dom";
 const NormalLayout = ({ searchQuery }) => {
     const [videos, setVideos] = useState([]);
     const [states, setStates] = useState([]);
+    const [location, setLocation] = useState([]);
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
@@ -15,6 +16,7 @@ const NormalLayout = ({ searchQuery }) => {
             try {
                 const res = await axios.get("Main/primary");
                 setVideos(res.data?.videos);
+                setLocation(res.data?.location);
                 setStates(
                     Object.keys(res.data?.locations).map((key) => ({
                         value: key,
@@ -32,7 +34,7 @@ const NormalLayout = ({ searchQuery }) => {
     return (
         <>
             <ScrollRestoration />
-            <Header searchQuery={searchQuery} states={states} categories={categories} />
+            <Header searchQuery={searchQuery} states={states} locator={location} categories={categories} />
             <Outlet context={[videos]} />
             <Footer />
         </>
