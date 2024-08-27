@@ -18,13 +18,13 @@ const UploadPage = () => {
     useEffect(() => {
         setPageTitle("Upload New Video 🥳");
     }, [setPageTitle]);
-    
+
     const [videoInfo, setVideoInfo] = useState({});
     const [categories, setCategories] = useState([]);
     const [thumbnail, setThumbnail] = useState(null);
     const [isPromoted, setIsPromoted] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
-    const [selectedPrice, setSelectedPrice] = useState('');
+    const [selectedPrice, setSelectedPrice] = useState("");
     const [uploadType, setUploadType] = useState("youtube");
     const [countryCityData, setCountryCityData] = useState([]);
 
@@ -124,13 +124,9 @@ const UploadPage = () => {
         setSelectedFile(file);
     };
 
-    const handleSelection = (value) => {
-        setSelectedPrice(value);
-    };
-
     const isPayable = isPromoted || uploadType == "file";
     const price = (isPromoted ? 99 : 0) + (uploadType == "file" ? 99 : 0);
-
+3
     return (
         <form onSubmit={uploadVideo}>
             <div className="md:flex justify-between gap-8 mb-10 rounded-2xl">
@@ -254,18 +250,18 @@ const UploadPage = () => {
                     <div className="flex flex-col gap-2">
                         <label className="text-sm font-medium text-gray-500 ml-1">Average Price</label>
                         <div className="flex items-center gap-4">
-                            <input type="radio" id="priceOne" name="average_price" value="one" className="hidden peer" onChange={() => handleSelection("one")} checked={selectedPrice === "one"} />
-                            <label htmlFor="priceOne" className={classNames("flex items-center px-4 py-2 rounded-full cursor-pointer transition-all", selectedPrice === "one" ? "bg-primary text-white" : "bg-gray-200 text-gray-700")}>
+                            <input type="radio" id="priceOne" name="price" value="1" className="hidden peer" onChange={(e) => changeInput(e)} checked={videoInfo?.price == 1} />
+                            <label htmlFor="priceOne" className={classNames("flex items-center px-4 py-2 rounded-full cursor-pointer transition-all", videoInfo?.price == 1 ? "bg-primary text-white" : "bg-gray-200 text-gray-700")}>
                                 $
                             </label>
 
-                            <input type="radio" id="priceTwo" name="average_price" value="two" className="hidden peer" onChange={() => handleSelection("two")} checked={selectedPrice === "two"} />
-                            <label htmlFor="priceTwo" className={classNames("flex items-center px-4 py-2 rounded-full cursor-pointer transition-all", selectedPrice === "two" ? "bg-primary text-white" : "bg-gray-200 text-gray-700")}>
+                            <input type="radio" id="priceTwo" name="price" value="2" className="hidden peer" onChange={(e) => changeInput(e)} checked={videoInfo?.price == 2} />
+                            <label htmlFor="priceTwo" className={classNames("flex items-center px-4 py-2 rounded-full cursor-pointer transition-all", videoInfo?.price == 2 ? "bg-primary text-white" : "bg-gray-200 text-gray-700")}>
                                 $$
                             </label>
 
-                            <input type="radio" id="priceThree" name="average_price" value="three" className="hidden peer" onChange={() => handleSelection("three")} checked={selectedPrice === "three"} />
-                            <label htmlFor="priceThree" className={classNames("flex items-center px-4 py-2 rounded-full cursor-pointer transition-all", selectedPrice === "three" ? "bg-primary text-white" : "bg-gray-200 text-gray-700")}>
+                            <input type="radio" id="priceThree" name="price" value="3" className="hidden peer" onChange={(e) => changeInput(e)} checked={videoInfo?.price == 3} />
+                            <label htmlFor="priceThree" className={classNames("flex items-center px-4 py-2 rounded-full cursor-pointer transition-all", videoInfo?.price == 3 ? "bg-primary text-white" : "bg-gray-200 text-gray-700")}>
                                 $$$
                             </label>
                         </div>

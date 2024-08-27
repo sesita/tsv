@@ -10,7 +10,7 @@ class Video extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['slug', 'title', 'description', 'video', 'user_id', 'thumbnail', 'category_id', 'location_id'];
+    protected $fillable = ['slug', 'title', 'description', 'video', 'user_id', 'thumbnail', 'price', 'category_id', 'location_id'];
 
     public $appends = ['likes', 'dislikes', 'comments_count', 'shares', 'views'];
 

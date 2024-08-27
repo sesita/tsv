@@ -35,7 +35,7 @@ const NormalLayout = ({ searchQuery }) => {
         <>
             <ScrollRestoration />
             <Header searchQuery={searchQuery} states={states} locator={location} categories={categories} />
-            <Outlet context={[videos]} />
+            <Outlet context={[videos, states, categories]} />
             <Footer />
         </>
     );

@@ -11,10 +11,10 @@ const UserLayout = () => {
     const { id } = useParams();
     const location = useLocation();
     const navigate = useNavigate();
-    const isProfilePage = location.pathname === `/user/${id}/videos`;
-
-    const [pageTitle, setPageTitle] = useState(null);
     const { currentUser } = useAuth();
+    const { states } = useOutletContext();
+    const [pageTitle, setPageTitle] = useState();
+    const isProfilePage = location.pathname === `/user/${id}/videos`;
 
     useEffect(() => {
         if (currentUser === null) navigate("/");
@@ -41,7 +41,7 @@ const UserLayout = () => {
             </Banner>
             <section className="sm:container -mt-28 mb-14">
                 <div className="shadow-lg rounded-2xl py-10 px-12 bg-white">
-                    <Outlet context={setPageTitle} />
+                    <Outlet context={[setPageTitle, states]} />
                 </div>
             </section>
         </>

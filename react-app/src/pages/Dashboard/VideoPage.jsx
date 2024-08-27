@@ -12,22 +12,19 @@ import Graph from "../../components/Analytics/Graph";
 import { MdOutlineFileUpload } from "react-icons/md";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import Devices from "../../components/Analytics/Devices";
-import { useParams, useNavigate } from "react-router-dom";
 import NumberFormatter from "../../components/Common/FormatNumber";
-import { usePageTitle } from "../../components/Layouts/UserLayout";
+import { useParams, useNavigate, useOutletContext } from "react-router-dom";
 
 const VideoPage = () => {
     const params = useParams();
     const navigate = useNavigate();
-    const setPageTitle = usePageTitle();
     const [videoInfo, setVideoInfo] = useState([]);
     const [thumbnail, setThumbnail] = useState({});
-    const [categories, setCategories] = useState([]);
-    const [countryCityData, setCountryCityData] = useState([]);
-
+    
+    const { pageTitle, states } = useOutletContext();
+    
     useEffect(() => {
-        setPageTitle(videoInfo?.title);
-    }, [videoInfo.title, setPageTitle]);
+    }, [videoInfo.title, pageTitle]);
 
     const fetchVideo = async () => {
         try {
@@ -66,18 +63,8 @@ const VideoPage = () => {
 
     useEffect(() => {
         fetchVideo();
-        axios.get("Main/getCategories").then((res) => {
-            setCategories(res.data.map((val) => ({ label: val.title, value: val.id })));
-        });
-        axios.get("Main/getLocations").then((res) => {
-            setCountryCityData(
-                Object.keys(res.data).map((key) => ({
-                    value: key,
-                    label: res.data[key],
-                }))
-            );
-        });
-    }, []);
+        console.log(states);
+    }, [states]);
 
     const [selectedCountry, setSelectedCountry] = useState(null);
     const [cityOptions, setCityOptions] = useState([]);
@@ -110,7 +97,7 @@ const VideoPage = () => {
                     <div className="flex flex-col gap-2 mb-5">
                         <label className="text-sm font-medium text-gray-500 ml-1">Location</label>
                         <Select
-                            options={countryCityData}
+                            options={states}
                             onChange={handleCountryChange}
                             placeholder="State"
                             classNamePrefix="react-select"
@@ -160,7 +147,7 @@ const VideoPage = () => {
                         <div className="flex flex-col gap-2">
                             <label className="text-sm font-medium text-gray-500 ml-1">Categories</label>
                             <Select
-                                options={categories}
+                                options={states}
                                 onChange={handleCategoryChange}
                                 placeholder="Category"
                                 classNamePrefix="react-select"
