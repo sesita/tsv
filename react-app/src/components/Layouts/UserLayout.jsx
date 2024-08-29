@@ -12,7 +12,7 @@ const UserLayout = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { currentUser } = useAuth();
-    const { states } = useOutletContext();
+    const [states] = useOutletContext();
     const [pageTitle, setPageTitle] = useState();
     const isProfilePage = location.pathname === `/user/${id}/videos`;
 
@@ -41,15 +41,10 @@ const UserLayout = () => {
             </Banner>
             <section className="sm:container -mt-28 mb-14">
                 <div className="shadow-lg rounded-2xl py-10 px-12 bg-white">
-                    <Outlet context={[setPageTitle, states]} />
+                    <Outlet context={{setPageTitle, states}} />
                 </div>
             </section>
         </>
     );
 };
-
-export function usePageTitle() {
-    return useOutletContext();
-}
-
 export default UserLayout;

@@ -2,12 +2,11 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import TagsInput from "react-tagsinput";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { usePageTitle } from "../../components/Layouts/UserLayout";
 
 const SettingsPage = () => {
-    const setPageTitle = usePageTitle();
+    const { setPageTitle } = useOutletContext();
 
     useEffect(() => {
         setPageTitle("Settings");

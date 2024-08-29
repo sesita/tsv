@@ -5,10 +5,10 @@ import Graph from "../../components/Analytics/Graph";
 import VideoBox from "../../components/Common/VideoBox";
 import Devices from "../../components/Analytics/Devices";
 import TotalInfo from "../../components/Analytics/TotalInfo";
-import { usePageTitle } from "../../components/Layouts/UserLayout";
+import { useOutletContext } from "react-router-dom";
 
 const AnalyticsPage = () => {
-    const setPageTitle = usePageTitle();
+    const { setPageTitle } = useOutletContext();
 
     useEffect(() => {
         setPageTitle("Analytics");
@@ -38,8 +38,8 @@ const AnalyticsPage = () => {
             <div className="mt-16">
                 <h2 className="text-center text-black text-[40px] font-light mb-8">Your top content in this period</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {videos?.map((video, key) => (
-                        <VideoBox info={video} hidePlayBtn={true} analytics={true} />
+                    {videos?.map((video) => (
+                        <VideoBox key={video?.id} info={video} hidePlayBtn={true} analytics={true} />
                     ))}
                 </div>
             </div>

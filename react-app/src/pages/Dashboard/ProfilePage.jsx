@@ -1,16 +1,15 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import { FaFacebookF } from "react-icons/fa";
 import { AiFillInstagram } from "react-icons/ai";
 import { useAuth } from "../../context/AuthContext";
 import { BsGoogle, BsTwitter } from "react-icons/bs";
 import NumberFormatter from "../../components/Common/FormatNumber";
-import { usePageTitle } from "../../components/Layouts/UserLayout";
 
 const ProfilePage = () => {
-    const setPageTitle = usePageTitle();
+    const { setPageTitle } = useOutletContext();
 
     useEffect(() => {
         setPageTitle("Profile");

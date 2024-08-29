@@ -5,26 +5,24 @@ import ReactPlayer from "react-player";
 import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import { BsMegaphone } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { MdOutlineFileUpload } from "react-icons/md";
 import { Tooltip as ReactTooltip } from "react-tooltip";
-import { usePageTitle } from "../components/Layouts/UserLayout";
 import { FaInfoCircle, FaYoutube, FaUpload } from "react-icons/fa";
 
 const UploadPage = () => {
-    const setPageTitle = usePageTitle();
+    const { setPageTitle } = useOutletContext();
     const navigate = useNavigate();
 
     useEffect(() => {
         setPageTitle("Upload New Video 🥳");
-    }, [setPageTitle]);
+    }, []);
 
     const [videoInfo, setVideoInfo] = useState({});
     const [categories, setCategories] = useState([]);
     const [thumbnail, setThumbnail] = useState(null);
     const [isPromoted, setIsPromoted] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
-    const [selectedPrice, setSelectedPrice] = useState("");
     const [uploadType, setUploadType] = useState("youtube");
     const [countryCityData, setCountryCityData] = useState([]);
 
@@ -126,7 +124,7 @@ const UploadPage = () => {
 
     const isPayable = isPromoted || uploadType == "file";
     const price = (isPromoted ? 99 : 0) + (uploadType == "file" ? 99 : 0);
-3
+    3;
     return (
         <form onSubmit={uploadVideo}>
             <div className="md:flex justify-between gap-8 mb-10 rounded-2xl">

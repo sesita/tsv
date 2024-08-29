@@ -1,12 +1,12 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { FaEdit } from "react-icons/fa";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import VideoBox from "../../components/Common/VideoBox";
-import { usePageTitle } from "../../components/Layouts/UserLayout";
+import { useOutletContext } from "react-router-dom";
 
 const VideosPage = () => {
-    const setPageTitle = usePageTitle();
+    const { setPageTitle } = useOutletContext();
 
     useEffect(() => {
         setPageTitle("My Videos");
@@ -34,8 +34,8 @@ const VideosPage = () => {
                 <FaEdit className="text-5xl text-red-600" />
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {videos?.map((video, key) => (
-                    <VideoBox info={video} hidePlayBtn={true} analytics={true} />
+                {videos?.map((video) => (
+                    <VideoBox key={video?.id} info={video} hidePlayBtn={true} analytics={true} />
                 ))}
             </div>
         </>
