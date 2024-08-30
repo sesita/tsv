@@ -31,6 +31,10 @@ const NormalLayout = ({ searchQuery }) => {
         getPrimary();
     }, []);
 
+    useEffect(() => {
+        console.log(states)
+    }, [states])
+
     return (
         <>
             <ScrollRestoration />

@@ -21,11 +21,8 @@ const VideoPage = () => {
     const [videoInfo, setVideoInfo] = useState([]);
     const [thumbnail, setThumbnail] = useState({});
     
-    const { pageTitle, states } = useOutletContext();
+    const { states } = useOutletContext();
     
-    useEffect(() => {
-    }, [videoInfo.title, pageTitle]);
-
     const fetchVideo = async () => {
         try {
             const response = await axios.get(`Dashboard/MyVideo/${params.id}`);
@@ -34,6 +31,10 @@ const VideoPage = () => {
             toast.error(error.response?.data?.message ?? "Caught error");
         }
     };
+
+    useEffect(() => {
+        fetchVideo();
+    }, []);
 
     const updateVideo = async (e) => {
         e.preventDefault();
@@ -60,11 +61,6 @@ const VideoPage = () => {
             [e.target.name]: e.target.value,
         });
     };
-
-    useEffect(() => {
-        fetchVideo();
-        console.log(states);
-    }, [states]);
 
     const [selectedCountry, setSelectedCountry] = useState(null);
     const [cityOptions, setCityOptions] = useState([]);

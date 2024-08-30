@@ -1,9 +1,9 @@
 import axios from "axios";
+import moment from "moment";
 import { toast } from "react-toastify";
 import { FaEdit } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import VideoBox from "../../components/Common/VideoBox";
-import { useOutletContext } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 
 const VideosPage = () => {
     const { setPageTitle } = useOutletContext();
@@ -35,7 +35,15 @@ const VideosPage = () => {
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {videos?.map((video) => (
-                    <VideoBox key={video?.id} info={video} hidePlayBtn={true} analytics={true} />
+                    <Link to={`/User/Video/${video.id}`} key={video.id} className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer">
+                        <div className="aspect-w-16 aspect-h-9">
+                            <img src={video.thumbnail} alt={video.title} className="object-cover w-full h-full" />
+                        </div>
+                        <div className="p-4">
+                            <h2 className="text-xl font-semibold text-gray-800 mb-2 truncate">{video.title}</h2>
+                            <p className="text-sm text-gray-600 mb-2">{moment(video.created_at).fromNow()}</p>
+                        </div>
+                    </Link>
                 ))}
             </div>
         </>

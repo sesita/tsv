@@ -40,12 +40,15 @@ const Header = ({ searchQuery, states, categories, locator }) => {
     const [notificationDropdown, setNotificationDropdown] = useState(false);
     const userRef = useDetectClickOutside({ onTriggered: () => setShowDropdown(false) });
     const notificationRef = useDetectClickOutside({ onTriggered: () => setNotificationDropdown(false) });
+    const locationRef = useRef(null);
 
     useEffect(() => {
         window.addEventListener("scroll", handleScroll);
         window.addEventListener("resize", handleWindowSizeChange);
+        document.addEventListener("mousedown", handleClickOutside);
         return () => {
             window.removeEventListener("resize", handleWindowSizeChange);
+            document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
 
@@ -60,6 +63,12 @@ const Header = ({ searchQuery, states, categories, locator }) => {
     const handleSearch = (e) => {
         e.preventDefault();
         navigate(`/search?q=${searchText}`);
+    };
+
+    const handleClickOutside = (event) => {
+        if (locationRef.current && !locationRef.current.contains(event.target)) {
+            setLocationModal(false);
+        }
     };
 
     const renderCategoryLinks = () => {
@@ -136,7 +145,7 @@ const Header = ({ searchQuery, states, categories, locator }) => {
         <>
             {/* Location Modal */}
             <div className={`flex items-center justify-center z-20 left-0 top-0 bottom-0 right-0 animate__animated ${locationModal ? "fixed animate__fadeIn" : "hidden"}`}>
-                <div className="bg-white lg:w-1/3 md:mt-32 p-6 rounded-3xl border mx-4 border-gray-200 shadow-[0px_0px_100px_1px_rgba(0,0,0,1)]">
+                <div ref={locationRef} className="bg-white lg:w-1/3 md:mt-32 p-6 rounded-3xl border mx-4 border-gray-200 shadow-[0px_0px_100px_1px_rgba(0,0,0,1)]">
                     <div className="flex flex-col text-center text-2xl">
                         <div className="sm:px-6 px-2">
                             <div className="flex justify-between items-center mb-10">

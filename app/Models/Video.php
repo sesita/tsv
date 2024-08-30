@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,7 +13,12 @@ class Video extends Model
 
     protected $fillable = ['slug', 'title', 'description', 'video', 'user_id', 'thumbnail', 'price', 'category_id', 'location_id'];
 
-    public $appends = ['likes', 'dislikes', 'comments_count', 'shares', 'views'];
+    public $appends = ['location', 'likes', 'dislikes', 'comments_count', 'shares', 'views'];
+
+    public function scopePublished(Builder $query): void
+    {
+        $query->where('published', 1);
+    }
 
     public function getVideos($params = [])
     {
@@ -20,7 +26,7 @@ class Video extends Model
         $orderBy = $params['orderBy'] ?? 'id';
         $search = $params['search'] ?? null;
 
-        $query = Video::withCount('views');
+        $query = Video::published()->withCount('views');
 
         if ($orderBy == 'popular') {
             $query->orderBy('views_count', 'desc');
@@ -35,7 +41,7 @@ class Video extends Model
                 });
             });
         }
-        
+
         $list = $query->with(['category', 'user'])->paginate($paginate);
 
         return $list;
@@ -74,6 +80,15 @@ class Video extends Model
     public function interactions()
     {
         return $this->hasMany(Interaction::class);
+    }
+
+    public function getLocationAttribute($value)
+    {
+        $location = $this->location()->first();
+
+        $res['children'] = $location->id;
+        $res['parent'] = $location->parent()->first()->id;
+        return $res;
     }
 
     public function getLikesAttribute($value)
