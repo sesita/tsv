@@ -6,7 +6,7 @@ import ReactDOM from "react-dom/client";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-loading-skeleton/dist/skeleton.css";
-import { AuthContextProvider } from "./context/AuthContext";
+import { PrimaryProvider } from "./context/PrimaryContext";
 
 let url = window.location.origin + "/api";
 if (import.meta.env.DEV) {
@@ -28,8 +28,8 @@ axios.interceptors.request.use(
 );
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-    <AuthContextProvider>
+    <PrimaryProvider>
         <App />
         <ToastContainer />
-    </AuthContextProvider>
+    </PrimaryProvider>
 );

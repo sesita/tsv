@@ -4,16 +4,17 @@ import "swiper/css/scrollbar";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
-import { Link, useOutletContext } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import VideoBox from "../components/Common/VideoBox";
 import { Autoplay, EffectFade, Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { PrimaryContext } from "../context/PrimaryContext";
 
 const Home = () => {
-    const [videos] = useOutletContext();
+    const { state } = useContext(PrimaryContext);
     const [sliderVideos, setSliderVideos] = useState([]);
     const [PopularVideos, setPopularVideos] = useState([]);
     const [RecommendedVideos, setRecommendedVideos] = useState({});
@@ -44,10 +45,10 @@ const Home = () => {
     };
 
     useEffect(() => {
-        setSliderVideos(videos?.slider);
-        setPopularVideos(videos?.popular);
-        setRecommendedVideos(videos?.recommended);
-    }, [videos]);
+        setSliderVideos(state.videos?.slider);
+        setPopularVideos(state.videos?.popular);
+        setRecommendedVideos(state.videos?.recommended);
+    }, [state]);
 
     return (
         <>

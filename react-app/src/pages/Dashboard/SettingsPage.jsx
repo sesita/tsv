@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import TagsInput from "react-tagsinput";
 import { useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { usePrimary } from "../../context/PrimaryContext";
 
 const SettingsPage = () => {
     const { setPageTitle } = useOutletContext();
@@ -13,7 +13,7 @@ const SettingsPage = () => {
     }, [setPageTitle]);
 
     const navigate = useNavigate();
-    const { currentUser } = useAuth();
+    const { state } = usePrimary();
     const [user, setUser] = useState({});
     const [skills, setSkills] = useState([]);
     const [languages, setLanguages] = useState([]);
@@ -30,9 +30,9 @@ const SettingsPage = () => {
         };
         getUser();
 
-        setSkills(currentUser.additional_info?.skills ?? []);
-        setLanguages(currentUser.additional_info?.languages ?? []);
-        setEducations(currentUser.additional_info?.educations ?? []);
+        setSkills(state.user.additional_info?.skills ?? []);
+        setLanguages(state.user.additional_info?.languages ?? []);
+        setEducations(state.user.additional_info?.educations ?? []);
     }, []);
 
     const skillInput = (value) => {

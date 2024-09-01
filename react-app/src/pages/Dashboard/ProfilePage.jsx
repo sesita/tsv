@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
 import { FaFacebookF } from "react-icons/fa";
 import { AiFillInstagram } from "react-icons/ai";
-import { useAuth } from "../../context/AuthContext";
 import { BsGoogle, BsTwitter } from "react-icons/bs";
 import NumberFormatter from "../../components/Common/FormatNumber";
+import { usePrimary } from "../../context/PrimaryContext";
 
 const ProfilePage = () => {
     const { setPageTitle } = useOutletContext();
@@ -16,7 +16,7 @@ const ProfilePage = () => {
     }, [setPageTitle]);
 
     const [userInfo, setUserInfo] = useState();
-    const { currentUser } = useAuth();
+    const { state } = usePrimary();
     const params = useParams();
 
     useEffect(() => {
@@ -33,12 +33,12 @@ const ProfilePage = () => {
                     toast.error(e.response?.data?.message);
                 }
             } else {
-                setUserInfo(currentUser);
+                setUserInfo(state.user);
             }
         };
 
         getUser();
-    }, [currentUser, params.id]);
+    }, [state.user, params.id]);
 
     return (
         <>

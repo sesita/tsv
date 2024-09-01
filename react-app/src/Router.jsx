@@ -9,8 +9,8 @@ import NormalLayout from "./components/Layouts/NormalLayout";
 import Home from "./pages/Home";
 import Video from "./pages/Video";
 import Search from "./pages/Search";
-import Signin from "./pages/Auth/Signin";
-import Signup from "./pages/Auth/Signup";
+import Signin from "./pages/Auth/Login";
+import Signup from "./pages/Auth/Register";
 import UploadPage from "./pages/UploadPage";
 
 // Dashboard Pages

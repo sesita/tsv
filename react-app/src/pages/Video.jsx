@@ -4,20 +4,20 @@ import ReactPlayer from "react-player";
 import { IoMdPlay } from "react-icons/io";
 import { BsEyeFill } from "react-icons/bs";
 import Skeleton from "react-loading-skeleton";
-import { useAuth } from "../context/AuthContext";
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import VideoBox from "../components/Common/VideoBox";
 import NumberFormatter from "../components/Common/FormatNumber";
 import { AiOutlineLoading, AiFillLike, AiFillDislike } from "react-icons/ai";
 import { BiLogoTelegram, BiSolidCommentDetail } from "react-icons/bi";
+import { usePrimary } from "../context/PrimaryContext";
 
 const SingleVideo = () => {
     const { slug } = useParams();
     const [video, setVideo] = useState([]);
     const [loading, setLoading] = useState(true);
     const [relatedVideos, setRelatedVideos] = useState([]);
-    const { currentUser } = useAuth();
+    const { state } = usePrimary();
     const [comment, setComment] = useState();
     const [reply, setReply] = useState();
     const [comments, setComments] = useState({});
@@ -123,7 +123,7 @@ const SingleVideo = () => {
     };
 
     const Interaction = async (status) => {
-        if (!currentUser) return toast.error("Require Authorization");
+        if (!state.user) return toast.error("Require Authorization");
         if (status === data.interaction) return;
 
         const res = await axios.post("Video/Interaction", {
@@ -155,7 +155,7 @@ const SingleVideo = () => {
                                 <button className="absolute bg-red-600 text-white text-[65px] p-5 rounded-full">{loading ? <AiOutlineLoading className="animate-spin" /> : <IoMdPlay className="pl-2" />}</button>
                             </>
                         ) : (
-                            <ReactPlayer className="object-cover md:rounded-2xl" url={video.video} width='100%' height='100%' controls />
+                            <ReactPlayer className="object-cover md:rounded-2xl" url={video.video} width="100%" height="100%" controls />
                         )}
                     </div>
                     <div className="flex flex-col lg:flex-row gap-6 mt-5">
@@ -199,7 +199,7 @@ const SingleVideo = () => {
                                 <h4 className="text-2xl text-[#8B8B8B]">{data?.user?.name}</h4>
                             </Link>
                             <div className="md:rounded-3xl bg-[#ECECEC] md:p-8 p-4 mt-5">
-                                {currentUser && (
+                                {state.user && (
                                     <>
                                         {reply && (
                                             <div className="mb-4 mr-auto shadow rounded-xl p-3 bg-white">
@@ -208,7 +208,7 @@ const SingleVideo = () => {
                                             </div>
                                         )}
                                         <form onSubmit={addComment} className="flex items-center gap-5 mb-6">
-                                            <img src={currentUser?.avatar} className="sm:w-[45px] w-[25px] sm:h-[45px] h-[25px] rounded-full" alt="Avatar" />
+                                            <img src={state.user?.avatar} className="sm:w-[45px] w-[25px] sm:h-[45px] h-[25px] rounded-full" alt="Avatar" />
                                             <input type="text" ref={commentInput} className="text-[#ACACAC] border-0 border-b-[1px] border-b-[#ACACAC] sm:flex-1 w-1/2 bg-transparent outline-none py-2" placeholder="Add Comment" onChange={(e) => setComment(e.target.value)} />
                                             <button type="submit">
                                                 <BiLogoTelegram className="sm:text-4xl text-xl cursor-pointer" />

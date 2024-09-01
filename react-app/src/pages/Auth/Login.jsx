@@ -3,30 +3,31 @@ import { useEffect } from "react";
 import { FaGoogle } from "react-icons/fa";
 import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useAuth } from "../../context/AuthContext";
+import { usePrimary } from "../../context/PrimaryContext";
 
 const Signin = () => {
     const navigate = useNavigate();
     const params = useParams();
     const location = useLocation();
-    const { login, currentUser, setUser } = useAuth();
+
+    const { state, dispatch } = usePrimary();
 
     useEffect(() => {
-        if (currentUser) {
+        if (state.user) {
             navigate("/");
         }
         if (params?.social) {
             axios.post(`/Auth/Social/${params.social}/Callback${location?.search}`).then((response) => {
                 if (response.data?.access_token) {
                     localStorage.setItem("accessToken", response.data.access_token);
-                    setUser(response.data.access_token);
+                    dispatch({ type: "SET_USER", payload: response.data.access_token });
                     navigate("/");
                 } else {
                     toast.error(response.data.message);
                 }
             });
         }
-    }, [currentUser, navigate, params, location, setUser]);
+    }, [state.user, navigate, params, location, dispatch]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -37,7 +38,10 @@ const Signin = () => {
             toast.error("All fields are required!");
         } else {
             try {
-                const res = await login({ email, password });
+                const res = await axios.post("Auth/Login", { email, password });
+                localStorage.setItem("accessToken", res.data?.access_token);
+                dispatch({ type: "SET_USER", payload: res.data.access_token });
+
                 if (res.data.status !== "error") {
                     navigate("/");
                 } else {

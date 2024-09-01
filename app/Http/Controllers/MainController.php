@@ -30,6 +30,7 @@ class MainController extends Controller
         $popularParams[] = $request->all();
         $popularParams['orderBy'] = 'popular';
 
+        $data['user'] = Auth::user();
         $data['location'] = $location;
         $data['locations'] = $this->getLocations();
         $data['categories'] = $this->getCategories();

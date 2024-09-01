@@ -2,18 +2,18 @@ import { useEffect } from "react";
 import { FaGoogle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
+import { usePrimary } from "../../context/PrimaryContext";
 
 const Signup = () => {
     const navigate = useNavigate();
-    const { setUser, currentUser } = useAuth();
+    const { state } = usePrimary();
 
     useEffect(() => {
-        if (currentUser) {
+        if (state.user) {
             navigate("/");
         }
-    }, [currentUser, navigate]);
+    }, [state.user, navigate]);
 
     const handleSignup = async (e) => {
         e.preventDefault();
@@ -40,7 +40,7 @@ const Signup = () => {
 
                 if (res.data?.status === "success") {
                     localStorage.setItem("accessToken", res.data?.token);
-                    await setUser(res.data?.token);
+                    
                     toast.success("Successfully registered");
                     navigate("/");
                 }

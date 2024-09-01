@@ -119,6 +119,7 @@ class DashboardController extends Controller
             'title' => $request->title,
             'price' => $request->price,
             'category_id' => $request->category_id,
+            'location_id' => $request->location_id,
             'description' => $request->description,
         ];
 

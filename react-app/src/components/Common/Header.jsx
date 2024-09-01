@@ -13,7 +13,6 @@ import Skeleton from "react-loading-skeleton";
 import { BiSolidVideoPlus } from "react-icons/bi";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useState, useRef, useEffect } from "react";
-import { useAuth } from "../../context/AuthContext";
 import { IoClose, IoLocationSharp } from "react-icons/io5";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import { BsChevronUp, BsGraphUpArrow } from "react-icons/bs";
@@ -21,6 +20,7 @@ import { IoMdClose, IoMdNotifications, IoMdNotificationsOutline } from "react-ic
 import { AiFillPlayCircle, AiFillSetting } from "react-icons/ai";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDetectClickOutside } from "react-detect-click-outside";
+import { usePrimary } from "../../context/PrimaryContext";
 
 const Header = ({ searchQuery, states, categories, locator }) => {
     const { query } = useParams();
@@ -28,7 +28,7 @@ const Header = ({ searchQuery, states, categories, locator }) => {
     const location = useLocation();
 
     const prevScrollY = useRef(0);
-    const { currentUser, logout } = useAuth();
+    const { state } = usePrimary();
     const [searchText, setSearchText] = useState("");
     const [citiesData, setCitiesData] = useState([]);
     const [width, setWidth] = useState(window.innerWidth);
@@ -233,10 +233,10 @@ const Header = ({ searchQuery, states, categories, locator }) => {
                 </div>
                 <div className="p-4">
                     <div className="flex flex-col gap-2 mb-4">
-                        {currentUser && (
+                        {state.user && (
                             <div className="flex justify-between items-center border-b mb-2 pb-4">
                                 <div className="flex">
-                                    <img src={currentUser?.avatar} className="w-12 h-12 rounded-full mr-3 object-cover" />
+                                    <img src={state.user?.avatar} className="w-12 h-12 rounded-full mr-3 object-cover" />
                                     <div className="block text-dark-white">
                                         <p className="text-sm text-gray-700"> Welcome, Back </p>
                                         <p className="text-lg font-medium">Test </p>
@@ -303,7 +303,7 @@ const Header = ({ searchQuery, states, categories, locator }) => {
                             </div>
                         </div>
                     </div>
-                    {currentUser && (
+                    {state.user && (
                         <div className="flex flex-col p-2 gap-6 text-2xl font-medium text-gray-600 border-t mt-6 pt-6">
                             <Link to={"/User/Profile"} className="flex items-center gap-3">
                                 <CgProfile className="text-primary" />
@@ -329,7 +329,7 @@ const Header = ({ searchQuery, states, categories, locator }) => {
                                 <AiFillSetting className="text-primary" />
                                 Settings
                             </Link>
-                            <button className="flex items-center gap-3" onClick={() => logout({})}>
+                            <button className="flex items-center gap-3">
                                 <VscSignOut className="text-primary" />
                                 Sign Out
                             </button>
@@ -357,7 +357,7 @@ const Header = ({ searchQuery, states, categories, locator }) => {
                         </div>
 
                         {/* User & Notification Section */}
-                        {currentUser ? (
+                        {state.user ? (
                             <div className="flex gap-4 items-center relative">
                                 <div className="hidden md:flex gap-4 items-center relative">
                                     <Link to={`/User/Upload`}>
@@ -378,17 +378,17 @@ const Header = ({ searchQuery, states, categories, locator }) => {
                                 <div ref={userRef}>
                                     <div className="md:flex items-center cursor-pointer hidden" onClick={showUserDropdown}>
                                         <span className="absolute md:hidden border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-[#C60C0D] text-white text-[11px] -top-1.5 -right-1">0</span>
-                                        <img src={currentUser.avatar} className="rounded-full w-8 h-8 mr-2" alt={currentUser.name} />
+                                        <img src={state.user.avatar} className="rounded-full w-8 h-8 mr-2" alt={state.user.name} />
                                         <BsChevronUp className={!showDropdown && "rotate-180 hidden md:block"} />
                                     </div>
                                     <div className={`animate__animated animate__fadeIn shadow-[0px_0px_14px_0px_rgba(0,0,0,0.2)] rounded-xl py-4 px-5 absolute right-0 top-12 w-48 z-20 bg-white ${!showDropdown && "hidden"} `}>
-                                        <span className="font-medium text-xl text-red-600 capitalize">{currentUser.name}</span>
+                                        <span className="font-medium text-xl text-red-600 capitalize">{state.user.name}</span>
                                         <hr className="my-2.5" />
                                         <Link to={`/User/Profile`} className="flex items-center gap-3 text-blue-900 text-sm mb-2">
                                             <CgProfile className="text-[#C60C0D] text-lg" />
                                             Profile
                                         </Link>
-                                        <button className="flex items-center gap-3 text-blue-900 text-sm mb-2" onClick={() => logout({})}>
+                                        <button className="flex items-center gap-3 text-blue-900 text-sm mb-2">
                                             <VscSignOut className="text-[#C60C0D] text-lg" />
                                             Sign Out
                                         </button>
@@ -409,7 +409,7 @@ const Header = ({ searchQuery, states, categories, locator }) => {
                                             <AiFillSetting className="text-[#C60C0D] text-lg" />
                                             Settings
                                         </Link>
-                                        {currentUser?.admin === 1 && (
+                                        {state.user?.admin === 1 && (
                                             <>
                                                 <hr className="my-3" />
                                                 <Link to={`/Admin`} className="flex items-center gap-3 text-blue-900 text-sm mb-1">
@@ -423,7 +423,7 @@ const Header = ({ searchQuery, states, categories, locator }) => {
                             </div>
                         ) : (
                             <>
-                                {currentUser === false ? (
+                                {state.user === false ? (
                                     <div className="md:block hidden">
                                         <Skeleton borderRadius={150} width={150} height={30} />
                                     </div>
@@ -463,13 +463,13 @@ const Header = ({ searchQuery, states, categories, locator }) => {
                             <span className="absolute border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-[#C60C0D] text-white text-[11px] -top-1.5 -right-1.5">0</span>
                             <IoMdNotificationsOutline className="text-primary" />
                         </Link>
-                        {!currentUser ? (
+                        {!state.user ? (
                             <Link to={"/Auth/Login"}>
                                 <LuLogIn className="text-primary" />
                             </Link>
                         ) : (
                             <button type="button" onClick={showUserDropdown}>
-                                <img src={currentUser.avatar} className="rounded-full w-8 h-8" alt={currentUser.name} />
+                                <img src={state.user.avatar} className="rounded-full w-8 h-8" alt={state.user.name} />
                             </button>
                         )}
                     </div>
