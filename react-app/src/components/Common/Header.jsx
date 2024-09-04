@@ -357,7 +357,7 @@ const Header = ({ searchQuery, states, categories, locator }) => {
                         </div>
 
                         {/* User & Notification Section */}
-                        {state.user ? (
+                        {state.user?.id ? (
                             <div className="flex gap-4 items-center relative">
                                 <div className="hidden md:flex gap-4 items-center relative">
                                     <Link to={`/User/Upload`}>
@@ -423,7 +423,7 @@ const Header = ({ searchQuery, states, categories, locator }) => {
                             </div>
                         ) : (
                             <>
-                                {state.user === false ? (
+                                {state.user ? (
                                     <div className="md:block hidden">
                                         <Skeleton borderRadius={150} width={150} height={30} />
                                     </div>
