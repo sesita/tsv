@@ -1,7 +1,6 @@
 import moment from "moment";
 import NumberFormatter from "./FormatNumber";
 import { Link } from "react-router-dom";
-import { LuDollarSign } from "react-icons/lu";
 import { IoIosPlay } from "react-icons/io";
 
 const VideoBox = ({ info }) => {
@@ -10,10 +9,12 @@ const VideoBox = ({ info }) => {
             <div className="relative group">
                 {/* Dollar Sign Overlay */}
                 <Link to={`/${info.slug}`}>
-                    <span className="py-4 w-12 flex items-center justify-center absolute right-2 top-2 bg-primary text-white rounded-full">
-                        <LuDollarSign />
-                        <LuDollarSign />
-                        <LuDollarSign />
+                    <span className="py-3 w-12 flex items-center justify-center absolute right-2 top-2 bg-primary text-white rounded-full z-10 tracking-widest font-semibold text-xl group-hover:opacity-0">
+                        {Array(info?.price)
+                            .fill("$")
+                            .map((e, index) => (
+                                <span key={index}>{e}</span>
+                            ))}
                     </span>
                 </Link>
 

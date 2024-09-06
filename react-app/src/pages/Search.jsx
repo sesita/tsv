@@ -9,12 +9,10 @@ import Skeleton from "react-loading-skeleton";
 import { Swiper, SwiperSlide } from "swiper/react";
 import VideoBox from "../components/Common/VideoBox";
 import { Autoplay, EffectFade } from "swiper/modules";
-import FilterOptions from "../components/Common/FilterOptions";
 
 const Search = ({ searchQuery }) => {
     const [videos, setVideos] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [activeTag, setActiveTag] = useState(null);
     const [sliderVideos, setSliderVideos] = useState([]);
 
     const { query } = useParams();
@@ -38,7 +36,6 @@ const Search = ({ searchQuery }) => {
         const res = await axios.get("Main/getVideos", {
             params: {
                 search: search,
-                tag: activeTag,
             },
         });
         setVideos(res.data);
@@ -48,8 +45,7 @@ const Search = ({ searchQuery }) => {
     useEffect(() => {
         getVideos(query);
         fetchSliderVideos();
-        console.log(query);
-    }, [searchQuery, activeTag, query]);
+    }, [searchQuery, query]);
 
     return (
         <>
@@ -87,7 +83,6 @@ const Search = ({ searchQuery }) => {
             </Swiper>
             <div className="sm:container">
                 <div className="relative shadow-[0px_0px_14px_0px_rgba(0,0,0,0.25)] sm:pt-8 pt-6 sm:rounded-3xl sm:px-10 -mt-24 mb-16 z-10 bg-white pb-10">
-                    <FilterOptions searchQuery={searchQuery} getVideos={getVideos} activeTag={activeTag} setActiveTag={setActiveTag} />
                     <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2">
                         {loading ? (
                             <>
