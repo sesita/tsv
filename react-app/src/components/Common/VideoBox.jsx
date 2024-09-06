@@ -2,11 +2,13 @@ import moment from "moment";
 import NumberFormatter from "./FormatNumber";
 import { Link } from "react-router-dom";
 import { LuDollarSign } from "react-icons/lu";
+import { IoIosPlay } from "react-icons/io";
 
 const VideoBox = ({ info }) => {
     return (
         <>
-            <div className="relative">
+            <div className="relative group">
+                {/* Dollar Sign Overlay */}
                 <Link to={`/${info.slug}`}>
                     <span className="py-4 w-12 flex items-center justify-center absolute right-2 top-2 bg-primary text-white rounded-full">
                         <LuDollarSign />
@@ -14,18 +16,31 @@ const VideoBox = ({ info }) => {
                         <LuDollarSign />
                     </span>
                 </Link>
+
+                {/* Video Thumbnail with Hover Animation */}
                 <Link to={`/${info.slug}`}>
-                    <div
-                        style={{
-                            background: `url(${info.thumbnail})`,
-                            backgroundPosition: "center",
-                            backgroundRepeat: "no-repeat",
-                            backgroundSize: "cover",
-                            cursor: "pointer",
-                        }}
-                        className="md:h-52 sm:h-40 h-36 w-full shadow sm:rounded-xl mb-2"
-                    ></div>
+                    <div className="relative w-full h-36 sm:h-40 md:h-52 overflow-hidden shadow sm:rounded-xl mb-2">
+                        <div
+                            style={{
+                                background: `url(${info.thumbnail})`,
+                                backgroundPosition: "center",
+                                backgroundRepeat: "no-repeat",
+                                backgroundSize: "cover",
+                                cursor: "pointer",
+                            }}
+                            className="w-full h-full transition-transform duration-300 transform group-hover:scale-110"
+                        ></div>
+
+                        {/* Play Button Overlay */}
+                        <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div className="text-white text-5xl">
+                                <IoIosPlay className="bg-red-600 p-2 rounded-full" />
+                            </div>
+                        </div>
+                    </div>
                 </Link>
+
+                {/* Video Info */}
                 <div className="flex items-center gap-3 mx-2 sm:mx-0">
                     <img src={info.user?.avatar} className="rounded-full w-10 h-10 object-cover" alt="Avatar" />
                     <div className="flex flex-col gap-0.5">

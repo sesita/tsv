@@ -17,10 +17,23 @@ class DashboardController extends Controller
         return response($video);
     }
     public function MyVideos(Request $request){
-        $order = $request->order ?? 'id';
-        $videos = Video::with('user')->where('user_id', Auth::user()->id)->orderBy($order, 'desc')->get();
-        return response($videos);
+        $perPage = 8;
+        $userId = Auth::user()->id;
+        $query = $request->query('query', '');
+        $order = $request->query('order', 'id');
+    
+        $videos = Video::with('user')
+            ->where('user_id', $userId)
+            ->where('title', 'like', '%' . $query . '%')
+            ->orderBy($order, 'desc')
+            ->paginate($perPage);
+    
+        return response()->json([
+            'videos' => $videos->items(),
+            'totalPages' => $videos->lastPage(),
+        ]);
     }
+    
     public function Settings(Request $request){
         $userId = Auth::user()->id;
         $request->validate([

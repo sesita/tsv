@@ -50,20 +50,12 @@ const VideoPage = () => {
         try {
             const { data } = await axios.get(`/Main/getLocations/${stateOption.value}`);
 
-            // Ensure the data is an object and map it to array
             const cities = Object.keys(data).map((key) => ({
                 value: key,
                 label: data[key],
             }));
 
             setCityOptions(cities);
-
-            // Set the city based on videoInfo.location.children
-            const defaultCity = cities.find((city) => city.value == videoInfo.location?.children) || null;
-            setVideoInfo((prev) => ({
-                ...prev,
-                location_id: defaultCity?.value,
-            }));
         } catch (error) {
             toast.error("Failed to fetch cities.");
         }
@@ -71,22 +63,21 @@ const VideoPage = () => {
 
     const updateVideo = async (e) => {
         e.preventDefault();
-        const formData = new FormData();
-        Object.keys(videoInfo).forEach((key) => formData.append(key, videoInfo[key]));
-        if (thumbnail) {
-            formData.append("thumbnail", thumbnail);
-        }
 
         try {
-            await axios.post("/Dashboard/Update", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            });
+            await axios.post(
+                "Dashboard/Update",
+                { ...videoInfo, thumbnail: thumbnail },
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
             toast.success("Video Updated");
             navigate("/User/Videos");
         } catch (error) {
-            toast.error(error.response?.data?.message || "Error updating video");
+            toast.error(error.response?.data?.message);
         }
     };
 

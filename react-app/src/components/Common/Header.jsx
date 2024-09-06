@@ -427,7 +427,7 @@ const Header = ({ searchQuery, states, categories, locator }) => {
                                     <div className="md:block hidden">
                                         <Skeleton borderRadius={150} width={150} height={30} />
                                     </div>
-                                ) : (
+                                ) : (  
                                     <div className="md:gap-4 gap-1 items-center md:flex hidden">
                                         <IoLocationSharp className="md:text-3xl text-xl cursor-pointer mr-0 xl:mr-4" onClick={() => setLocationModal(!locationModal)} />
                                         <Link to={`/Auth/Login`} className="md:block hidden">
