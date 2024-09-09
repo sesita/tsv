@@ -28,7 +28,7 @@ const Header = ({ searchQuery, states, categories, locator }) => {
     const location = useLocation();
 
     const prevScrollY = useRef(0);
-    const { state } = usePrimary();
+    const { state, dispatch } = usePrimary();
     const [searchText, setSearchText] = useState("");
     const [citiesData, setCitiesData] = useState([]);
     const [width, setWidth] = useState(window.innerWidth);
@@ -139,6 +139,12 @@ const Header = ({ searchQuery, states, categories, locator }) => {
         } else {
             setShowDropdown(!showDropdown);
         }
+    };
+
+    const Logout = async () => {
+        await axios.post("Auth/Logout");
+        localStorage.setItem("accessToken", null);
+        dispatch({ type: "SET_USER", payload: {} });
     };
 
     return (
@@ -329,7 +335,7 @@ const Header = ({ searchQuery, states, categories, locator }) => {
                                 <AiFillSetting className="text-primary" />
                                 Settings
                             </Link>
-                            <button className="flex items-center gap-3">
+                            <button onClick={() => Logout()} className="flex items-center gap-3">
                                 <VscSignOut className="text-primary" />
                                 Sign Out
                             </button>
@@ -360,12 +366,13 @@ const Header = ({ searchQuery, states, categories, locator }) => {
                         {state.user?.id ? (
                             <div className="flex gap-4 items-center relative">
                                 <div className="hidden md:flex gap-4 items-center relative">
+                                    <IoLocationSharp className="md:text-3xl text-xl cursor-pointer mr-0 xl:mr-2" onClick={() => setLocationModal(!locationModal)} />
                                     <Link to={`/User/Upload`}>
-                                        <BiSolidVideoPlus className="md:text-3xl text-xl cursor-pointer" />
+                                        <BiSolidVideoPlus className="md:text-3xl text-xl cursor-pointer xl:mr-2" />
                                     </Link>
-                                    <div className="relative cursor-pointer" ref={notificationRef} onClick={() => setNotificationDropdown(!notificationDropdown)}>
+                                    <div className="relative cursor-pointer xl:mr-4" ref={notificationRef} onClick={() => setNotificationDropdown(!notificationDropdown)}>
                                         <span className="absolute border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-[#C60C0D] text-white text-[11px] -top-1.5 -right-1.5">0</span>
-                                        <IoMdNotifications className="md:text-3xl text-xl" />
+                                        <IoMdNotifications className="md:text-3xl text-xl " />
                                         {notificationDropdown && (
                                             <div className="shadow-[0px_0px_5px_0px_rgba(0,0,0,0.2)] rounded-xl py-4 px-4 absolute right-0 top-12 w-52 z-20 text-center bg-white">
                                                 <span className="font-medium text-xl text-red-600 capitalize">Notifications</span>
@@ -388,7 +395,7 @@ const Header = ({ searchQuery, states, categories, locator }) => {
                                             <CgProfile className="text-[#C60C0D] text-lg" />
                                             Profile
                                         </Link>
-                                        <button className="flex items-center gap-3 text-blue-900 text-sm mb-2">
+                                        <button onClick={() => Logout()} className="flex items-center gap-3 text-blue-900 text-sm mb-2">
                                             <VscSignOut className="text-[#C60C0D] text-lg" />
                                             Sign Out
                                         </button>
@@ -427,7 +434,7 @@ const Header = ({ searchQuery, states, categories, locator }) => {
                                     <div className="md:block hidden">
                                         <Skeleton borderRadius={150} width={150} height={30} />
                                     </div>
-                                ) : (  
+                                ) : (
                                     <div className="md:gap-4 gap-1 items-center md:flex hidden">
                                         <IoLocationSharp className="md:text-3xl text-xl cursor-pointer mr-0 xl:mr-4" onClick={() => setLocationModal(!locationModal)} />
                                         <Link to={`/Auth/Login`} className="md:block hidden">

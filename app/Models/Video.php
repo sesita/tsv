@@ -25,6 +25,7 @@ class Video extends Model
         $paginate = $params['paginate'] ?? 8;
         $orderBy = $params['orderBy'] ?? 'id';
         $search = $params['search'] ?? null;
+        $related = $params['related'] ?? null;
 
         $query = Video::published()->withCount('views');
 
@@ -42,6 +43,14 @@ class Video extends Model
             });
         }
 
+        if ($related) {
+            $relatedVideo = Video::find($related);
+
+            if ($relatedVideo) {
+                $query->where('category_id', $relatedVideo->category_id)
+                    ->where('id', '!=', $related);
+            }
+        }
         $list = $query->with(['category', 'user'])->paginate($paginate);
 
         return $list;

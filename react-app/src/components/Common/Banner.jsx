@@ -1,4 +1,4 @@
-import { FaUserCog } from "react-icons/fa";
+import { FaCog, FaUserCog } from "react-icons/fa";
 import { FaAdversal } from "react-icons/fa";
 import { BiSolidCategory } from "react-icons/bi";
 import { RiMoneyDollarBoxFill } from "react-icons/ri";
@@ -46,6 +46,12 @@ const Banner = ({ pageTitle, children }) => {
                                     <Link to={"/"} className="flex items-center gap-3">
                                         Ads
                                         <FaAdversal className="mt-1" />
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link to={"/"} className="flex items-center gap-3">
+                                        Settings
+                                        <FaCog className="mt-1" />
                                     </Link>
                                 </li>
                             </ul>

@@ -11,12 +11,15 @@ import NumberFormatter from "../components/Common/FormatNumber";
 import { AiOutlineLoading, AiFillLike, AiFillDislike } from "react-icons/ai";
 import { BiLogoTelegram, BiSolidCommentDetail } from "react-icons/bi";
 import { usePrimary } from "../context/PrimaryContext";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const SingleVideo = () => {
     const { slug } = useParams();
     const [video, setVideo] = useState([]);
     const [loading, setLoading] = useState(true);
     const [relatedVideos, setRelatedVideos] = useState([]);
+    const [hasMore, setHasMore] = useState(true);
+    const [page, setPage] = useState(1);
     const { state } = usePrimary();
     const [comment, setComment] = useState();
     const [reply, setReply] = useState();
@@ -35,6 +38,7 @@ const SingleVideo = () => {
             try {
                 const response = await axios.get(`Video/${slug}`);
                 setVideo(response.data);
+                setLoading(false);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -42,38 +46,35 @@ const SingleVideo = () => {
         fetchData();
     }, [slug]);
 
-    useEffect(() => {
-        if (video?.tags?.[0]) {
-            let Tags = JSON.parse(localStorage.getItem("recommendedTags"));
-            if (!Array.isArray(Tags)) Tags = [];
-            if (!Tags.includes(video.tags[0].id)) Tags.push(video.tags[0].id);
-            if (Tags.length >= 5) delete Tags[0];
-            localStorage.setItem("recommendedTags", JSON.stringify(Tags));
-        }
-
-        axios
-            .get("Main/getVideos", {
+    const fetchRelatedVideos = async (page) => {
+        try {
+            const res = await axios.get("Main/getVideos", {
                 params: {
-                    tag: JSON.parse(localStorage.getItem("recommendedTags")),
-                    paginate: 3,
+                    related: video?.id,
+                    page: page,
                 },
-            })
-            .then((res) => {
-                setRelatedVideos(res.data.data);
             });
-
-        if (video.video) {
-            setTimeout(() => {
-                setLoading(false);
-            }, 1000);
+            if (res.data.data.length === 0) {
+                setHasMore(false);
+            } else {
+                setRelatedVideos((prev) => [...prev, ...res.data.data]);
+            }
+        } catch (error) {
+            console.error("Error fetching related videos:", error);
         }
-    }, [video]);
+    };
 
     useEffect(() => {
         setComments(video?.comments);
         setData(video);
         setLikesPercent(countInteractionPercent(video.likes, video.dislikes));
     }, [video]);
+
+    useEffect(() => {
+        if (video?.id) {
+            fetchRelatedVideos(page);
+        }
+    }, [video, page]);
 
     useEffect(() => {
         setLikesPercent(countInteractionPercent(data.likes, data.dislikes));
@@ -220,9 +221,28 @@ const SingleVideo = () => {
                             </div>
                         </div>
                         <div className="grid md:grid-cols-3 lg:grid-cols-1 grid-cols-1 w-full lg:max-w-[300px] gap-5 md:p-2 rounded">
-                            {relatedVideos.map((video, key) => (
-                                <VideoBox key={key} info={video} />
-                            ))}
+                            <InfiniteScroll
+                                dataLength={relatedVideos.length}
+                                next={() => setPage((prev) => prev + 1)}
+                                hasMore={hasMore}
+                                className="grid md:grid-cols-3 lg:grid-cols-1 grid-cols-1 w-full lg:max-w-[300px] gap-5 md:p-2 rounded"
+                                loader={
+                                    <>
+                                        {Array(2)
+                                            .fill()
+                                            .map((_, key) => (
+                                                <div className="w-full h-full" key={key}>
+                                                    <Skeleton height={180} borderRadius={20} />
+                                                    <Skeleton height={50} className="mt-4" borderRadius={20} />
+                                                </div>
+                                            ))}
+                                    </>
+                                }
+                            >
+                                {relatedVideos.map((video, idx) => (
+                                    <VideoBox key={idx} info={video} className="mb-3" />
+                                ))}
+                            </InfiniteScroll>
                         </div>
                     </div>
                 </div>
