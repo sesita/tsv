@@ -10,7 +10,7 @@ import { MdOutlineFileUpload } from "react-icons/md";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import { FaInfoCircle, FaYoutube, FaUpload } from "react-icons/fa";
 
-const UploadPage = () => {
+const Upload = () => {
     const { setPageTitle } = useOutletContext();
     const navigate = useNavigate();
 
@@ -291,7 +291,7 @@ const UploadPage = () => {
                         <label className="text-sm font-medium text-gray-500 ml-1 flex gap-1 cursor-pointer" data-tooltip-id="Description">
                             Description
                             <FaInfoCircle className="mt-1" />
-                            <ReactTooltip id="Description" content="This Description Field Is For Better SEO" />
+                            <ReactTooltip id="Description" content="Description about your video" />
                         </label>
                         <textarea name="description" rows="4" className="text-lg font-medium rounded-2xl border py-2 px-4 outline-none" placeholder="Description..." value={videoInfo?.description || ""} onChange={changeInput}></textarea>
                     </div>
@@ -317,4 +317,4 @@ const UploadPage = () => {
     );
 };
 
-export default UploadPage;
+export default Upload;

@@ -22,7 +22,7 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDetectClickOutside } from "react-detect-click-outside";
 import { usePrimary } from "../../context/PrimaryContext";
 
-const Header = ({ searchQuery, states, categories, locator }) => {
+const Header = ({ states, categories, locator }) => {
     const { query } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
@@ -62,7 +62,7 @@ const Header = ({ searchQuery, states, categories, locator }) => {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        navigate(`/search?q=${searchText}`);
+        navigate(`/search/${searchText}`);
     };
 
     const handleClickOutside = (event) => {
@@ -355,7 +355,7 @@ const Header = ({ searchQuery, states, categories, locator }) => {
                         {/* Search Bar Section */}
                         <div className="w-2/3 md:w-1/2 px-4">
                             <form className="w-full rounded-full border-[1px] border-[#CACACA] py-1 px-1 flex" onSubmit={handleSearch}>
-                                <input type="text" className="outline-none border-none md:text-sm text-xs sm:pl-4 pl-2 flex-1 rounded-lg" placeholder="Search..." value={searchQuery || searchText} onChange={(e) => setSearchText(e.target.value)} />
+                                <input type="text" className="outline-none border-none md:text-sm text-xs sm:pl-4 pl-2 flex-1 rounded-lg" placeholder="Search..." value={searchText} onChange={(e) => setSearchText(e.target.value)} />
                                 <button className="md:w-9 md:h-9 w-6 h-6 bg-[#C60C0D] flex justify-center items-center rounded-full text-white" onClick={handleSearch}>
                                     <CiSearch className="md:text-xl text-sm" />
                                 </button>

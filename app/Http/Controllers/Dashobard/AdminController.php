@@ -33,12 +33,12 @@ class AdminController extends Controller
 
     public function getUsers()
     {
-        $users = User::all();
+        $users = User::paginate(9)->all();
         return response()->json($users);
     }
     public function getVideos()
     {
-        $videos = Video::paginate(9);
+        $videos = Video::orderBy('status', 'asc')->paginate(9);
         return response()->json($videos);
     }
 
@@ -111,6 +111,12 @@ class AdminController extends Controller
     public function deleteCategory(Request $request)
     {
         Category::find($request->id)->delete();
+        return response(['status' => 'success']);
+    }
+
+    public function acceptVideo(Request $request)
+    {
+        Video::find($request->id)->update(['status'=>'active']);
         return response(['status' => 'success']);
     }
 }

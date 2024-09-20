@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Video;
+use App\Models\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
@@ -32,6 +34,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'Auth'], function ($router) {
     Route::post('Me', [AuthController::class, 'me']);
 });
 
+
 Route::prefix('Main')->group(function () {
     Route::get('primary', [MainController::class, 'primary']);
     Route::get('getUser', [MainController::class, 'getUser']);
@@ -56,6 +59,7 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'Dashboard'], function ($r
     Route::get('Checkout', [DashboardController::class, 'Checkout']);
     Route::get('MyVideos', [DashboardController::class, 'MyVideos']);
     Route::get('MyVideo/{id}', [DashboardController::class, 'MyVideo']);
+    Route::get('VideoViews/{id}', [DashboardController::class, 'VideoViews']);
 
     
     Route::any('Admin/{method}', function ($method, Request $request) {

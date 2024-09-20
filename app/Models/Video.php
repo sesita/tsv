@@ -11,13 +11,13 @@ class Video extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['slug', 'title', 'description', 'video', 'user_id', 'thumbnail', 'price', 'category_id', 'location_id'];
+    protected $fillable = ['slug', 'title', 'description', 'video', 'user_id', 'thumbnail', 'price', 'status', 'category_id', 'location_id'];
 
     public $appends = ['location', 'likes', 'dislikes', 'comments_count', 'shares', 'views'];
 
     public function scopePublished(Builder $query): void
     {
-        $query->where('published', 1);
+        $query->where('status', 'active');
     }
 
     public function getVideos($params = [])

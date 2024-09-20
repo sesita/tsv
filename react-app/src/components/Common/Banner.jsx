@@ -37,19 +37,7 @@ const Banner = ({ pageTitle, children }) => {
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link to={"/"} className="flex items-center gap-3">
-                                        Sales
-                                        <RiMoneyDollarBoxFill className="mt-1" />
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to={"/"} className="flex items-center gap-3">
-                                        Ads
-                                        <FaAdversal className="mt-1" />
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to={"/"} className="flex items-center gap-3">
+                                    <Link to={"/Admin/Settings"} className="flex items-center gap-3">
                                         Settings
                                         <FaCog className="mt-1" />
                                     </Link>

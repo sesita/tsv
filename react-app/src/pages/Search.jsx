@@ -10,7 +10,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import VideoBox from "../components/Common/VideoBox";
 import { Autoplay, EffectFade } from "swiper/modules";
 
-const Search = ({ searchQuery }) => {
+const Search = () => {
     const [videos, setVideos] = useState([]);
     const [loading, setLoading] = useState(false);
     const [sliderVideos, setSliderVideos] = useState([]);
@@ -45,7 +45,7 @@ const Search = ({ searchQuery }) => {
     useEffect(() => {
         getVideos(query);
         fetchSliderVideos();
-    }, [searchQuery, query]);
+    }, [query]);
 
     return (
         <>

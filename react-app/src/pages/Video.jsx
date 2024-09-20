@@ -12,8 +12,9 @@ import { AiOutlineLoading, AiFillLike, AiFillDislike } from "react-icons/ai";
 import { BiLogoTelegram, BiSolidCommentDetail } from "react-icons/bi";
 import { usePrimary } from "../context/PrimaryContext";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { FiShare2 } from "react-icons/fi"; // Import a share icon
 
-const SingleVideo = () => {
+const Video = () => {
     const { slug } = useParams();
     const [video, setVideo] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -139,7 +140,21 @@ const SingleVideo = () => {
             toast.error("Could not interact");
         }
     };
-
+    const handleShare = () => {
+        if (navigator.share) {
+            navigator
+                .share({
+                    title: video.title,
+                    text: video.description,
+                    url: window.location.href
+                })
+                .catch((error) => {
+                    toast.error('Error sharing video: ' + error);
+                });
+        } else {
+            toast.error('Sharing not supported in this browser');
+        }
+    };
     return (
         <>
             <div className="bg-gray-800 sm:pt-10 sm:pb-20 pattern">
@@ -149,20 +164,22 @@ const SingleVideo = () => {
             </div>
             <div className="sm:container">
                 <div className="md:rounded-3xl md:py-8 py-4 md:px-8 bg-white -mt-10">
-                    <div className="max-h-[800px] md:h-[500px] w-full flex justify-center items-center relative">
+                    <div className="max-h-[800px] md:h-[500px] h-[220px] w-full flex justify-center items-center relative">
                         {loading ? (
                             <>
                                 <img src={video.thumbnail} alt="" className="w-full h-full object-cover md:rounded-2xl" />
                                 <button className="absolute bg-red-600 text-white text-[65px] p-5 rounded-full">{loading ? <AiOutlineLoading className="animate-spin" /> : <IoMdPlay className="pl-2" />}</button>
                             </>
                         ) : (
-                            <ReactPlayer className="object-cover md:rounded-2xl" url={video.video} width="100%" height="100%" controls />
+                            <div className="player-wrapper w-full h-full rounded-xl">
+                                <ReactPlayer className="object-cover rounded-2xl" url={video.video} width="100%" height="100%" controls />
+                            </div>
                         )}
                     </div>
                     <div className="flex flex-col lg:flex-row gap-6 mt-5">
                         <div className="flex-1">
-                            <h1 className="text-3xl font-semibold mx-1.5 md:mx-0">{data.title}</h1>
-                            <div className="sm:flex grid grid-cols-4 gap-8 items-center my-4 mb-5 mx-1.5 md:mx-0">
+                            <h1 className="text-3xl font-semibold mx-2 md:mx-0">{data.title}</h1>
+                            <div className="sm:flex grid grid-cols-4 gap-8 items-center my-4 mb-5 mx-2 md:mx-0">
                                 <div className="flex gap-2 items-center">
                                     <BsEyeFill className="text-[#8B8B8B] text-3xl" />
                                     <span className="text-md text-[#8B8B8B]">
@@ -193,31 +210,38 @@ const SingleVideo = () => {
                                         <NumberFormatter value={data.dislikes} />
                                     </span>
                                 </div>
+                                <div className="flex gap-2 items-center cursor-pointer" onClick={handleShare}>
+                                    <FiShare2 className="text-[#8B8B8B] text-3xl" />
+                                    <span className="text-md text-[#8B8B8B]">Share</span>
+                                </div>
                             </div>
 
-                            <Link to={`/User/Profile/${data?.user?.id}`} className="flex items-center gap-3 mb-8">
+                            <Link to={`/User/Profile/${data?.user?.id}`} className="flex items-center gap-3 mb-8 mx-2 md:mx-0">
                                 <img src={data?.user?.avatar} alt="user avatar" className="w-[40px] h-[40px] rounded-full" />
                                 <h4 className="text-2xl text-[#8B8B8B]">{data?.user?.name}</h4>
                             </Link>
-                            <div className="md:rounded-3xl bg-[#ECECEC] md:p-8 p-4 mt-5">
+
+                            <div className="md:rounded-3xl bg-gray-100 drop-shadow md:p-8 p-4 mb-8">{video.description}</div>
+
+                            <div className="md:rounded-3xl bg-gray-100 drop-shadow md:p-8 p-4">
                                 {state.user && (
                                     <>
                                         {reply && (
-                                            <div className="mb-4 mr-auto shadow rounded-xl p-3 bg-white">
-                                                <span className="block mb-1">Replying to {reply?.user?.name}</span>
-                                                <span className="text-xs ml-2">{reply?.comment}</span>
+                                            <div className="mb-4 mr-auto shadow md:rounded-xl rounded-lg p-3 bg-white">
+                                                <span className="block mb-1 text-sm sm:text-base">Replying to {reply?.user?.name}</span>
+                                                <span className="text-xs text-gray-600">{reply?.comment}</span>
                                             </div>
                                         )}
-                                        <form onSubmit={addComment} className="flex items-center gap-5 mb-6">
-                                            <img src={state.user?.avatar} className="sm:w-[45px] w-[25px] sm:h-[45px] h-[25px] rounded-full" alt="Avatar" />
-                                            <input type="text" ref={commentInput} className="text-[#ACACAC] border-0 border-b-[1px] border-b-[#ACACAC] sm:flex-1 w-1/2 bg-transparent outline-none py-2" placeholder="Add Comment" onChange={(e) => setComment(e.target.value)} />
-                                            <button type="submit">
-                                                <BiLogoTelegram className="sm:text-4xl text-xl cursor-pointer" />
+                                        <form onSubmit={addComment} className="flex items-center gap-3 mb-4">
+                                            <img src={state.user?.avatar} className="w-8 h-8 sm:w-[45px] sm:h-[45px] rounded-full" alt="Avatar" />
+                                            <input type="text" ref={commentInput} className="flex-1 text-sm sm:text-base text-gray-500 border-b border-gray-300 bg-transparent outline-none py-2" placeholder="Add Comment" onChange={(e) => setComment(e.target.value)} />
+                                            <button type="submit" className="text-red-500">
+                                                <BiLogoTelegram className="text-2xl sm:text-4xl cursor-pointer" />
                                             </button>
                                         </form>
                                     </>
                                 )}
-                                <div className="bg-[#FFFFFF] rounded-2xl pt-2 pb-6 px-5">{comments?.length > 0 ? displayComments(comments) : <h1 className="text-center mt-4 text-lg font-medium">No comments yet...</h1>}</div>
+                                <div className="bg-white rounded-xl pt-2 pb-6 px-3 md:px-5">{comments?.length > 0 ? displayComments(comments) : <h1 className="text-center mt-4 text-base sm:text-lg font-medium text-gray-600">No comments yet...</h1>}</div>
                             </div>
                         </div>
                         <div className="grid md:grid-cols-3 lg:grid-cols-1 grid-cols-1 w-full lg:max-w-[300px] gap-5 md:p-2 rounded">
@@ -251,4 +275,4 @@ const SingleVideo = () => {
     );
 };
 
-export default SingleVideo;
+export default Video;

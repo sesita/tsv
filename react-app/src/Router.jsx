@@ -11,7 +11,7 @@ import Video from "./pages/Video";
 import Search from "./pages/Search";
 import Signin from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Register";
-import UploadPage from "./pages/UploadPage";
+import Upload from "./pages/Upload";
 
 // Dashboard Pages
 import VideoPage from "./pages/Dashboard/VideoPage";
@@ -25,6 +25,7 @@ import Dashboard from "./pages/Dashboard/Admin/Dashboard";
 import AdminVideos from "./pages/Dashboard/Admin/Videos";
 import Categories from "./pages/Dashboard/Admin/Categories";
 import Users from "./pages/Dashboard/Admin/Users";
+import Settings from "./pages/Dashboard/Admin/Settings";
 
 const router = createBrowserRouter([
     {
@@ -72,7 +73,7 @@ const router = createBrowserRouter([
                     },
                     {
                         path: "Upload",
-                        element: <UploadPage />,
+                        element: <Upload />,
                     },
                 ],
             },
@@ -95,6 +96,10 @@ const router = createBrowserRouter([
                     {
                         path: "Categories",
                         element: <Categories />,
+                    },
+                    {
+                        path: "Settings",
+                        element: <Settings />,
                     },
                 ],
             },

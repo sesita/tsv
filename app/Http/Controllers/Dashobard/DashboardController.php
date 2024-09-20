@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashobard;
 use App\Models\User;
 use App\Models\Video;
 use App\Models\Location;
+use App\Models\View;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -33,7 +34,10 @@ class DashboardController extends Controller
             'totalPages' => $videos->lastPage(),
         ]);
     }
-    
+    public function VideoViews($id, Request $request){
+        $views = View::getViewsForPeriod($id, $request->period);
+        return response($views);
+    }
     public function Settings(Request $request){
         $userId = Auth::user()->id;
         $request->validate([
@@ -107,6 +111,7 @@ class DashboardController extends Controller
             'title' => $request->title,
             'price' => $request->price,
             'thumbnail' => $thumbnail ?? null,
+            'status' => 'waiting',
             'category_id' => $request->category,
             'location_id' => $location->id ?? 1,
             'description' => $request->description,

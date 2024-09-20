@@ -26,7 +26,7 @@ return new class extends Migration
             $table->integer('price');
             $table->text('description')->nullable();
             $table->text('thumbnail')->nullable();
-            $table->enum('status', ['active', 'promoted', 'disabled']);
+            $table->enum('status', ['active', 'promoted', 'disabled', 'waiting']);
             $table->softDeletes();
             $table->timestamps();
         });

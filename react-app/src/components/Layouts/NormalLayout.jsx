@@ -6,7 +6,7 @@ import { Footer } from "../Common/Footer";
 import { Outlet, ScrollRestoration } from "react-router-dom";
 import { PrimaryContext } from "../../context/PrimaryContext";
 
-const NormalLayout = ({ searchQuery }) => {
+const NormalLayout = () => {
     const { state, dispatch } = useContext(PrimaryContext);
 
     useEffect(() => {
@@ -35,7 +35,7 @@ const NormalLayout = ({ searchQuery }) => {
     return (
         <>
             <ScrollRestoration />
-            <Header searchQuery={searchQuery} states={state.states} locator={state.location} categories={state.categories} />
+            <Header states={state.states} locator={state.location} categories={state.categories} />
             <Outlet />
             <Footer />
         </>
