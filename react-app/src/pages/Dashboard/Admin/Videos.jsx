@@ -18,7 +18,7 @@ const VideosPage = () => {
     const fetchVideos = async (page = 1, query = "") => {
         setLoading(true);
         try {
-            const response = await axios.get("Dashboard/MyVideos", {
+            const response = await axios.get("Dashboard/Admin/getVideos", {
                 params: { page, query },
             });
             setVideos(response.data.videos);

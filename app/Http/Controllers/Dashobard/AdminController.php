@@ -36,10 +36,15 @@ class AdminController extends Controller
         $users = User::paginate(9)->all();
         return response()->json($users);
     }
-    public function getVideos()
+    public function getVideos(Request $request)
     {
-        $videos = Video::orderBy('status', 'asc')->paginate(9);
-        return response()->json($videos);
+        $perPage = 8;
+        $query = $request->query('query', '');
+        $videos = Video::orderBy('status', 'asc')->where('title', 'like', '%' . $query . '%')->paginate($perPage);
+        return response()->json([
+            'videos' => $videos->items(),
+            'totalPages' => $videos->lastPage(),
+        ]);
     }
 
     public function updateUser(Request $request)
@@ -116,7 +121,7 @@ class AdminController extends Controller
 
     public function acceptVideo(Request $request)
     {
-        Video::find($request->id)->update(['status'=>'active']);
+        Video::find($request->id)->update(['status' => 'active']);
         return response(['status' => 'success']);
     }
 }
