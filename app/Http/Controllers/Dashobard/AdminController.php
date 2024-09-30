@@ -40,7 +40,7 @@ class AdminController extends Controller
     {
         $perPage = 8;
         $query = $request->query('query', '');
-        $videos = Video::orderBy('status', 'asc')->where('title', 'like', '%' . $query . '%')->paginate($perPage);
+        $videos = Video::orderBy('status', 'desc')->where('title', 'like', '%' . $query . '%')->paginate($perPage);
         return response()->json([
             'videos' => $videos->items(),
             'totalPages' => $videos->lastPage(),

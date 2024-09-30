@@ -61,6 +61,7 @@ const Upload = () => {
                 const res = await axios.get("Dashboard/Checkout", {
                     params: {
                         promoted: isPromoted,
+                        file: selectedFile ? true : false,
                     },
                 });
                 window.location.href = res.data.url;
@@ -72,7 +73,7 @@ const Upload = () => {
         try {
             await axios.post(
                 "Dashboard/Upload",
-                { ...videoInfo, video: selectedFile?.target?.files[0], thumbnail: thumbnail.target?.files[0] },
+                { ...videoInfo, video: selectedFile?.target?.files[0], thumbnail: thumbnail.target?.files[0], promoted: isPromoted },
                 {
                     headers: {
                         "Content-Type": "multipart/form-data",
@@ -142,7 +143,7 @@ const Upload = () => {
                     <div className="relative w-full group rounded-2xl cursor-pointer mb-4" onDragOver={handleDragOver} onDrop={handleDrop}>
                         {uploadType === "file" ? (
                             selectedFile ? (
-                                <ReactPlayer className="w-full h-full rounded-xl" url={URL.createObjectURL(selectedFile)} />
+                                <ReactPlayer className="w-full h-full rounded-xl" url={URL.createObjectURL(selectedFile)} controls />
                             ) : (
                                 <>
                                     <span className="text-gray-400 text-xs flex gap-3">
