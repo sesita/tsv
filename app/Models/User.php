@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Review;
 use Laravel\Cashier\Billable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -93,5 +94,13 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     public function getViewsAttribute($value)
     {
         return 54;
+    }
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'seller_id');
+    }
+    public function getRatingAttribute($rating)
+    {
+        return number_format($this->reviews()->avg('rating'), 1);
     }
 }
