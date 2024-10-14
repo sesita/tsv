@@ -12,6 +12,7 @@ import Search from "./pages/Search";
 import Signin from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Register";
 import Upload from "./pages/Upload";
+import Profile from "./pages/Profile";
 
 // Dashboard Pages
 import VideoPage from "./pages/Dashboard/VideoPage";
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
                 element: <Search />,
             },
             {
+                path: "Profile/:id?",
+                element: <Profile />,
+            },
+            {
                 path: "/:slug",
                 element: <Video />,
             },
@@ -48,12 +53,12 @@ const router = createBrowserRouter([
                 element: <UserLayout />,
                 children: [
                     {
-                        path: "Profile/:id?",
-                        element: <ProfilePage />,
-                    },
-                    {
                         path: "Analytics",
                         element: <AnalyticsPage />,
+                    },
+                    {
+                        path: "Profile/:id?",
+                        element: <ProfilePage />,
                     },
                     {
                         path: "Video/:id",

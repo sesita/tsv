@@ -69,7 +69,7 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         return [];
     }
 
-    public $appends = ['likes', 'videos', 'views'];
+    public $appends = ['rating', 'likes', 'videos', 'views'];
 
     public function getAdditionalInfoAttribute($value)
     {
@@ -97,7 +97,7 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     }
     public function reviews()
     {
-        return $this->hasMany(Review::class, 'seller_id');
+        return $this->hasMany(Review::class, 'user_id');
     }
     public function getRatingAttribute($rating)
     {

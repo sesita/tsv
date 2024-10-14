@@ -42,7 +42,7 @@ const VideoBox = ({ info }) => {
                 </Link>
 
                 {/* Video Info */}
-                <div className="flex items-center gap-3 mx-2 sm:mx-0">
+                <div className="flex items-center gap-3 mx-2 sm:mx-0 relative">
                     <img src={info.user?.avatar} className="rounded-full w-10 h-10 object-cover" alt="Avatar" />
                     <div className="flex flex-col gap-0.5">
                         <h2 className="text-md text-[#232323] font-semibold line-clamp-2">

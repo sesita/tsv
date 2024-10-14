@@ -2,24 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Video;
+use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Location;
+use App\Models\Review;
+use App\Models\User;
+use App\Models\Video;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class MainController extends Controller
 {
-    public function primary(Request $request){
+    public function primary(Request $request)
+    {
 
         $data['user'] = Auth::user() ?? null;
-        
+
         $location = Session::get('location') ? json_decode(Session::get('location')) : Location::location($request->ip());
 
-        if($location){
+        if ($location) {
             Session::put('location', json_encode($location));
         }
 
@@ -37,7 +39,7 @@ class MainController extends Controller
         $data['videos'] = [
             'slider' => $video->getVideos($sliderParams),
             'popular' => $video->getVideos($popularParams),
-            'recommended' => $video->getVideos($request)
+            'recommended' => $video->getVideos($request),
         ];
 
         return response($data);
@@ -54,8 +56,9 @@ class MainController extends Controller
             'id' => 'required|integer',
         ]);
 
-        $res = User::where('id', $request->id)->first();
-
+        $res['user'] = User::where('id', $request->id)->first();
+        $res['videos'] = Video::with('user')->withCount('views')->published()->where('user_id', $res['user']->id)->orderBy('views_count', 'desc')->take(3)->get();
+        $res['reviews'] = Review::where('user_id', $res['user']->id)->latest()->get();
         return response($res);
     }
     public function getCategories()
@@ -67,7 +70,7 @@ class MainController extends Controller
     {
         $query = Location::with('parent');
 
-        if($parent){
+        if ($parent) {
             $query->where('parent_id', $parent);
         } else {
             $query->where('parent_id', null);
@@ -77,10 +80,24 @@ class MainController extends Controller
 
         return $locations;
     }
+    public function addReview(Request $request)
+    {
+        $request->validate([
+            'name' => 'string|required|min:3',
+            'user' => 'required|exists:users,id'
+        ]);
 
+        $res = Review::create([
+            'name' => $request->name,
+            'user_id' => $request->user,
+            'rating' => $request->rating,
+            'comment' => $request->comment,
+        ]);
+        return response($res);
+    }
     public function updateLocation(Request $request)
     {
- 
+
         return response();
     }
 }

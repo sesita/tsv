@@ -12,7 +12,8 @@ import { AiOutlineLoading, AiFillLike, AiFillDislike } from "react-icons/ai";
 import { BiLogoTelegram, BiSolidCommentDetail } from "react-icons/bi";
 import { usePrimary } from "../context/PrimaryContext";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { FiShare2 } from "react-icons/fi"; // Import a share icon
+import { FiShare2 } from "react-icons/fi";
+import { Rating } from 'react-simple-star-rating'
 
 const Video = () => {
     const { slug } = useParams();
@@ -216,9 +217,12 @@ const Video = () => {
                                 </div>
                             </div>
 
-                            <Link to={`/User/Profile/${data?.user?.id}`} className="flex items-center gap-3 mb-8 mx-2 md:mx-0">
-                                <img src={data?.user?.avatar} alt="user avatar" className="w-[40px] h-[40px] rounded-full" />
-                                <h4 className="text-2xl text-[#8B8B8B]">{data?.user?.name}</h4>
+                            <Link to={`/Profile/${data?.user?.id}`} className="flex items-center gap-3 mb-8 mx-2 md:mx-0">
+                                <img src={data?.user?.avatar} alt="Avatar" className="w-[55px] h-[55px] rounded-full object-cover border-2 border-red-500" />
+                                <div className="flex flex-col">
+                                    <Rating SVGclassName="inline" size={17} readonly={true} initialValue={data?.user?.rating} />
+                                    <h4 className="text-xl text-[#8B8B8B]">{data?.user?.name}</h4>
+                                </div>
                             </Link>
 
                             <div className="md:rounded-3xl bg-gray-100 drop-shadow md:p-8 p-4 mb-8">{video.description}</div>
