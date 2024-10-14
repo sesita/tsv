@@ -1,8 +1,8 @@
 import { useEffect, useContext } from "react";
 import axios from "axios";
-import Header from "../Common/Header";
+import Header from "../Partials/Header";
 import { toast } from "react-toastify";
-import { Footer } from "../Common/Footer";
+import { Footer } from "../Partials/Footer";
 import { Outlet, ScrollRestoration } from "react-router-dom";
 import { PrimaryContext } from "../../context/PrimaryContext";
 

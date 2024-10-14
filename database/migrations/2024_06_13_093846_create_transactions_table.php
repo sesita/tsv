@@ -17,7 +17,7 @@ return new class extends Migration
             $table->bigInteger('video_id')->unsigned()->nullable();
             $table->foreign('video_id')->references('id')->on('videos');
             $table->float('price');
-            $table->enum('status', ['paid', 'waiting', 'canceled']);
+            $table->string('status', 20);
             $table->timestamps();
         });
     }

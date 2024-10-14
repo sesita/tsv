@@ -2,43 +2,48 @@
 
 namespace App\Http\Controllers\Dashobard;
 
+use App\Http\Controllers\Controller;
+use App\Models\Location;
+use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Video;
-use App\Models\Location;
 use App\Models\View;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class DashboardController extends Controller
 {
-    public function MyVideo($id){
+    public function MyVideo($id)
+    {
         $video = Video::find($id);
         return response($video);
     }
-    public function MyVideos(Request $request){
+    public function MyVideos(Request $request)
+    {
         $perPage = 8;
         $userId = Auth::user()->id;
         $query = $request->query('query', '');
         $order = $request->query('order', 'id');
-    
+
         $videos = Video::with('user')
             ->where('user_id', $userId)
             ->where('title', 'like', '%' . $query . '%')
             ->orderBy($order, 'desc')
             ->paginate($perPage);
-    
+
         return response()->json([
             'videos' => $videos->items(),
             'totalPages' => $videos->lastPage(),
         ]);
     }
-    public function VideoViews($id, Request $request){
+    public function VideoViews($id, Request $request)
+    {
         $views = View::getViewsForPeriod($id, $request->period);
         return response($views);
     }
-    public function Settings(Request $request){
+    public function Settings(Request $request)
+    {
         $userId = Auth::user()->id;
         $request->validate([
             'name' => 'required',
@@ -70,26 +75,33 @@ class DashboardController extends Controller
 
         return response($user);
     }
-    public function UploadVideo(Request $request){
+    public function UploadVideo(Request $request)
+    {
         $userId = Auth::user()->id;
         $request->validate([
-            'title' =>'required',
-            'description' =>'required',
-            'price' =>'required|integer|max:3',
-            'video' =>'nullable|mimes:mp4,mov,ogg,webm',
-            'thumbnail' =>'required',
-            'category' =>'required',
+            'title' => 'required',
+            'description' => 'required',
+            'price' => 'required|integer|max:3',
+            'video' => 'nullable|mimes:mp4,mov,ogg,webm',
+            'thumbnail' => 'required',
+            'category' => 'required',
         ]);
 
-        if($request->file('video')){   
-            $videoName = 'videos/'. Str::random(). time(). '.mp4';
+        $status = 'waiting';
+        if ($request->file('video')) {
+            $videoName = 'videos/' . Str::random() . time() . '.mp4';
             $request->video->move(public_path('storage/videos'), $videoName);
+            $status = 'unpaid';
         } else {
             $videoName = $request->iframe;
         }
 
-        if($request->file('thumbnail')){
-            $thumbnail = 'thumbnails/'. Str::random(). time(). '.webp';
+        if ($request->promoted) {
+            $status = 'unpaid';
+        }
+
+        if ($request->file('thumbnail')) {
+            $thumbnail = 'thumbnails/' . Str::random() . time() . '.webp';
             $request->thumbnail->move(public_path('storage/thumbnails'), $thumbnail);
         }
 
@@ -100,7 +112,7 @@ class DashboardController extends Controller
             $counter++;
         } while (Video::where('slug', $videoSlug)->exists());
 
-        if($request->location){
+        if ($request->location) {
             $location = Location::find($request->location);
         }
 
@@ -111,25 +123,26 @@ class DashboardController extends Controller
             'title' => $request->title,
             'price' => $request->price,
             'thumbnail' => $thumbnail ?? null,
-            'status' => 'waiting',
+            'status' => $status,
             'category_id' => $request->category,
             'location_id' => $location->id ?? 1,
             'description' => $request->description,
         ]);
 
-        return response(['status' =>'success', 'message'=> 'Video Uploaded Successfully']);
+        return response(['status' => 'success', 'message' => 'Video Uploaded Successfully']);
     }
 
-    public function UpdateVideo(Request $request){
+    public function UpdateVideo(Request $request)
+    {
         $request->validate([
-            'title' =>'required',
-            'price' =>'required|integer|max:3',
-            'description' =>'required',
-            'category_id' =>'required',
+            'title' => 'required',
+            'price' => 'required|integer|max:3',
+            'description' => 'required',
+            'category_id' => 'required',
         ]);
 
-        if($request->file('thumbnail')){
-            $thumbnail = 'thumbnails/'. Str::random(). time(). '.webp';
+        if ($request->file('thumbnail')) {
+            $thumbnail = 'thumbnails/' . Str::random() . time() . '.webp';
             $request->thumbnail->move(public_path('storage/thumbnails'), $thumbnail);
         }
 
@@ -148,24 +161,39 @@ class DashboardController extends Controller
         $video = Video::where('id', $request->id)->firstOrFail();
         $video->update($updateData);
 
-        return response(['status' =>'success', 'message'=> 'Video Updated Successfully']);
+        return response(['status' => 'success', 'message' => 'Video Updated Successfully']);
     }
 
-    public function Checkout(Request $request){
-        //one time payment
-        $price_ids = ['price_1OtHN8B9uNXBCzh8jLbp55iv' => 1];
+    public function Checkout(Request $request)
+    {
+        $price_ids = [];
 
-        if($request->promoted){
-            //Subscription $99/monthly
-            // $price_ids['price_1OtHpWB9uNXBCzh8HQqQhzCq'] = 1;
+        if ($request->file) {
+            $price_ids[] = 'price_1Q4iXcB9uNXBCzh8d6fGt3yg';
+        }
+        if ($request->promoted) {
+            $price_ids[] = 'price_1Q4kseB9uNXBCzh8NqBXqFLK';
         }
 
- 
-        $checkoutSession = $request->user()->checkout($price_ids, [
-            'success_url' => 'https://mytsv.com/success',
-            'cancel_url' => 'https://mytsv.com/',
+        $customer = Auth::user();
+
+        if (!$customer->hasStripeId()) {
+            $customer->createAsStripeCustomer();
+        }
+
+        $transactionId = Str::random(10) . time();
+        Transaction::create([
+            'price' => 199,
+            'status' => 'created',
+            'transaction_id' => $transactionId,
         ]);
-    
+
+        $checkoutSession = $request->user()->checkout($price_ids, [
+            'success_url' => route('checkout-success') . '?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' => route('checkout-cancel') . '?session_id={CHECKOUT_SESSION_ID}',
+            'metadata' => ['transaction_id' => $transactionId],
+        ]);
+
         return response()->json(['url' => $checkoutSession->url]);
     }
 }
