@@ -3,7 +3,6 @@ import axios from "axios";
 import "swiper/css/navigation";
 import "swiper/css/effect-fade";
 import { Link, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { Swiper, SwiperSlide } from "swiper/react";

@@ -48,8 +48,7 @@ class MainController extends Controller
     {
         $video = new Video();
         $videos = $video->getVideos($request->all());
-        $common = $video->getVideos($request->all());
-        return response(compact('videos', 'common'));
+        return response($videos);
     }
     public function getUser(Request $request)
     {
