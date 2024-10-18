@@ -17,20 +17,6 @@ const Search = () => {
 
     const { query } = useParams();
 
-    const fetchSliderVideos = async () => {
-        try {
-            const response = await axios.get("Main/getVideos", {
-                params: {
-                    orderBy: "featured",
-                    paginate: 3,
-                },
-            });
-            setSliderVideos(response.data);
-        } catch (error) {
-            toast.error(error.response?.data?.message ?? "Caught error");
-        }
-    };
-
     const getVideos = async (search) => {
         setLoading(true);
         const res = await axios.get("Main/getVideos", {
@@ -38,13 +24,13 @@ const Search = () => {
                 search: search,
             },
         });
-        setVideos(res.data);
+        setVideos(res.data?.videos);
+        setSliderVideos(res.data?.common);
         setLoading(false);
     };
 
     useEffect(() => {
         getVideos(query);
-        fetchSliderVideos();
     }, [query]);
 
     return (

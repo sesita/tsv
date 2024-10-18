@@ -96,7 +96,7 @@ class Video extends Model
         $location = $this->location()->first();
 
         $res['children'] = $location->id;
-        $res['parent'] = $location->parent()->first()->id;
+        $res['parent'] = $location->parent()->first()->id ?? null;
         return $res;
     }
 
