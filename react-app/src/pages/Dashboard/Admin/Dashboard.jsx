@@ -66,7 +66,7 @@ const Dashboard = () => {
                     <h2 className="text-[#0A2A8D] font-bold text-[28px]">
                         <NumberFormatter value={stats.videos?.total} />
                     </h2>
-                    <Link to={"/"} className="text-red-500 text-sm font-medium">
+                    <Link to={"/Admin/Videos"} className="text-red-500 text-sm font-medium">
                         Manage Videos
                     </Link>
                 </div>
@@ -75,7 +75,7 @@ const Dashboard = () => {
                     <h2 className="text-[#0A2A8D] font-bold text-[28px]">
                         <NumberFormatter value={stats.users} />
                     </h2>
-                    <Link to={"/"} className="text-red-500 text-sm font-medium">
+                    <Link to={"/Admin/Users"} className="text-red-500 text-sm font-medium">
                         Manage Users
                     </Link>
                 </div>

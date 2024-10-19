@@ -22,11 +22,11 @@ return new class extends Migration
             $table->text('video');
             $table->string('title');
             $table->string('slug')->unique();
-            $table->enum('package', ['free', 'standard', 'premium']);
+            $table->integer('package');
             $table->integer('price');
             $table->text('description')->nullable();
             $table->text('thumbnail')->nullable();
-            $table->string('status', 20);
+            $table->integer('status');
             $table->softDeletes();
             $table->timestamps();
         });

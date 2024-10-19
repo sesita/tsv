@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Video\Status;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,13 +12,13 @@ class Video extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['slug', 'title', 'description', 'video', 'user_id', 'thumbnail', 'price', 'status', 'category_id', 'location_id'];
+    protected $fillable = ['slug', 'title', 'description', 'video', 'user_id', 'thumbnail', 'price', 'package', 'status', 'category_id', 'location_id'];
 
     public $appends = ['location', 'likes', 'category', 'dislikes', 'comments_count', 'shares', 'views'];
 
     public function scopePublished(Builder $query): void
     {
-        $query->where('status', 'active');
+        $query->where('status', Status::PUBLISHED);
     }
 
     public function getVideos($params = [])
@@ -90,7 +91,10 @@ class Video extends Model
     {
         return $this->hasMany(Interaction::class);
     }
-
+    public function getStatusAttribute($value)
+    {
+        return Status::from($value)->name;
+    }
     public function getLocationAttribute($value)
     {
         $location = $this->location()->first();
@@ -124,7 +128,6 @@ class Video extends Model
         if ($value) {
             return asset('storage/' . $value);
         }
-
     }
 
     public function getSharesAttribute($value)

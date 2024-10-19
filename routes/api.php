@@ -1,15 +1,13 @@
 <?php
 
-use App\Models\Video;
-use App\Models\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\SocialController;
-use App\Http\Controllers\Dashobard\AdminController;
-use App\Http\Controllers\Dashobard\DashboardController;
+use App\Http\Controllers\Dashboard\AdminController;
+use App\Http\Controllers\Dashboard\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,7 +60,6 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'Dashboard'], function ($r
     Route::get('MyVideo/{id}', [DashboardController::class, 'MyVideo']);
     Route::get('VideoViews/{id}', [DashboardController::class, 'VideoViews']);
 
-    
     Route::any('Admin/{method}', function ($method, Request $request) {
         $controller = new AdminController();
         return $controller->callAction($method, [$request]);
