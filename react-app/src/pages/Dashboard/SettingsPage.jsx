@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
-import { usePrimary } from '../../context/PrimaryContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { FaUpload } from 'react-icons/fa';
-import Select from 'react-select';
+import CreatableSelect from 'react-select/creatable';
+import { usePrimary } from '../../context/PrimaryContext';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
 const SettingsPage = () => {
     const { setPageTitle } = useOutletContext();
@@ -17,20 +17,12 @@ const SettingsPage = () => {
 
     useEffect(() => {
         setPageTitle('Settings');
-        const getUser = async () => {
-            try {
-                const res = await axios.post('Auth/Me');
-                setUser(res?.data);
-            } catch (e) {
-                toast.error(e.response?.data?.message);
-            }
-        };
-        getUser();
 
+        setUser(state.user);
         setSkills(state.user.additional_info?.skills ?? []);
         setLanguages(state.user.additional_info?.languages ?? []);
         setEducations(state.user.additional_info?.educations ?? []);
-    }, []);
+    }, [state]);
 
     const handleInputChange = (e) => {
         setUser({ ...user, [e.target.name]: e.target.value });
@@ -71,7 +63,7 @@ const SettingsPage = () => {
             const res = await axios.post('Dashboard/Settings', data);
             setUser(res.data);
             toast.success('Successfully updated.');
-            navigate('/User/Profile/' + res.data.id);
+            navigate('/User/Profile');
         } catch (error) {
             toast.error(error.response?.data?.message);
         }
@@ -95,32 +87,32 @@ const SettingsPage = () => {
     };
 
     return (
-        <div className="mx-auto p-3">
-            <div className="flex justify-between items-center mb-12">
-                <div className="flex items-center gap-8">
+        <div className="mx-auto p-3 max-w-8xl">
+            <div className="flex flex-col md:flex-row justify-between items-center mb-8 md:mb-12">
+                <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8 mb-4 md:mb-0">
                     <img
-                        className="w-40 h-40 rounded-full border-4 border-red-500 object-cover"
+                        className="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-red-500 object-cover"
                         src={user.avatar}
                         alt=""
                     />
-                    <div>
-                        <h2 className="text-4xl font-semibold text-[#232323] mb-2">{user.name}</h2>
+                    <div className="text-center md:text-left">
+                        <h2 className="text-3xl md:text-4xl font-semibold text-[#232323] mb-2">{user.name}</h2>
                         <p className="text-sm font-medium">Update your photo and personal details</p>
                     </div>
                 </div>
-                <div className="flex gap-6">
-                    <label htmlFor="file-input" className="cursor-pointer py-4 px-12 rounded-full bg-blue-800 text-white text-lg flex items-center gap-2">
+                <div className="flex flex-col sm:flex-row gap-4">
+                    <label htmlFor="file-input" className="cursor-pointer py-3 px-6 md:py-4 md:px-12 rounded-full bg-blue-800 text-white text-base md:text-lg flex items-center justify-center gap-2">
                         <FaUpload /> Upload New Picture
                         <input id="file-input" type="file" className="hidden" onChange={handleAvatarChange} />
                     </label>
-                    <button className="py-4 px-14 rounded-full bg-red-500 text-white text-lg">
+                    <button className="py-3 px-8 md:py-4 md:px-14 rounded-full bg-red-500 text-white text-base md:text-lg">
                         Delete
                     </button>
                 </div>
             </div>
 
-            <form onSubmit={handleSubmit}>
-                <div className="flex items-center gap-3 mb-5">
+            <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="flex flex-col md:flex-row gap-3">
                     <input
                         type="text"
                         name="name"
@@ -138,7 +130,7 @@ const SettingsPage = () => {
                         onChange={handleInputChange}
                     />
                 </div>
-                <div className="flex items-center gap-3 mb-5">
+                <div className="flex flex-col md:flex-row gap-3">
                     <input
                         type="email"
                         name="email"
@@ -156,46 +148,43 @@ const SettingsPage = () => {
                         onChange={handleInputChange}
                     />
                 </div>
-                <div className="mb-5">
-                    <Select
-                        isMulti
-                        value={educations.map(edu => ({ value: edu, label: edu }))}
-                        onChange={(selectedOptions) => setEducations(selectedOptions.map(option => option.value))}
-                        placeholder="Education"
-                        styles={customSelectStyles}
-                    />
+                <CreatableSelect
+                    isMulti
+                    isClearable
+                    value={educations.map(edu => ({ value: edu, label: edu }))}
+                    onChange={(selectedOptions) => setEducations(selectedOptions.map(option => option.value))}
+                    placeholder="Education"
+                    styles={customSelectStyles}
+                />
+                <CreatableSelect
+                    isMulti
+                    isClearable
+                    value={languages.map(lang => ({ value: lang, label: lang }))}
+                    onChange={(selectedOptions) => setLanguages(selectedOptions.map(option => option.value))}
+                    placeholder="Languages"
+                    styles={customSelectStyles}
+                />
+                <CreatableSelect
+                    isMulti
+                    isClearable
+                    value={skills.map(skill => ({ value: skill, label: skill }))}
+                    onChange={(selectedOptions) => setSkills(selectedOptions.map(option => option.value))}
+                    placeholder="Skills"
+                    styles={customSelectStyles}
+                />
+                <textarea
+                    name="bio"
+                    rows="4"
+                    className="w-full rounded-2xl py-3 px-4 border-2 border-gray-200 text-md text-gray-800 outline-none"
+                    placeholder="Bio"
+                    value={user.additional_info?.bio || ''}
+                    onChange={(e) => setUser({ ...user, additional_info: { ...user.additional_info, bio: e.target.value } })}
+                ></textarea>
+                <div className="flex justify-center">
+                    <button type="submit" className="py-3 px-8 md:py-4 md:px-12 rounded-full bg-red-500 text-white text-base md:text-lg">
+                        Save Profile
+                    </button>
                 </div>
-                <div className="mb-5">
-                    <Select
-                        isMulti
-                        value={languages.map(lang => ({ value: lang, label: lang }))}
-                        onChange={(selectedOptions) => setLanguages(selectedOptions.map(option => option.value))}
-                        placeholder="Languages"
-                        styles={customSelectStyles}
-                    />
-                </div>
-                <div className="mb-5">
-                    <Select
-                        isMulti
-                        value={skills.map(skill => ({ value: skill, label: skill }))}
-                        onChange={(selectedOptions) => setSkills(selectedOptions.map(option => option.value))}
-                        placeholder="Skills"
-                        styles={customSelectStyles}
-                    />
-                </div>
-                <div className="mb-5">
-                    <textarea
-                        name="bio"
-                        rows="4"
-                        className="w-full rounded-2xl py-3 px-4 border-2 border-gray-200 text-md text-gray-800 outline-none"
-                        placeholder="Bio"
-                        value={user.additional_info?.bio || ''}
-                        onChange={(e) => setUser({ ...user, additional_info: { ...user.additional_info, bio: e.target.value } })}
-                    ></textarea>
-                </div>
-                <button type="submit" className="py-4 px-12 rounded-full bg-red-500 text-white mt-5 mx-auto block text-lg">
-                    Save Profile
-                </button>
             </form>
         </div>
     );

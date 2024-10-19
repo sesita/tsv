@@ -25,7 +25,8 @@ import AnalyticsPage from "./pages/Dashboard/AnalyticsPage";
 import Dashboard from "./pages/Dashboard/Admin/Dashboard";
 import AdminVideos from "./pages/Dashboard/Admin/Videos";
 import Categories from "./pages/Dashboard/Admin/Categories";
-import Users from "./pages/Dashboard/Admin/Users";
+import UsersList from "./pages/Dashboard/Admin/Users/UsersList";
+import UsersForm from "./pages/Dashboard/Admin/Users/UsersForm";
 import Settings from "./pages/Dashboard/Admin/Settings";
 
 const router = createBrowserRouter([
@@ -87,6 +88,16 @@ const router = createBrowserRouter([
                 element: <AdminLayout />,
                 children: [
                     {
+                        path: "Users",
+                        element: <UsersList />,
+                        children: [
+                            {
+                                path: ":id",
+                                element: <UsersForm />,
+                            },
+                        ]
+                    },
+                    {
                         path: "",
                         element: <Dashboard />,
                     },
@@ -94,10 +105,7 @@ const router = createBrowserRouter([
                         path: "Videos",
                         element: <AdminVideos />,
                     },
-                    {
-                        path: "Users",
-                        element: <Users />,
-                    },
+
                     {
                         path: "Categories",
                         element: <Categories />,

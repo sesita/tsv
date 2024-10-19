@@ -65,8 +65,8 @@ const Profile = () => {
                         <img className="w-40 h-40 rounded-full border-4 border-red-500 object-cover" src={userInfo?.avatar} alt="" />
                         <div>
                             <h2 className="text-3xl font-semibold">{userInfo?.name}</h2>
-                            <p className="text-sm font-medium mb-3">Content Creator</p>
-                            <div className="flex items-center gap-4">
+                            <p className="text-sm font-medium mb-2">Content Creator</p>
+                            <div className="flex items-center gap-4 -ml-1.5">
                                 <Rating SVGclassName="inline" readonly={true} allowFraction={true} initialValue={userInfo?.rating} />
                             </div>
                         </div>
