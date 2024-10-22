@@ -1,154 +1,115 @@
 import axios from "axios";
-import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
-import { MdOutlineDelete } from "react-icons/md";
 import { CiCirclePlus } from "react-icons/ci";
-import { IoMdArrowRoundBack } from "react-icons/io";
+import { CiSearch } from "react-icons/ci";
+import Pagination from "../../../../components/Common/Pagination";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Users = () => {
     const [users, setUsers] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
-    const [filteredUsers, setFilteredUsers] = useState([]);
-    const [formState, setFormState] = useState({
-        id: null,
-        name: "",
-        full_name: "",
-        email: "",
-        phone_number: "",
-        avatar: "",
-        bio: "",
-    });
-    const [isEditMode, setIsEditMode] = useState(false);
-    const [viewingDetails, setViewingDetails] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [loading, setLoading] = useState(true);
 
-    const fetchUsers = () => {
-        axios
-            .get("/Dashboard/Admin/getUsers")
-            .then((response) => {
-                setUsers(response.data);
-                setFilteredUsers(response.data);
-            })
-            .catch((error) => {
-                console.error("There was an error fetching the users!", error);
+    const fetchUsers = async (page = 1, search = "") => {
+        setLoading(true);
+        try {
+            const response = await axios.get(`/Dashboard/Admin/Users`, {
+                params: {
+                    page,
+                    search,
+                }
             });
+            setUsers(response.data);
+            setTotalPages(response.data.last_page);
+        } catch (error) {
+            toast.error('Caught Error!');
+        } finally {
+            setLoading(false);
+        }
     };
+
 
     useEffect(() => {
-        fetchUsers();
-    }, []);
+        fetchUsers(currentPage, searchTerm);
+    }, [currentPage, searchTerm]);
 
-    useEffect(() => {
-        setFilteredUsers(users.filter((user) => user.name.toLowerCase().includes(searchTerm.toLowerCase())));
-    }, [searchTerm, users]);
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormState((prevState) => ({
-            ...prevState,
-            [name]: value,
-        }));
-    };
-
-    const handleDelete = (user) => {
-        axios
-            .post("/Dashboard/Admin/deleteUser", { id: user?.id })
-            .then(() => {
-                fetchUsers();
-                toast.success("User Deleted!");
-            })
-            .catch((error) => {
-                toast.error("There was an error deleting the user.");
-                console.error(error);
-            });
-    };
-
-    const handleBackToList = () => {
-        setViewingDetails(false);
-        setFormState({
-            id: null,
-            name: "",
-            full_name: "",
-            email: "",
-            phone_number: "",
-            avatar: "",
-            bio: "",
-        });
-        setIsEditMode(false);
-    };
-
-    const handleEdit = (user) => {
-        setFormState(user);
-        setIsEditMode(true);
-        setViewingDetails(true);
+    const handlePagination = (page) => {
+        if (page > 0 && page <= totalPages) {
+            setCurrentPage(page);
+        }
     };
 
     return (
         <>
-            {!viewingDetails ? (
-                <>
-                    <div className="flex justify-between items-center gap-10 rounded-xl mb-5 border-b border-gray-100 pb-4">
-                        <h1 className="text-3xl font-medium">Manage Users</h1>
-                        <input
-                            type="text"
-                            className="rounded-2xl border py-3 px-4 outline-none font-medium w-1/2"
-                            placeholder="Search User..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                        <button
-                            onClick={() => setViewingDetails(true)}
-                            className="mb-5 py-3 px-6 bg-primary text-white rounded-2xl flex items-center gap-2">
-                            <CiCirclePlus className="text-xl" />
-                            Add New User
-                        </button>
-                    </div>
+            <div className="flex justify-between items-center gap-10 rounded-xl mb-4 pb-4">
+                <h1 className="text-3xl font-medium">Manage Users</h1>
+                <div className="relative w-1/2">
+                    <CiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl" />
+                    <input
+                        type="text"
+                        className="w-full rounded-2xl border py-3 pl-12 pr-4 outline-none focus:border-blue-500 transition-colors"
+                        placeholder="Search users..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </div>
+                <button className="py-3 px-6 bg-red-600 hover:bg-red-700 text-white rounded-2xl flex items-center gap-2 transition-colors">
+                    <CiCirclePlus className="text-xl" />
+                    Add New User
+                </button>
+            </div>
 
-                    <table className="min-w-full bg-white border">
-                        <thead>
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
                             <tr>
-                                <th className="p-4 border">Name</th>
-                                <th className="p-4 border">Email</th>
-                                <th className="p-4 border">Actions</th>
+                                <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">User</th>
+                                <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">Full Name</th>
+                                <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">Email</th>
+                                <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            {filteredUsers.map((user) => (
-                                <tr key={user.id} draggable className="bg-white hover:bg-gray-100">
-                                    <td className="p-4 border">{user.name}</td>
-                                    <td className="p-4 border">{user.email}</td>
-                                    <td className="p-4 border w-60">
-                                        <div className="flex gap-2">
-                                            <button
-                                                onClick={() => handleEdit(user)}
-                                                className="mr-2 py-1 px-3 flex items-center gap-2 bg-yellow-500 text-white rounded-2xl">
-                                                <CiEdit className="text-xl" />
-                                                Edit
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(user)}
-                                                className="mr-2 py-1 px-3 flex items-center gap-2 bg-primary text-white rounded-2xl">
-                                                <MdOutlineDelete className="text-xl" />
-                                                Delete
-                                            </button>
-                                        </div>
-                                    </td>
+                        <tbody className="divide-y divide-gray-200">
+                            {loading ? (
+                                <tr>
+                                    <td colSpan="3" className="px-6 py-4 text-center">Loading...</td>
                                 </tr>
-                            ))}
+                            ) : (
+                                users?.data?.map((user) => (
+                                    <tr key={user.id} className="hover:bg-gray-50">
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center gap-4">
+                                                <img
+                                                    src={user.avatar}
+                                                    alt={user.name}
+                                                    className="w-10 h-10 rounded-full object-cover"
+                                                />
+                                                <span className="font-medium text-gray-900">{user.name}</span>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4 text-gray-500">{user.full_name}</td>
+                                        <td className="px-6 py-4 text-gray-500">{user.email}</td>
+                                        <td className="px-6 py-4">
+                                            <Link to={`/Admin/Users/${user.id}`} className="py-2 px-4 w-fit flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-xl transition-colors">
+                                                <CiEdit className="text-xl" />
+                                                Manage
+                                            </Link>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
-                </>
-            ) : (
-                <>
-                    <button
-                        onClick={handleBackToList}
-                        className="mb-10 py-3 px-6 bg-primary text-white rounded-2xl text-xl flex items-center gap-2">
-                        <IoMdArrowRoundBack />
-                        Back to List
-                    </button>
+                </div>
 
-                </>
-            )}
+            </div>
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePagination} />
         </>
     );
 };

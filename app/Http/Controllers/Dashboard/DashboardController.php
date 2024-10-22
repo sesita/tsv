@@ -32,10 +32,7 @@ class DashboardController extends Controller
             ->orderBy($order, 'desc')
             ->paginate($perPage);
 
-        return response()->json([
-            'videos' => $videos->items(),
-            'totalPages' => $videos->lastPage(),
-        ]);
+        return response()->json($videos);
     }
     public function VideoViews($id, Request $request)
     {

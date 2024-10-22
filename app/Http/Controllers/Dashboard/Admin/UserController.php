@@ -9,12 +9,32 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    public function getUsers()
+    public function index(Request $request)
     {
-        $users = User::paginate(9)->all();
+        $search = $request->query('search');
+
+        $query = User::latest();
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                    ->orWhere('email', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $users = $query->paginate(9);
+
         return response()->json($users);
     }
-    public function updateUser(Request $request)
+
+    public function show($id)
+    {
+        $user = User::find($id);
+        return response()->json($user);
+    }
+
+
+    public function update(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'id' => 'nullable|exists:users,id',
@@ -39,13 +59,13 @@ class UserController extends Controller
             $user = new User();
             $user->name = $request->name;
             $user->email = $request->email;
-            $user->password = bcrypt('defaultpassword'); // or generate a random password
+            $user->password = bcrypt('defaultpassword');
             $user->save();
             return response()->json($user, 201);
         }
     }
 
-    public function deleteUser(Request $request)
+    public function delete(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'id' => 'required|exists:users,id',

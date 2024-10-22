@@ -39,7 +39,7 @@ const ProfilePage = () => {
     }, [state.user, params.id]);
 
     return (
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="">
             <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 mb-6">
                 <img className="w-32 h-32 sm:w-40 sm:h-40 rounded-full border-4 border-red-500 object-cover" src={userInfo?.avatar} alt="" />
                 <div className="text-center sm:text-left">

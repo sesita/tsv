@@ -18,7 +18,7 @@ import Profile from "./pages/Profile";
 import VideoPage from "./pages/Dashboard/VideoPage";
 import VideosPage from "./pages/Dashboard/VideosPage";
 import ProfilePage from "./pages/Dashboard/ProfilePage";
-import SettingsPage from "./pages/Dashboard/SettingsPage";
+import Settings from "./pages/Dashboard/Settings";
 import AnalyticsPage from "./pages/Dashboard/AnalyticsPage";
 
 // Admin Pages
@@ -27,7 +27,7 @@ import AdminVideos from "./pages/Dashboard/Admin/Videos";
 import Categories from "./pages/Dashboard/Admin/Categories";
 import UsersList from "./pages/Dashboard/Admin/Users/UsersList";
 import UsersForm from "./pages/Dashboard/Admin/Users/UsersForm";
-import Settings from "./pages/Dashboard/Admin/Settings";
+import SettingsAdmin from "./pages/Dashboard/Admin/Settings";
 
 const router = createBrowserRouter([
     {
@@ -75,7 +75,7 @@ const router = createBrowserRouter([
                     },
                     {
                         path: "Settings",
-                        element: <SettingsPage />,
+                        element: <Settings />,
                     },
                     {
                         path: "Upload",
@@ -88,18 +88,16 @@ const router = createBrowserRouter([
                 element: <AdminLayout />,
                 children: [
                     {
-                        path: "Users",
-                        element: <UsersList />,
-                        children: [
-                            {
-                                path: ":id",
-                                element: <UsersForm />,
-                            },
-                        ]
-                    },
-                    {
                         path: "",
                         element: <Dashboard />,
+                    },
+                    {
+                        path: "Users",
+                        element: <UsersList />,
+                    },
+                    {
+                        path: "Users/:id",
+                        element: <UsersForm />,
                     },
                     {
                         path: "Videos",
@@ -112,7 +110,7 @@ const router = createBrowserRouter([
                     },
                     {
                         path: "Settings",
-                        element: <Settings />,
+                        element: <SettingsAdmin />,
                     },
                 ],
             },

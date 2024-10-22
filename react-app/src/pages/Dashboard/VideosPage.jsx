@@ -27,8 +27,8 @@ const VideosPage = () => {
             const response = await axios.get("Dashboard/MyVideos", {
                 params: { page, query },
             });
-            setVideos(response.data.videos);
-            setTotalPages(response.data.totalPages);
+            setVideos(response.data.data);
+            setTotalPages(response.data.last_page);
         } catch (error) {
             toast.error(error.response?.data?.message ?? "Caught error");
         } finally {

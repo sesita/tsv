@@ -71,29 +71,36 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
 
     public $appends = ['rating', 'likes', 'videos', 'views'];
 
+    public function videos()
+    {
+        return $this->hasMany(Video::class);
+    }
+
     public function getAdditionalInfoAttribute($value)
     {
         return json_decode($value);
     }
     public function getAvatarAttribute($value)
     {
-        if(filter_var($value, FILTER_VALIDATE_URL)) return $value;
-        if($value) return asset('storage/'.$value);
+        if (filter_var($value, FILTER_VALIDATE_URL))
+            return $value;
+        if ($value)
+            return asset('storage/' . $value);
 
         return "https://ui-avatars.com/api/?background=random&name={$this->name}&bold=true";
     }
     public function getLikesAttribute($value)
     {
-        $videoIds = Video::where('user_id', $this->id)->pluck('id');
+        $videoIds = $this->videos()->pluck('id');
         return Interaction::whereIn('video_id', $videoIds)->sum('is_liked');
     }
     public function getVideosAttribute($value)
     {
-        return Video::where('user_id', $this->id)->count();
+        return $this->videos()->count();
     }
     public function getViewsAttribute($value)
     {
-        return 54;
+        return $this->videos()->withCount('views')->get()->sum('views_count');
     }
     public function reviews()
     {

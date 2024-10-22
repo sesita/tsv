@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Dashboard\Admin\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MainController;
@@ -60,6 +61,9 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'Dashboard'], function ($r
     Route::get('MyVideo/{id}', [DashboardController::class, 'MyVideo']);
     Route::get('VideoViews/{id}', [DashboardController::class, 'VideoViews']);
 
+    Route::prefix('Admin')->group(function () {
+        Route::apiResource('Users', UserController::class);
+    });
     Route::any('Admin/{method}', function ($method, Request $request) {
         $controller = new AdminController();
         return $controller->callAction($method, [$request]);
