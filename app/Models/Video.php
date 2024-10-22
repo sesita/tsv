@@ -21,6 +21,15 @@ class Video extends Model
         $query->where('status', Status::PUBLISHED);
     }
 
+    public function scopeSearch(Builder $query, $search): void
+    {
+        $query->where(function ($q) use ($search) {
+            $q->where('title', 'like', "%{$search}%")->orwhereHas('category', function ($query) use ($search) {
+                $query->where('title', 'like', "%{$search}%");
+            });
+        });
+    }
+
     public function getVideos($params = [])
     {
         $paginate = $params['paginate'] ?? 8;
@@ -37,11 +46,7 @@ class Video extends Model
         }
 
         if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")->orwhereHas('category', function ($query) use ($search) {
-                    $query->where('title', 'like', "%{$search}%");
-                });
-            });
+            $query->search($search);
         }
 
         if ($related) {

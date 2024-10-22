@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard\Admin;
 
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -34,7 +35,7 @@ class UserController extends Controller
     }
 
 
-    public function update(Request $request)
+    public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'id' => 'nullable|exists:users,id',
@@ -46,23 +47,30 @@ class UserController extends Controller
             return response()->json(['status' => 'error', 'errors' => $validator->errors()], 400);
         }
 
-        if ($request->id) {
-            $user = User::find($request->id);
-            if ($user) {
-                $user->name = $request->name;
-                $user->email = $request->email;
-                $user->save();
-                return response()->json($user);
-            }
-            return response()->json(['status' => 'error', 'message' => 'User not found'], 404);
+        if ($request->hasFile('avatar')) {
+            $request->validate([
+                'avatar' => 'mimes:jpg,hpeg,png,webp,gif|max:2048',
+            ]);
+            $name = 'avatars/' . Str::random() . time() . '.webp';
+            $request->avatar->move(public_path('storage/avatars'), $name);
+            $avatar = $name;
         } else {
-            $user = new User();
-            $user->name = $request->name;
-            $user->email = $request->email;
-            $user->password = bcrypt('defaultpassword');
-            $user->save();
-            return response()->json($user, 201);
+            $avatar = $request->avatar ?? null;
         }
+
+        $user = User::find($request->id);
+        if ($user) {
+            $user->update([
+                'name' => $request->name,
+                'full_name' => $request->full_name,
+                'email' => $request->email,
+                'additional_info' => json_encode($request->additional_info),
+                'avatar' => $avatar,
+            ]);
+            return response()->json($user);
+        }
+        return response()->json(['status' => 'error', 'message' => 'User not found'], 404);
+
     }
 
     public function delete(Request $request)

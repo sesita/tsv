@@ -1,17 +1,16 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-import { FaCheck, FaSpinner, FaPlay, FaTimes, FaYoutube, FaUpload } from "react-icons/fa";
+import { FaCheck, FaPlay, FaTimes, FaYoutube, FaUpload } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import NumberFormatter from "../../../components/Common/FormatNumber";
 import { Link } from "react-router-dom";
-import Pagination from "../../../components/Common/Pagination";
-import { CiEdit } from "react-icons/ci";
-import { MdOutlineDelete } from "react-icons/md";
+import Pagination from "../../../../components/Common/Pagination";
+import { CiEdit, CiSearch } from "react-icons/ci";
+import { MdOutlineDelete, MdOutlineVideoSettings } from "react-icons/md";
 import ReactPlayer from "react-player";
 
-const VideosPage = () => {
+const VideosList = () => {
     const [videos, setVideos] = useState([]);
-    const [searchQuery, setSearchQuery] = useState("");
+    const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
@@ -20,14 +19,14 @@ const VideosPage = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [iframeInput, setIframeInput] = useState(""); // For YouTube link or iframe
 
-    const fetchVideos = async (page = 1, query = "") => {
+    const fetchVideos = async (page = 1, search = "") => {
         setLoading(true);
         try {
-            const response = await axios.get("Dashboard/Admin/getVideos", {
-                params: { page, query },
+            const response = await axios.get("Dashboard/Admin/Videos", {
+                params: { page, search },
             });
-            setVideos(response.data.videos);
-            setTotalPages(response.data.totalPages);
+            setVideos(response.data.data);
+            setTotalPages(response.data.last_page);
         } catch (error) {
             toast.error(error.response?.data?.message ?? "Caught error");
         } finally {
@@ -36,11 +35,11 @@ const VideosPage = () => {
     };
 
     useEffect(() => {
-        fetchVideos(currentPage, searchQuery);
-    }, [currentPage, searchQuery]);
+        fetchVideos(currentPage, search);
+    }, [currentPage, search]);
 
-    const handleSearchChange = (e) => {
-        setSearchQuery(e.target.value);
+    const handleSearch = (search) => {
+        setSearch(search);
         setCurrentPage(1);
     };
 
@@ -70,7 +69,7 @@ const VideosPage = () => {
                 },
             });
             setSelectedVideo(null);
-            fetchVideos(currentPage, searchQuery); // Refresh the videos listF
+            fetchVideos(currentPage, search); // Refresh the videos listF
         } catch (error) {
             toast.error("Failed to update the video.");
         }
@@ -112,46 +111,61 @@ const VideosPage = () => {
 
     return (
         <>
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-10 rounded-xl mb-5 border-b border-gray-100 pb-4">
-                <h1 className="text-2xl md:text-3xl font-medium">Manage Videos</h1>
-                <input
-                    type="text"
-                    placeholder="Search videos..."
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    className="w-full md:w-1/2 px-4 py-2 border rounded-lg focus:outline-none focus:border-red-500"
-                />
-            </div>
-            {loading ? (
-                <div className="flex justify-center my-8">
-                    <FaSpinner className="animate-spin text-6xl text-red-600" />
+            <div className="flex justify-between items-center gap-10 rounded-xl mb-4 pb-4">
+                <h1 className="text-4xl font-medium flex items-center gap-3 text-gray-700">
+                    <MdOutlineVideoSettings />
+                    Videos
+                </h1>
+                <div className="relative w-1/2">
+                    <CiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl" />
+                    <input
+                        type="text"
+                        className="w-full rounded-2xl border-2 py-3 pl-12 pr-4 outline-none focus:border-red-300 transition-colors"
+                        placeholder="Search videos..."
+                        value={search}
+                        onChange={(e) => handleSearch(e.target.value)}
+                    />
                 </div>
-            ) : (
-                <div className="relative overflow-x-auto rounded-lg">
-                    <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-                        <thead className="text-gray-700 uppercase bg-gray-200">
+            </div>
+            <div className="relative overflow-x-auto rounded-lg">
+                <table className="min-w-full text-left rtl:text-right divide-y divide-gray-200">
+                    <thead className="bg-gray-100">
+                        <tr>
+                            <th className="px-6 py-4 text-sm font-medium text-gray-500">Video</th>
+                            <th className="px-6 py-4 text-sm font-medium text-gray-500">User</th>
+                            <th className="px-6 py-4 text-sm font-medium text-gray-500">Category</th>
+                            <th className="px-6 py-4 text-sm font-medium text-gray-500">Status</th>
+                            <th className="px-6 py-4 text-sm font-medium text-gray-500">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200 text-sm">
+                        {loading ? (
                             <tr>
-                                <th scope="col" className="px-6 py-3">Video</th>
-                                <th scope="col" className="px-6 py-3">Category</th>
-                                <th scope="col" className="px-6 py-3">Views</th>
-                                <th scope="col" className="px-6 py-3">Status</th>
-                                <th scope="col" className="px-6 py-3">Action</th>
+                                <td colSpan="5" className="py-6 text-center text-base text-gray-500">Loading...</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {videos && videos.length > 0 ? (
+                        ) : (
+                            videos && videos.length > 0 ? (
                                 videos.map((video) => (
                                     <>
-                                        <tr className={`border-b border-gray-100 ${video.status === 'WAITING' ? 'bg-gray-100' : 'bg-white'}`} key={video.id}>
+                                        <tr className={`${video.status === 'WAITING' ? 'bg-gray-100' : 'bg-white'}`} key={video.id}>
                                             <th scope="row" className="px-6 py-4 font-medium text-gray-900" width="25%">
                                                 <Link className="hover:text-primary">
                                                     <img src={video.thumbnail} className="rounded-lg w-64 h-28 object-cover mb-2" alt={video.title} />
                                                     <p className="line-clamp-2">{video.title}</p>
                                                 </Link>
                                             </th>
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center gap-4">
+                                                    <img
+                                                        src={video?.user?.avatar}
+                                                        alt={video?.user?.name}
+                                                        className="w-10 h-10 rounded-full object-cover"
+                                                    />
+                                                    <span className="font-medium text-gray-900">{video?.user?.name}</span>
+                                                </div>
+                                            </td>
                                             <td className="px-6 py-4">{video.category?.title}</td>
-                                            <td className="px-6 py-4"><NumberFormatter value={video.views} /></td>
-                                            <th className="px-6 py-4 uppercase font">{video.status}</th>
+                                            <th className="px-6 py-4 uppercase font text-gray-600">{video.status}</th>
                                             <td className="px-6 py-4">
                                                 {video.status === 'WAITING' && (
                                                     <button onClick={() => handleReview(video)} className="mb-4 py-2 px-4 flex items-center gap-2 text-lg bg-blue-500 text-white rounded-2xl">
@@ -231,17 +245,13 @@ const VideosPage = () => {
                                                         </div>
                                                     </div>
                                                     <div className="flex items-center justify-center gap-4 mb-4">
-                                                        <button
-                                                            onClick={() => videoStatus(video.id, "CANCELED")}
-                                                            className="mt-4 py-2 px-4 flex items-center gap-2 text-lg bg-red-500 text-white rounded-2xl"
-                                                        >
+                                                        <button onClick={() => videoStatus(video.id, "CANCELED")}
+                                                            className="mt-4 py-2 px-4 flex items-center gap-2 text-lg bg-red-500 text-white rounded-2xl">
                                                             <FaTimes className="text-xl" />
                                                             Cancel
                                                         </button>
-                                                        <button
-                                                            onClick={() => handleVideoSubmission(video.id, "APPROVED")}
-                                                            className="mt-4 py-2 px-4 flex items-center gap-2 text-lg bg-green-500 text-white rounded-2xl"
-                                                        >
+                                                        <button onClick={() => handleVideoSubmission(video.id, "APPROVED")}
+                                                            className="mt-4 py-2 px-4 flex items-center gap-2 text-lg bg-green-500 text-white rounded-2xl">
                                                             <FaCheck className="text-xl" />
                                                             Accept
                                                         </button>
@@ -253,15 +263,15 @@ const VideosPage = () => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="5" className="text-center py-4">
+                                    <td colSpan="5" className="text-center py-6">
                                         No videos found.
                                     </td>
                                 </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-            )}
+                            )
+                        )}
+                    </tbody>
+                </table>
+            </div>
             <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
@@ -271,4 +281,4 @@ const VideosPage = () => {
     );
 };
 
-export default VideosPage;
+export default VideosList;

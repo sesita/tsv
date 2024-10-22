@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { FaUpload } from 'react-icons/fa';
+import { FaSave, FaTrash, } from 'react-icons/fa';
 import CreatableSelect from 'react-select/creatable';
+import AvatarUpload from '../Common/AvatarUpload';
 
-const UserSettingsForm = ({ endpoint, thumbnailEndpoint, userInfo, onSuccess }) => {
+const UserSettingsForm = ({ endpoint, userInfo, onSuccess }) => {
     const [user, setUser] = useState({});
     const [skills, setSkills] = useState([]);
     const [languages, setLanguages] = useState([]);
@@ -21,21 +22,6 @@ const UserSettingsForm = ({ endpoint, thumbnailEndpoint, userInfo, onSuccess }) 
 
     const handleInputChange = (e) => {
         setUser({ ...user, [e.target.name]: e.target.value });
-    };
-
-    const handleAvatarChange = async (e) => {
-        const selectedImage = e.target.files?.[0];
-        try {
-            const res = await axios.post(
-                thumbnailEndpoint,
-                { ...user, avatar: selectedImage },
-                { headers: { 'Content-Type': 'multipart/form-data' } }
-            );
-            setUser(res.data);
-            toast.success('Successfully updated avatar.');
-        } catch (error) {
-            toast.error(error.response?.data?.message);
-        }
     };
 
     const handleSubmit = async (e) => {
@@ -83,27 +69,20 @@ const UserSettingsForm = ({ endpoint, thumbnailEndpoint, userInfo, onSuccess }) 
 
     return (
         <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="flex flex-col md:flex-row justify-between items-center mb-8 md:mb-12">
-                <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8 mb-4 md:mb-0">
-                    <img
-                        className="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-red-500 object-cover"
-                        src={user.avatar}
-                        alt="User Avatar"
-                    />
-                    <div className="text-center md:text-left">
-                        <h2 className="text-3xl md:text-4xl font-semibold text-[#232323] mb-2">{user.name}</h2>
-                        <p className="text-sm font-medium">Update your photo and personal details</p>
-                    </div>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-4">
-                    <label htmlFor="file-input" className="cursor-pointer py-3 px-6 md:py-4 md:px-12 rounded-full bg-blue-800 text-white text-base md:text-lg flex items-center justify-center gap-2">
-                        <FaUpload /> Upload New Picture
-                        <input id="file-input" type="file" className="hidden" onChange={handleAvatarChange} />
-                    </label>
-                    <button type="button" className="py-3 px-8 md:py-4 md:px-14 rounded-full bg-red-500 text-white text-base md:text-lg">
-                        Delete
-                    </button>
-                </div>
+            <div className='mb-8 border-b pb-6'>
+                <AvatarUpload
+                    user={user}
+                    onAvatarChange={async (avatar) => {
+                        await axios.post(endpoint, { ...user, avatar }, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                            }
+                        });
+                    }}
+                    onAvatarDelete={async () => {
+                        return await axios.post(endpoint, { ...user, avatar: null });
+                    }}
+                />
             </div>
 
             <div className="flex flex-col md:flex-row gap-3">
@@ -174,8 +153,13 @@ const UserSettingsForm = ({ endpoint, thumbnailEndpoint, userInfo, onSuccess }) 
                 value={user.additional_info?.bio || ''}
                 onChange={(e) => setUser({ ...user, additional_info: { ...user.additional_info, bio: e.target.value } })}
             ></textarea>
-            <div className="flex justify-center">
-                <button type="submit" className="py-3 px-8 md:py-4 md:px-12 rounded-full bg-red-500 text-white text-base md:text-lg">
+            <div className="flex gap-10 justify-center">
+                <button type="button" className="inline-flex items-center justify-center gap-2 px-8 py-4 font-medium text-white border-2 bg-red-500 hover:bg-red-600 rounded-full transition-all duration-200 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                    <FaTrash />
+                    Delete Profile
+                </button>
+                <button type="submit" className="inline-flex items-center justify-center gap-2 px-8 py-4 font-medium  text-white border-2 bg-yellow-500 hover:bg-yellow-600 rounded-full transition-all duration-200 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                    <FaSave />
                     Save Profile
                 </button>
             </div>

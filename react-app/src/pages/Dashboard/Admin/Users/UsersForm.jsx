@@ -31,8 +31,7 @@ const Settings = () => {
     return (
         <div className="mx-auto p-3 max-w-8xl">
             <UserSettingsForm
-                endpoint="Dashboard/Settings"
-                thumbnailEndpoint="Dashboard/Settings/Avatar"
+                endpoint="/Dashboard/Admin/Users"
                 userInfo={userInfo}
                 onSuccess={handleSuccess}
             />

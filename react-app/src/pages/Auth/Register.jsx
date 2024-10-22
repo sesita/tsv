@@ -42,7 +42,7 @@ const Signup = () => {
                     localStorage.setItem("accessToken", res.data?.token);
                     
                     toast.success("Successfully registered");
-                    navigate("/");
+                    navigate("/User/Settings");
                 }
             } catch (e) {
                 toast.error(e.response?.data?.message);

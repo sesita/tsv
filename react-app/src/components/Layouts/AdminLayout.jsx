@@ -22,10 +22,10 @@ const AdminLayout = () => {
     return (
         <>
             <div className="pt-12 pb-32 md:pb-40 pattern bg-red-950">
-                <div className="container mx-auto px-4">
-                    <div className="flex flex-col md:flex-row justify-between items-center">
+                <div className="sm:container mx-auto">
+                    <div className="flex flex-col md:flex-row justify-between items-center px-4">
                         <div className="w-full flex justify-between items-center mb-6 md:mb-0">
-                            <h2 className="text-white text-3xl md:text-6xl font-medium">Admin Panel</h2>
+                            <Link to={'/Admin'} className="text-white text-3xl md:text-6xl font-medium">Admin Panel</Link>
                             <button onClick={toggleMenu} className="text-white text-2xl md:hidden">
                                 <HiMenu />
                             </button>
@@ -45,8 +45,8 @@ const AdminLayout = () => {
                     </div>
                 </div>
             </div>
-            <section className="container mx-auto px-4 -mt-28 mb-14">
-                <div className="shadow-lg rounded-2xl py-10 px-4 md:px-12 bg-white">
+            <section className="sm:container -mt-28 mb-14">
+                <div className="shadow-lg rounded-2xl py-10 px-12 bg-white">
                     <Outlet />
                 </div>
             </section>

@@ -1,15 +1,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { CiEdit } from "react-icons/ci";
-import { CiCirclePlus } from "react-icons/ci";
 import { CiSearch } from "react-icons/ci";
 import Pagination from "../../../../components/Common/Pagination";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { FaUser } from "react-icons/fa";
 
 const Users = () => {
     const [users, setUsers] = useState([]);
-    const [searchTerm, setSearchTerm] = useState("");
+    const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(true);
@@ -23,7 +23,7 @@ const Users = () => {
                     search,
                 }
             });
-            setUsers(response.data);
+            setUsers(response.data.data);
             setTotalPages(response.data.last_page);
         } catch (error) {
             toast.error('Caught Error!');
@@ -34,9 +34,13 @@ const Users = () => {
 
 
     useEffect(() => {
-        fetchUsers(currentPage, searchTerm);
-    }, [currentPage, searchTerm]);
+        fetchUsers(currentPage, search);
+    }, [currentPage, search]);
 
+    const handleSearch = (search) => {
+        setSearch(search)
+        setCurrentPage(1);
+    };
 
     const handlePagination = (page) => {
         if (page > 0 && page <= totalPages) {
@@ -47,41 +51,40 @@ const Users = () => {
     return (
         <>
             <div className="flex justify-between items-center gap-10 rounded-xl mb-4 pb-4">
-                <h1 className="text-3xl font-medium">Manage Users</h1>
+                <h1 className="text-4xl font-medium flex items-center gap-3 text-gray-700">
+                    <FaUser />
+                    Users
+                </h1>
                 <div className="relative w-1/2">
                     <CiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl" />
                     <input
                         type="text"
-                        className="w-full rounded-2xl border py-3 pl-12 pr-4 outline-none focus:border-blue-500 transition-colors"
+                        className="w-full rounded-2xl border-2 py-3 pl-12 pr-4 outline-none focus:border-red-300 transition-colors"
                         placeholder="Search users..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                        value={search}
+                        onChange={(e) => handleSearch(e.target.value)}
                     />
                 </div>
-                <button className="py-3 px-6 bg-red-600 hover:bg-red-700 text-white rounded-2xl flex items-center gap-2 transition-colors">
-                    <CiCirclePlus className="text-xl" />
-                    Add New User
-                </button>
             </div>
 
             <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
+                <table className="min-w-full text-left rtl:text-right divide-y divide-gray-200">
+                    <thead className="bg-gray-100">
+                        <tr>
+                            <th className="px-6 py-4 text-sm font-medium text-gray-500">User</th>
+                            <th className="px-6 py-4 text-sm font-medium text-gray-500">Full Name</th>
+                            <th className="px-6 py-4 text-sm font-medium text-gray-500">Email</th>
+                            <th className="px-6 py-4 text-sm font-medium text-gray-500">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                        {loading ? (
                             <tr>
-                                <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">User</th>
-                                <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">Full Name</th>
-                                <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">Email</th>
-                                <th className="px-6 py-4 text-left text-sm font-medium text-gray-500">Actions</th>
+                                <td colSpan="4" className="py-6 text-center text-gray-500">Loading...</td>
                             </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-200">
-                            {loading ? (
-                                <tr>
-                                    <td colSpan="3" className="px-6 py-4 text-center">Loading...</td>
-                                </tr>
-                            ) : (
-                                users?.data?.map((user) => (
+                        ) : (
+                            users && users.length > 0 ? (
+                                users.map((user) => (
                                     <tr key={user.id} className="hover:bg-gray-50">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-4">
@@ -98,15 +101,21 @@ const Users = () => {
                                         <td className="px-6 py-4">
                                             <Link to={`/Admin/Users/${user.id}`} className="py-2 px-4 w-fit flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-xl transition-colors">
                                                 <CiEdit className="text-xl" />
-                                                Manage
+                                                Edit
                                             </Link>
                                         </td>
                                     </tr>
                                 ))
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                            ) : (
+                                <tr>
+                                    <td colSpan="4" className="text-center py-6">
+                                        No videos found.
+                                    </td>
+                                </tr>
+                            )
+                        )}
+                    </tbody>
+                </table>
 
             </div>
             <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePagination} />

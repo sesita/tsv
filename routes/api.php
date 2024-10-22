@@ -63,6 +63,7 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'Dashboard'], function ($r
 
     Route::prefix('Admin')->group(function () {
         Route::apiResource('Users', UserController::class);
+        Route::apiResource('Videos', \App\Http\Controllers\Dashboard\Admin\VideoController::class);
     });
     Route::any('Admin/{method}', function ($method, Request $request) {
         $controller = new AdminController();
