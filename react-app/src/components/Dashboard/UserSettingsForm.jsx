@@ -33,6 +33,7 @@ const UserSettingsForm = ({ endpoint, userInfo, onSuccess }) => {
                 educations,
                 bio: user.additional_info?.bio,
             },
+            id: user.id,
             name: user.name,
             full_name: user.full_name,
             email: user.email,

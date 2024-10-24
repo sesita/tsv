@@ -64,26 +64,18 @@ class UserController extends Controller
                 'name' => $request->name,
                 'full_name' => $request->full_name,
                 'email' => $request->email,
+                'phone_number' => $request->phone_number,
                 'additional_info' => json_encode($request->additional_info),
                 'avatar' => $avatar,
             ]);
             return response()->json($user);
         }
         return response()->json(['status' => 'error', 'message' => 'User not found'], 404);
-
     }
 
-    public function delete(Request $request)
+    public function destroy($id)
     {
-        $validator = Validator::make($request->all(), [
-            'id' => 'required|exists:users,id',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['status' => 'error', 'errors' => $validator->errors()], 400);
-        }
-
-        $user = User::find($request->id);
+        $user = User::find($id);
         if ($user) {
             $user->delete();
             return response()->json(['status' => 'success']);

@@ -23,11 +23,12 @@ import AnalyticsPage from "./pages/Dashboard/AnalyticsPage";
 
 // Admin Pages
 import Dashboard from "./pages/Dashboard/Admin/Dashboard";
-import Categories from "./pages/Dashboard/Admin/Categories";
 import UsersList from "./pages/Dashboard/Admin/Users/UsersList";
 import UsersForm from "./pages/Dashboard/Admin/Users/UsersForm";
 import SettingsAdmin from "./pages/Dashboard/Admin/Settings";
 import VideosList from "./pages/Dashboard/Admin/Videos/VideosList";
+import CategoriesForm from "./pages/Dashboard/Admin/Categories/CategoriesForm";
+import CategoriesList from "./pages/Dashboard/Admin/Categories/CategoriesList";
 
 const router = createBrowserRouter([
     {
@@ -93,20 +94,33 @@ const router = createBrowserRouter([
                     },
                     {
                         path: "Users",
-                        element: <UsersList />,
+                        children: [
+                            {
+                                path: "",
+                                element: <UsersList />,
+                            },
+                            {
+                                path: ":id",
+                                element: <UsersForm />,
+                            },
+                        ]
                     },
                     {
-                        path: "Users/:id",
-                        element: <UsersForm />,
+                        path: "Categories",
+                        children: [
+                            {
+                                path: "",
+                                element: <CategoriesList />,
+                            },
+                            {
+                                path: ":id",
+                                element: <CategoriesForm />,
+                            },
+                        ]
                     },
                     {
                         path: "Videos",
                         element: <VideosList />,
-                    },
-
-                    {
-                        path: "Categories",
-                        element: <Categories />,
                     },
                     {
                         path: "Settings",

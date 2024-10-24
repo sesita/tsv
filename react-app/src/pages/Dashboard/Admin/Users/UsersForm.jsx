@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
-const Settings = () => {
+const Users = () => {
     const navigate = useNavigate();
     const params = useParams();
     const [userInfo, setUserInfo] = useState({});
 
     const handleSuccess = () => {
-        navigate('Admin/Users');
+        navigate('/Admin/Users');
     };
 
     useEffect(() => {
@@ -39,4 +39,4 @@ const Settings = () => {
     );
 };
 
-export default Settings;
+export default Users;

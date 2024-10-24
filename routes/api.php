@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Dashboard\Admin\CategoryController;
 use App\Http\Controllers\Dashboard\Admin\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -64,6 +65,7 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'Dashboard'], function ($r
     Route::prefix('Admin')->group(function () {
         Route::apiResource('Users', UserController::class);
         Route::apiResource('Videos', \App\Http\Controllers\Dashboard\Admin\VideoController::class);
+        Route::apiResource('Categories', CategoryController::class);
     });
     Route::any('Admin/{method}', function ($method, Request $request) {
         $controller = new AdminController();

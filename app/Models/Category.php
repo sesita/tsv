@@ -11,7 +11,7 @@ class Category extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = ['title'];
-    protected $hidden = ['deleted_at', 'created_at', 'updated_at'];
+    protected $hidden = ['deleted_at', 'updated_at'];
 
     public function videos()
     {
