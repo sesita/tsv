@@ -51,6 +51,15 @@ const UserSettingsForm = ({ endpoint, userInfo, onSuccess }) => {
         }
     };
 
+    const handleDelete = async () => {
+        try {
+            const res = await axios.delete(`${endpoint}/${user.id}`);
+            toast.success('Successfully deleted.');
+            if (onSuccess) onSuccess(res.data);
+        } catch (error) {
+            toast.error(error.response?.data?.message);
+        }
+    };
     const customSelectStyles = {
         control: (provided) => ({
             ...provided,
@@ -155,7 +164,7 @@ const UserSettingsForm = ({ endpoint, userInfo, onSuccess }) => {
                 onChange={(e) => setUser({ ...user, additional_info: { ...user.additional_info, bio: e.target.value } })}
             ></textarea>
             <div className="flex gap-10 justify-center">
-                <button type="button" className="inline-flex items-center justify-center gap-2 px-8 py-4 font-medium text-white border-2 bg-red-500 hover:bg-red-600 rounded-full transition-all duration-200 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                <button type="button" onClick={handleDelete} className="inline-flex items-center justify-center gap-2 px-8 py-4 font-medium text-white border-2 bg-red-500 hover:bg-red-600 rounded-full transition-all duration-200 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
                     <FaTrash />
                     Delete Profile
                 </button>
