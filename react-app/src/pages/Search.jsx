@@ -23,8 +23,8 @@ const Search = () => {
                 search: search,
             },
         });
-        setVideos(res.data?.videos);
-        setSliderVideos(res.data?.common);
+        setVideos(res.data);
+        setSliderVideos(res.data);
         setLoading(false);
     };
 
@@ -42,7 +42,7 @@ const Search = () => {
                 effect={"fade"}
                 modules={[Autoplay, EffectFade]}
             >
-                {sliderVideos?.data ? (
+                {sliderVideos?.total > 0 ? (
                     sliderVideos?.data?.map((video) => (
                         <SwiperSlide key={video.id}>
                             <section className="md:pt-16 pt-8 md:pb-32 pb-28">
@@ -80,7 +80,7 @@ const Search = () => {
                                         </div>
                                     ))}
                             </>
-                        ) : videos.data?.length > 0 ? (
+                        ) : videos?.total > 0 ? (
                             videos?.data?.map((video, key) => <VideoBox info={video} key={key} />)
                         ) : (
                             <>
