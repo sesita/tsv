@@ -299,7 +299,7 @@ const Upload = () => {
             <div className="flex justify-end mb-4">
                 <div className={`flex items-center gap-8 ${isPayable && "border-b pb-4"}`}>
                     <span className="text-gray-700 font-bold text-3xl">${price}</span>
-                    <button type="submit" className="bg-red-500 py-4 px-12 text-white font-medium text-lg rounded-2xl">
+                    <button type="submit" className="bg-primary py-4 px-12 text-white font-medium text-lg rounded-2xl">
                         {price > 0 ? "Pay Now" : "Publish Video"}
                     </button>
                 </div>

@@ -102,20 +102,20 @@ const Categories = () => {
                         Update Category
                     </button>
                     <button type="button" onClick={showDeleteWarning}
-                        className="inline-flex items-center justify-center gap-2 px-8 py-4 font-medium text-white border-2 bg-red-500 hover:bg-red-600 rounded-3xl transition-all duration-200 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                        className="inline-flex items-center justify-center gap-2 px-8 py-4 font-medium text-white border-2 bg-primary hover:bg-primary-dark rounded-3xl transition-all duration-200 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
                         <FaTrash />
                         Delete
                     </button>
                 </div>
                 {deleteWarning && (
                     <div className="bg-red-100 p-4 rounded-lg mt-4">
-                        <p className="text-red-600">
+                        <p className="text-primary-dark">
                             Are you sure you want to delete this category? This action will also delete all related videos.
                         </p>
                         <div className="flex gap-2 mt-4">
                             <button
                                 type="button"
-                                className="bg-red-500 text-white py-2 px-4 rounded-xl"
+                                className="bg-primary text-white py-2 px-4 rounded-xl"
                                 onClick={handleDelete}
                             >
                                 Confirm Delete

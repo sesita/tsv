@@ -41,7 +41,7 @@ const ProfilePage = () => {
     return (
         <div className="">
             <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 mb-6">
-                <img className="w-32 h-32 sm:w-40 sm:h-40 rounded-full border-4 border-red-500 object-cover" src={userInfo?.avatar} alt="" />
+                <img className="w-32 h-32 sm:w-40 sm:h-40 rounded-full border-4 border-primary object-cover" src={userInfo?.avatar} alt="" />
                 <div className="text-center sm:text-left">
                     <h2 className="text-2xl sm:text-3xl font-semibold">{userInfo?.name}</h2>
                     <p className="text-sm font-medium mb-2">Content Creator</p>
@@ -80,19 +80,19 @@ const ProfilePage = () => {
                 <div className="flex-1">
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 px-4 sm:px-8 mb-6">
                         <div className="text-center">
-                            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#C60C0D]">
+                            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary">
                                 <NumberFormatter value={userInfo?.views} />
                             </h2>
                             <p className="text-md text-[#232323]">Views</p>
                         </div>
                         <div className="text-center">
-                            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#C60C0D]">
+                            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary">
                                 <NumberFormatter value={userInfo?.videos} />
                             </h2>
                             <p className="text-md text-[#232323]">Videos</p>
                         </div>
                         <div className="text-center">
-                            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#C60C0D]">
+                            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary">
                                 <NumberFormatter value={userInfo?.likes} />
                             </h2>
                             <p className="text-md text-[#232323]">Likes</p>

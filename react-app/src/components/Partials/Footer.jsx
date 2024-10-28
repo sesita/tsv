@@ -15,13 +15,13 @@ export const Footer = () => {
                         <ul className="text-sm text-dark-gray flex flex-col gap-2">
                             <li>
                                 <span>E-mail: </span>
-                                <a href="mailto:info@mytsv.com" className="font-normal hover:text-red-600 dark:hover:text-yellow transition-all">
+                                <a href="mailto:info@mytsv.com" className="font-normal hover:text-primary-dark dark:hover:text-yellow transition-all">
                                     info@mytsv.com
                                 </a>
                             </li>
                             <li>
                                 <span>Number: </span>
-                                <a href="tel:18479439634" className="font-normal hover:text-red-600 dark:hover:text-yellow transition-all">
+                                <a href="tel:18479439634" className="font-normal hover:text-primary-dark dark:hover:text-yellow transition-all">
                                     +1 847-943-9634
                                 </a>
                             </li>
@@ -31,13 +31,13 @@ export const Footer = () => {
                         <div className="mx-md-5">
                             <h1 className="text-xl font-semibold text-dark mb-6">Useful Links</h1>
                             <ul className="text-dark-gray flex flex-col gap-6">
-                                <li className="hover:text-red-600 transition-all">
+                                <li className="hover:text-primary-dark transition-all">
                                     <a href="">FAQ</a>
                                 </li>
-                                <li className="hover:text-red-600 transition-all">
+                                <li className="hover:text-primary-dark transition-all">
                                     <a href="">Registration</a>
                                 </li>
-                                <li className="hover:text-red-600 transition-all">
+                                <li className="hover:text-primary-dark transition-all">
                                     <a href="">Video Upload</a>
                                 </li>
                             </ul>
@@ -46,13 +46,13 @@ export const Footer = () => {
                     <div className="col-span-3">
                         <h1 className="text-xl font-semibold text-dark mb-6">Company</h1>
                         <ul className="text-dark-gray flex flex-col gap-6">
-                            <li className="hover:text-red-600 transition-all">
+                            <li className="hover:text-primary-dark transition-all">
                                 <a href="">About us</a>
                             </li>
-                            <li className="hover:text-red-600 transition-all">
+                            <li className="hover:text-primary-dark transition-all">
                                 <a href="">Contact</a>
                             </li>
-                            <li className="hover:text-red-600 transition-all">
+                            <li className="hover:text-primary-dark transition-all">
                                 <a href="">Terms & Conditions</a>
                             </li>
                         </ul>

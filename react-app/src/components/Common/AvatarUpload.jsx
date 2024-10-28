@@ -63,7 +63,7 @@ const AvatarUpload = ({ user, onAvatarChange, onAvatarDelete }) => {
                 <div className="flex flex-col md:flex-row items-center gap-6">
                     {/* Avatar Preview */}
                     <div className="relative group">
-                        <div className={`w-40 h-40 rounded-full overflow-hidden border-4 ${isUploading ? 'border-red-400 animate-pulse' : 'border-red-500'
+                        <div className={`w-40 h-40 rounded-full overflow-hidden border-4 ${isUploading ? 'border-primary-light animate-pulse' : 'border-primary'
                             }`}>
                             {previewUrl ? (
                                 <img
@@ -86,7 +86,7 @@ const AvatarUpload = ({ user, onAvatarChange, onAvatarDelete }) => {
                         {/* Hover Overlay */}
                         <label className="absolute cursor-pointer inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 rounded-full transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
                             <div className="p-3 rounded-full bg-white bg-opacity-90 hover:bg-opacity-100 transition-all duration-200 hover:scale-110">
-                                <FaUpload className="w-6 h-6 text-red-500" />
+                                <FaUpload className="w-6 h-6 text-primary" />
                                 <input
                                     type="file"
                                     className="hidden"
@@ -111,7 +111,7 @@ const AvatarUpload = ({ user, onAvatarChange, onAvatarDelete }) => {
 
                 {/* Buttons Section */}
                 <div className="flex flex-col sm:flex-row gap-4">
-                    <label className="cursor-pointer inline-flex items-center justify-center gap-2 px-8 py-3 font-medium text-white bg-red-500 hover:bg-red-600 rounded-full transition-all duration-200 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                    <label className="cursor-pointer inline-flex items-center justify-center gap-2 px-8 py-3 font-medium text-white bg-primary hover:bg-primary-dark rounded-full transition-all duration-200 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
                         <FaUpload className="w-4 h-4" />
                         Upload New Picture
                         <input
@@ -126,7 +126,7 @@ const AvatarUpload = ({ user, onAvatarChange, onAvatarDelete }) => {
                     <button
                         onClick={handleDelete}
                         disabled={isUploading || !previewUrl}
-                        className="inline-flex items-center justify-center gap-2 px-8 py-3 font-medium text-red-500 border-2 border-red-500 hover:bg-red-50 rounded-full transition-all duration-200 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="inline-flex items-center justify-center gap-2 px-8 py-3 font-medium text-primary border-2 border-primary hover:bg-red-50 rounded-full transition-all duration-200 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <FaTrash className="w-4 h-4" />
                         Delete
@@ -136,7 +136,7 @@ const AvatarUpload = ({ user, onAvatarChange, onAvatarDelete }) => {
 
             {/* Error Message */}
             {error && (
-                <div className="mt-4 p-4 bg-red-50 border-l-4 border-red-500 text-red-700">
+                <div className="mt-4 p-4 bg-red-50 border-l-4 border-primary text-red-700">
                     <p className="font-medium">Error</p>
                     <p className="text-sm">{error}</p>
                 </div>

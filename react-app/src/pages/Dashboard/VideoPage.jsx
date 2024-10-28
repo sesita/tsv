@@ -176,7 +176,7 @@ const VideoPage = () => {
                             <textarea name="description" rows="3" className="text-lg font-medium rounded-2xl border py-2 px-4 outline-none" placeholder="Description..." value={videoInfo.description || ""} onChange={handleInputChange}></textarea>
                         </div>
 
-                        <button type="submit" className="bg-red-500 py-3 text-white font-medium text-lg rounded-2xl flex items-center gap-3 justify-center mt-4">
+                        <button type="submit" className="bg-primary py-3 text-white font-medium text-lg rounded-2xl flex items-center gap-3 justify-center mt-4">
                             Update <FaCheck />
                         </button>
                     </div>

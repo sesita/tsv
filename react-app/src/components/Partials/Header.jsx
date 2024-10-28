@@ -356,7 +356,7 @@ const Header = ({ states, categories, locator }) => {
                         <div className="w-2/3 md:w-1/2 px-4">
                             <form className="w-full rounded-full border-[1px] border-[#CACACA] py-1 px-1 flex" onSubmit={handleSearch}>
                                 <input type="text" className="outline-none border-none md:text-sm text-xs sm:pl-4 pl-2 flex-1 rounded-lg" placeholder="Search..." value={searchText} onChange={(e) => setSearchText(e.target.value)} />
-                                <button className="md:w-9 md:h-9 w-6 h-6 bg-[#C60C0D] flex justify-center items-center rounded-full text-white" onClick={handleSearch}>
+                                <button className="md:w-9 md:h-9 w-6 h-6 bg-primary flex justify-center items-center rounded-full text-white" onClick={handleSearch}>
                                     <CiSearch className="md:text-xl text-sm" />
                                 </button>
                             </form>
@@ -371,11 +371,11 @@ const Header = ({ states, categories, locator }) => {
                                         <BiSolidVideoPlus className="md:text-3xl text-xl cursor-pointer xl:mr-2" />
                                     </Link>
                                     <div className="relative cursor-pointer xl:mr-4" ref={notificationRef} onClick={() => setNotificationDropdown(!notificationDropdown)}>
-                                        <span className="absolute border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-[#C60C0D] text-white text-[11px] -top-1.5 -right-1.5">0</span>
+                                        <span className="absolute border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-primary text-white text-[11px] -top-1.5 -right-1.5">0</span>
                                         <IoMdNotifications className="md:text-3xl text-xl " />
                                         {notificationDropdown && (
                                             <div className="shadow-[0px_0px_5px_0px_rgba(0,0,0,0.2)] rounded-xl py-4 px-4 absolute right-0 top-12 w-52 z-20 text-center bg-white">
-                                                <span className="font-medium text-xl text-red-600 capitalize">Notifications</span>
+                                                <span className="font-medium text-xl text-primary-dark capitalize">Notifications</span>
                                                 <hr className="my-2.5" />
                                                 <h1>No New Notifications</h1>
                                             </div>
@@ -384,43 +384,43 @@ const Header = ({ states, categories, locator }) => {
                                 </div>
                                 <div ref={userRef}>
                                     <div className="md:flex items-center cursor-pointer hidden" onClick={showUserDropdown}>
-                                        <span className="absolute md:hidden border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-[#C60C0D] text-white text-[11px] -top-1.5 -right-1">0</span>
+                                        <span className="absolute md:hidden border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-primary text-white text-[11px] -top-1.5 -right-1">0</span>
                                         <img src={state.user.avatar} className="rounded-full w-8 h-8 mr-2" alt={state.user.name} />
                                         <BsChevronUp className={!showDropdown && "rotate-180 hidden md:block"} />
                                     </div>
                                     <div className={`animate__animated animate__fadeIn shadow-[0px_0px_14px_0px_rgba(0,0,0,0.2)] rounded-xl py-4 px-5 absolute right-0 top-12 w-48 z-20 bg-white ${!showDropdown && "hidden"} `}>
-                                        <span className="font-medium text-xl text-red-600 capitalize">{state.user.name}</span>
+                                        <span className="font-medium text-xl text-primary-dark capitalize">{state.user.name}</span>
                                         <hr className="my-2.5" />
                                         <Link to={`/User/Profile`} className="flex items-center gap-3 text-blue-900 text-sm mb-2">
-                                            <CgProfile className="text-[#C60C0D] text-lg" />
+                                            <CgProfile className="text-primary text-lg" />
                                             Profile
                                         </Link>
                                         <button onClick={() => Logout()} className="flex items-center gap-3 text-blue-900 text-sm mb-2">
-                                            <VscSignOut className="text-[#C60C0D] text-lg" />
+                                            <VscSignOut className="text-primary text-lg" />
                                             Sign Out
                                         </button>
                                         <hr className="my-3" />
                                         <Link to={`/User/Videos`} className="flex items-center gap-3 text-blue-900 text-sm mb-1">
-                                            <AiFillPlayCircle className="text-[#C60C0D] text-lg" />
+                                            <AiFillPlayCircle className="text-primary text-lg" />
                                             My Videos
                                         </Link>
                                         <Link to={`/User/Analytics`} className="flex items-center gap-3 text-blue-900 text-sm mb-1">
-                                            <BsGraphUpArrow className="text-[#C60C0D] text-lg" />
+                                            <BsGraphUpArrow className="text-primary text-lg" />
                                             Analytics
                                         </Link>
                                         <Link to={`/User/Upload`} className="flex items-center gap-3 text-blue-900 text-sm mb-1">
-                                            <CgProfile className="text-[#C60C0D] text-lg" />
+                                            <CgProfile className="text-primary text-lg" />
                                             Promotion
                                         </Link>
                                         <Link to={`/User/Settings`} className="flex items-center gap-3 text-blue-900 text-sm mb-1">
-                                            <AiFillSetting className="text-[#C60C0D] text-lg" />
+                                            <AiFillSetting className="text-primary text-lg" />
                                             Settings
                                         </Link>
                                         {state.user?.admin === 1 && (
                                             <>
                                                 <hr className="my-3" />
                                                 <Link to={`/Admin`} className="flex items-center gap-3 text-blue-900 text-sm mb-1">
-                                                    <CgProfile className="text-[#C60C0D] text-lg" />
+                                                    <CgProfile className="text-primary text-lg" />
                                                     Admin Panel
                                                 </Link>
                                             </>
@@ -441,7 +441,7 @@ const Header = ({ states, categories, locator }) => {
                                             <BiSolidVideoPlus className="md:text-3xl text-xl cursor-pointer mr-6" />
                                         </Link>
                                         <div className="md:flex gap-4 hidden">
-                                            <Link to="/Auth/Register" className="bg-[#C60C0D] text-white md:text-sm text-xs md:px-7 px-4 md:py-2 py-1 rounded-full">
+                                            <Link to="/Auth/Register" className="bg-primary text-white md:text-sm text-xs md:px-7 px-4 md:py-2 py-1 rounded-full">
                                                 Sign Up
                                             </Link>
                                             <Link to="/Auth/Login" className="text-[#0A2A8D] md:text-sm text-xs md:px-7 px-4 md:py-2 py-1 rounded-full border-[1px] border-[#CACACA] lg:block hidden">
@@ -467,7 +467,7 @@ const Header = ({ states, categories, locator }) => {
                             <IoLocationSharp className="text-primary" />
                         </button>
                         <Link to="/User/Profile" className="relative">
-                            <span className="absolute border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-[#C60C0D] text-white text-[11px] -top-1.5 -right-1.5">0</span>
+                            <span className="absolute border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-primary text-white text-[11px] -top-1.5 -right-1.5">0</span>
                             <IoMdNotificationsOutline className="text-primary" />
                         </Link>
                         {!state.user ? (

@@ -120,7 +120,7 @@ const VideosList = () => {
                     <CiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl" />
                     <input
                         type="text"
-                        className="w-full rounded-2xl border-2 py-3 pl-12 pr-4 outline-none focus:border-red-300 transition-colors"
+                        className="w-full rounded-2xl border-2 py-3 pl-12 pr-4 outline-none focus:border-primary-light transition-colors"
                         placeholder="Search videos..."
                         value={search}
                         onChange={(e) => handleSearch(e.target.value)}
@@ -246,7 +246,7 @@ const VideosList = () => {
                                                     </div>
                                                     <div className="flex items-center justify-center gap-4 mb-4">
                                                         <button onClick={() => videoStatus(video.id, "CANCELED")}
-                                                            className="mt-4 py-2 px-4 flex items-center gap-2 text-lg bg-red-500 text-white rounded-2xl">
+                                                            className="mt-4 py-2 px-4 flex items-center gap-2 text-lg bg-primary text-white rounded-2xl">
                                                             <FaTimes className="text-xl" />
                                                             Cancel
                                                         </button>

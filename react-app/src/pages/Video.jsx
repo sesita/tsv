@@ -169,7 +169,7 @@ const Video = () => {
                         {loading ? (
                             <>
                                 <img src={video.thumbnail} alt="" className="w-full h-full object-cover md:rounded-2xl" />
-                                <button className="absolute bg-red-600 text-white text-[65px] p-5 rounded-full">{loading ? <AiOutlineLoading className="animate-spin" /> : <IoMdPlay className="pl-2" />}</button>
+                                <button className="absolute bg-primary-dark text-white text-[65px] p-5 rounded-full">{loading ? <AiOutlineLoading className="animate-spin" /> : <IoMdPlay className="pl-2" />}</button>
                             </>
                         ) : (
                             <div className="player-wrapper w-full h-full rounded-xl">
@@ -218,7 +218,7 @@ const Video = () => {
                             </div>
 
                             <Link to={`/Profile/${data?.user?.id}`} className="flex items-center gap-3 mb-8 mx-2 md:mx-0">
-                                <img src={data?.user?.avatar} alt="Avatar" className="w-[55px] h-[55px] rounded-full object-cover border-2 border-red-500" />
+                                <img src={data?.user?.avatar} alt="Avatar" className="w-[55px] h-[55px] rounded-full object-cover border-2 border-primary" />
                                 <div className="flex flex-col">
                                     <Rating SVGclassName="inline" size={17} readonly={true} initialValue={data?.user?.rating} />
                                     <h4 className="text-xl text-[#8B8B8B]">{data?.user?.name}</h4>
@@ -239,7 +239,7 @@ const Video = () => {
                                         <form onSubmit={addComment} className="flex items-center gap-3 mb-4">
                                             <img src={state.user?.avatar} className="w-8 h-8 sm:w-[45px] sm:h-[45px] rounded-full" alt="Avatar" />
                                             <input type="text" ref={commentInput} className="flex-1 text-sm sm:text-base text-gray-500 border-b border-gray-300 bg-transparent outline-none py-2" placeholder="Add Comment" onChange={(e) => setComment(e.target.value)} />
-                                            <button type="submit" className="text-red-500">
+                                            <button type="submit" className="text-primary">
                                                 <BiLogoTelegram className="text-2xl sm:text-4xl cursor-pointer" />
                                             </button>
                                         </form>

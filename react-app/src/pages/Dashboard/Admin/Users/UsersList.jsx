@@ -59,7 +59,7 @@ const Users = () => {
                     <CiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl" />
                     <input
                         type="text"
-                        className="w-full rounded-2xl border-2 py-3 pl-12 pr-4 outline-none focus:border-red-300 transition-colors"
+                        className="w-full rounded-2xl border-2 py-3 pl-12 pr-4 outline-none focus:border-primary-light transition-colors"
                         placeholder="Search users..."
                         value={search}
                         onChange={(e) => handleSearch(e.target.value)}

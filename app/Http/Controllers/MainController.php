@@ -41,6 +41,7 @@ class MainController extends Controller
             'popular' => $video->getVideos($popularParams),
             'recommended' => $video->getVideos($request),
         ];
+        $data['settings'] = [];
 
         return response($data);
     }

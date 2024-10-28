@@ -62,7 +62,7 @@ const Profile = () => {
             <div className="sm:container -mt-28 mb-14">
                 <div className="shadow-lg rounded-2xl py-10 px-12 bg-white">
                     <div className="flex items-center gap-8 mb-6">
-                        <img className="w-40 h-40 rounded-full border-4 border-red-500 object-cover" src={userInfo?.avatar} alt="" />
+                        <img className="w-40 h-40 rounded-full border-4 border-primary object-cover" src={userInfo?.avatar} alt="" />
                         <div>
                             <h2 className="text-3xl font-semibold">{userInfo?.name}</h2>
                             <p className="text-sm font-medium mb-2">Content Creator</p>
@@ -97,19 +97,19 @@ const Profile = () => {
                         <div className="flex-1">
                             <div className="flex items-center justify-between gap-5 px-8 mb-6">
                                 <div className="text-center">
-                                    <h2 className="text-6xl font-bold text-[#C60C0D]">
+                                    <h2 className="text-6xl font-bold text-primary">
                                         <NumberFormatter value={userInfo?.views} />
                                     </h2>
                                     <p className="text-md ">Views</p>
                                 </div>
                                 <div className="text-center">
-                                    <h2 className="text-6xl font-bold text-[#C60C0D]">
+                                    <h2 className="text-6xl font-bold text-primary">
                                         <NumberFormatter value={userInfo?.videos} />
                                     </h2>
                                     <p className="text-md ">Videos</p>
                                 </div>
                                 <div className="text-center">
-                                    <h2 className="text-6xl font-bold text-[#C60C0D]">
+                                    <h2 className="text-6xl font-bold text-primary">
                                         <NumberFormatter value={userInfo?.likes} />
                                     </h2>
                                     <p className="text-md ">Likes</p>
@@ -163,7 +163,7 @@ const Profile = () => {
                                     />
                                     <button
                                         onClick={handleAddReview}
-                                        className="mt-2 bg-red-500 text-white px-4 py-2 rounded-xl"
+                                        className="mt-2 bg-primary text-white px-4 py-2 rounded-xl"
                                     >
                                         Submit Review
                                     </button>

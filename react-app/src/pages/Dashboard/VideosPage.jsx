@@ -55,13 +55,13 @@ const VideosPage = () => {
         <>
             <div className="flex justify-between items-center gap-10 rounded-xl mb-4 border-b border-gray-100 pb-4">
                 <h1 className="text-3xl font-medium">Manage Your Videos</h1>
-                <input type="text" placeholder="Search videos..." value={searchQuery} onChange={handleSearchChange} className="w-1/2 px-4 py-2 border rounded-lg focus:outline-none focus:border-red-500" />
+                <input type="text" placeholder="Search videos..." value={searchQuery} onChange={handleSearchChange} className="w-1/2 px-4 py-2 border rounded-lg focus:outline-none focus:border-primary" />
             </div>
 
             {/* Loading Spinner */}
             {loading ? (
                 <div className="flex justify-center my-8">
-                    <FaSpinner className="animate-spin text-6xl text-red-600" />
+                    <FaSpinner className="animate-spin text-6xl text-primary-dark" />
                 </div>
             ) : (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -74,7 +74,7 @@ const VideosPage = () => {
                                     {/* Play Button Overlay */}
                                     <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                         <div className="text-white text-5xl">
-                                            <IoIosPlay className="bg-red-600 p-2 rounded-full" />
+                                            <IoIosPlay className="bg-primary-dark p-2 rounded-full" />
                                         </div>
                                     </div>
                                 </div>

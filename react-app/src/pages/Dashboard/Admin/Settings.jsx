@@ -1,17 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import { CiSearch } from "react-icons/ci";
 import {
     FaCog, FaGlobe, FaPalette, FaImage, FaSave, FaPhone,
     FaMapMarkerAlt, FaEnvelope, FaUpload, FaTrash, FaCheck,
-    FaDesktop, FaMobile, FaTabletAlt
+    FaDesktop, FaMobile, FaTabletAlt, FaSpinner
 } from "react-icons/fa";
+import { toast } from 'react-toastify';
 
-const Settings = () => {
+export default function Settings() {
     const [activeTab, setActiveTab] = useState('general');
     const [isDirty, setIsDirty] = useState(false);
-    const [primaryColor, setPrimaryColor] = useState('#DC2626');
-    const [logo, setLogo] = useState(null);
-    const [favicon, setFavicon] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [settings, setSettings] = useState({
+        website_name: '',
+        business_slogan: '',
+        contact_email: '',
+        support_phone: '',
+        default_location: '',
+        meta_title: '',
+        meta_description: '',
+        meta_keywords: '',
+        primary_color: '#DC2626',
+        logo: null,
+        favicon: null
+    });
     const [previewDevice, setPreviewDevice] = useState('desktop');
 
     const tabs = [
@@ -20,42 +34,93 @@ const Settings = () => {
         { id: 'media', icon: FaImage, label: 'Media' }
     ];
 
-    const handleLogoUpload = (event, type) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                if (type === 'logo') {
-                    setLogo(e.target.result);
-                } else {
-                    setFavicon(e.target.result);
-                }
-                setIsDirty(true);
-            };
-            reader.readAsDataURL(file);
+    const presetColors = [
+        '#DC2626', '#2563EB', '#059669', '#7C3AED', '#EA580C', '#0891B2'
+    ];
+
+    useEffect(() => {
+        loadSettings();
+    }, []);
+
+    const loadSettings = async () => {
+        try {
+            setIsLoading(true);
+            const response = await axios.get('/Dashboard/Admin/Settings');
+            setSettings(prev => ({
+                ...prev,
+                ...response.data
+            }));
+        } catch (error) {
+            toast.error('Failed to load settings');
+            console.error('Error loading settings:', error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
-    const handleColorChange = (color) => {
-        setPrimaryColor(color);
+    const handleSettingChange = (name, value) => {
+        setSettings(prev => ({
+            ...prev,
+            [name]: value
+        }));
         setIsDirty(true);
     };
 
-    const presetColors = [
-        '#DC2626', // Red
-        '#2563EB', // Blue
-        '#059669', // Green
-        '#7C3AED', // Purple
-        '#EA580C', // Orange
-        '#0891B2', // Cyan
-    ];
+    const handleMediaUpload = async (event, type) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('type', type);
+
+        try {
+            setIsLoading(true);
+            const response = await axios.post('/Dashboard/Admin/Settings/Upload-media', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+
+            setSettings(prev => ({
+                ...prev,
+                [type]: response.data.url
+            }));
+            setIsDirty(true);
+            toast.success('File uploaded successfully');
+        } catch (error) {
+            toast.error('Failed to upload file');
+            console.error('Error uploading file:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleSave = async () => {
+        try {
+            setIsLoading(true);
+            const settingsArray = Object.entries(settings).map(([name, value]) => ({
+                name,
+                value: value ?? ''
+            }));
+
+            await axios.post('/Dashboard/Admin/Settings', {
+                settings: settingsArray
+            });
+
+            toast.success('Settings saved successfully');
+            setIsDirty(false);
+        } catch (error) {
+            toast.error(error.response?.data?.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <>
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
                 <h1 className="text-4xl font-medium flex items-center gap-3 text-gray-800">
-                    <FaCog style={{ color: primaryColor }} />
+                    <FaCog style={{ color: settings.primary_color }} />
                     Settings
                 </h1>
                 <div className="flex items-center gap-4 w-full md:w-auto">
@@ -63,16 +128,20 @@ const Settings = () => {
                         <CiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl" />
                         <input
                             type="text"
-                            className="w-full rounded-2xl border border-gray-200 py-3 pl-12 pr-4 outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition-all bg-white shadow-sm"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full rounded-2xl border border-gray-200 py-3 pl-12 pr-4 outline-none focus:border-primary-light focus:ring-2 focus:ring-red-100 transition-all bg-white shadow-sm"
                             placeholder="Search settings..."
                         />
                     </div>
                     {isDirty && (
                         <button
-                            className="flex items-center gap-2 px-6 py-3 rounded-2xl transition-all shadow-sm hover:shadow text-white"
-                            style={{ backgroundColor: primaryColor }}
+                            onClick={handleSave}
+                            disabled={isLoading}
+                            className="flex items-center gap-2 px-6 py-3 rounded-2xl transition-all shadow-sm hover:shadow text-white disabled:opacity-50"
+                            style={{ backgroundColor: settings.primary_color }}
                         >
-                            <FaSave />
+                            {isLoading ? <FaSpinner className="animate-spin" /> : <FaSave />}
                             Save Changes
                         </button>
                     )}
@@ -82,18 +151,16 @@ const Settings = () => {
             {/* Main Content */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100">
                 {/* Tabs */}
-                <div className="flex gap-2 p-2 border-b">
+                <div className="flex gap-2 p-2 border-b overflow-x-auto">
                     {tabs.map(tab => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
-                            className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all ${activeTab === tab.id
-                                ? 'font-medium'
-                                : 'text-gray-600 hover:bg-gray-50'
+                            className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all whitespace-nowrap ${activeTab === tab.id ? 'font-medium' : 'text-gray-600 hover:bg-gray-50'
                                 }`}
                             style={{
-                                backgroundColor: activeTab === tab.id ? `${primaryColor}15` : '',
-                                color: activeTab === tab.id ? primaryColor : ''
+                                backgroundColor: activeTab === tab.id ? `${settings.primary_color}15` : '',
+                                color: activeTab === tab.id ? settings.primary_color : ''
                             }}
                         >
                             <tab.icon className="text-sm" />
@@ -104,291 +171,308 @@ const Settings = () => {
 
                 {/* Settings Content */}
                 <div className="p-6">
-                    {/* Media Tab */}
-                    {activeTab === 'media' && (
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            {/* Logo Upload */}
-                            <div className="space-y-6">
-                                <h2 className="text-2xl font-medium text-gray-800 mb-6">Logo</h2>
-                                <div className="border-2 border-dashed rounded-xl p-8 text-center space-y-4">
-                                    {logo ? (
-                                        <div className="relative">
-                                            <img
-                                                src={logo}
-                                                alt="Logo preview"
-                                                className="max-h-48 mx-auto"
-                                            />
-                                            <button
-                                                onClick={() => setLogo(null)}
-                                                className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600"
-                                            >
-                                                <FaTrash className="text-sm" />
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <>
-                                            <FaImage className="text-4xl text-gray-400 mx-auto" />
-                                            <div className="space-y-2">
-                                                <p className="text-gray-600">Upload your website logo</p>
-                                                <p className="text-sm text-gray-500">Recommended size: 200x60px</p>
-                                            </div>
-                                        </>
-                                    )}
-                                    <label className="inline-flex items-center gap-2 px-6 py-3 rounded-xl cursor-pointer transition-all text-white"
-                                        style={{ backgroundColor: primaryColor }}>
-                                        <FaUpload />
-                                        Choose Logo
-                                        <input
-                                            type="file"
-                                            className="hidden"
-                                            accept="image/*"
-                                            onChange={(e) => handleLogoUpload(e, 'logo')}
-                                        />
-                                    </label>
-                                </div>
-                            </div>
-
-                            {/* Favicon Upload */}
-                            <div className="space-y-6">
-                                <h2 className="text-2xl font-medium text-gray-800 mb-6">Favicon</h2>
-                                <div className="border-2 border-dashed rounded-xl p-8 text-center space-y-4">
-                                    {favicon ? (
-                                        <div className="relative">
-                                            <img
-                                                src={favicon}
-                                                alt="Favicon preview"
-                                                className="max-h-32 mx-auto"
-                                            />
-                                            <button
-                                                onClick={() => setFavicon(null)}
-                                                className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600"
-                                            >
-                                                <FaTrash className="text-sm" />
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <>
-                                            <FaImage className="text-4xl text-gray-400 mx-auto" />
-                                            <div className="space-y-2">
-                                                <p className="text-gray-600">Upload your favicon</p>
-                                                <p className="text-sm text-gray-500">Recommended size: 32x32px</p>
-                                            </div>
-                                        </>
-                                    )}
-                                    <label className="inline-flex items-center gap-2 px-6 py-3 rounded-xl cursor-pointer transition-all text-white"
-                                        style={{ backgroundColor: primaryColor }}>
-                                        <FaUpload />
-                                        Choose Favicon
-                                        <input
-                                            type="file"
-                                            className="hidden"
-                                            accept="image/*"
-                                            onChange={(e) => handleLogoUpload(e, 'favicon')}
-                                        />
-                                    </label>
-                                </div>
-                            </div>
+                    {isLoading && activeTab !== 'media' && (
+                        <div className="flex justify-center items-center py-12">
+                            <FaSpinner className="animate-spin text-2xl" style={{ color: settings.primary_color }} />
                         </div>
                     )}
 
-                    {/* Appearance Tab */}
-                    {activeTab === 'appearance' && (
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            {/* Color Scheme */}
-                            <div className="space-y-6">
-                                <h2 className="text-2xl font-medium text-gray-800 mb-6">Color Scheme</h2>
+                    {!isLoading && (
+                        <>
+                            {/* General Settings */}
+                            {activeTab === 'general' && (
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                    {/* Basic Information */}
+                                    <div className="space-y-6">
+                                        <h2 className="text-2xl font-medium text-gray-800 mb-6">Basic Information</h2>
+                                        <div className="space-y-6">
+                                            <div className="space-y-2">
+                                                <label className="font-medium text-gray-700 flex items-center gap-2">
+                                                    <FaGlobe className="text-gray-400" />
+                                                    Website Name
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    value={settings.website_name}
+                                                    onChange={(e) => handleSettingChange('website_name', e.target.value)}
+                                                    className="w-full rounded-xl py-3 px-4 border border-gray-200 outline-none focus:border-primary-light focus:ring-2 focus:ring-red-100 transition-all"
+                                                    placeholder="Your Website Name"
+                                                />
+                                            </div>
 
-                                <div className="space-y-6">
-                                    <div className="space-y-4">
-                                        <label className="font-medium text-gray-700">Primary Color</label>
-                                        <div className="flex items-center gap-4">
-                                            <input
-                                                type="color"
-                                                value={primaryColor}
-                                                onChange={(e) => handleColorChange(e.target.value)}
-                                                className="w-16 h-16 rounded-lg cursor-pointer"
-                                            />
-                                            <input
-                                                type="text"
-                                                value={primaryColor}
-                                                onChange={(e) => handleColorChange(e.target.value)}
-                                                className="w-32 rounded-xl py-3 px-4 border border-gray-200 outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition-all"
-                                            />
+                                            <div className="space-y-2">
+                                                <label className="font-medium text-gray-700">Business Slogan</label>
+                                                <input
+                                                    type="text"
+                                                    value={settings.business_slogan}
+                                                    onChange={(e) => handleSettingChange('business_slogan', e.target.value)}
+                                                    className="w-full rounded-xl py-3 px-4 border border-gray-200 outline-none focus:border-primary-light focus:ring-2 focus:ring-red-100 transition-all"
+                                                    placeholder="Your business slogan"
+                                                />
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <label className="font-medium text-gray-700 flex items-center gap-2">
+                                                    <FaEnvelope className="text-gray-400" />
+                                                    Contact Email
+                                                </label>
+                                                <input
+                                                    type="email"
+                                                    value={settings.contact_email}
+                                                    onChange={(e) => handleSettingChange('contact_email', e.target.value)}
+                                                    className="w-full rounded-xl py-3 px-4 border border-gray-200 outline-none focus:border-primary-light focus:ring-2 focus:ring-red-100 transition-all"
+                                                    placeholder="contact@example.com"
+                                                />
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <label className="font-medium text-gray-700 flex items-center gap-2">
+                                                    <FaPhone className="text-gray-400" />
+                                                    Support Phone
+                                                </label>
+                                                <input
+                                                    type="tel"
+                                                    value={settings.support_phone}
+                                                    onChange={(e) => handleSettingChange('support_phone', e.target.value)}
+                                                    className="w-full rounded-xl py-3 px-4 border border-gray-200 outline-none focus:border-primary-light focus:ring-2 focus:ring-red-100 transition-all"
+                                                    placeholder="+1 (555) 000-0000"
+                                                />
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <label className="font-medium text-gray-700 flex items-center gap-2">
+                                                    <FaMapMarkerAlt className="text-gray-400" />
+                                                    Default Location
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    value={settings.default_location}
+                                                    onChange={(e) => handleSettingChange('default_location', e.target.value)}
+                                                    className="w-full rounded-xl py-3 px-4 border border-gray-200 outline-none focus:border-primary-light focus:ring-2 focus:ring-red-100 transition-all"
+                                                    placeholder="City, Country"
+                                                />
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div className="space-y-4">
-                                        <label className="font-medium text-gray-700">Preset Colors</label>
-                                        <div className="flex flex-wrap gap-3">
-                                            {presetColors.map((color) => (
-                                                <button
-                                                    key={color}
-                                                    onClick={() => handleColorChange(color)}
-                                                    className="w-12 h-12 rounded-xl relative flex items-center justify-center"
-                                                    style={{ backgroundColor: color }}
-                                                >
-                                                    {color === primaryColor && (
-                                                        <FaCheck className="text-white" />
+                                    {/* SEO Settings */}
+                                    <div className="space-y-6">
+                                        <h2 className="text-2xl font-medium text-gray-800 mb-6">SEO Settings</h2>
+                                        <div className="space-y-6">
+                                            <div className="space-y-2">
+                                                <label className="font-medium text-gray-700">Meta Title</label>
+                                                <input
+                                                    type="text"
+                                                    value={settings.meta_title}
+                                                    onChange={(e) => handleSettingChange('meta_title', e.target.value)}
+                                                    className="w-full rounded-xl py-3 px-4 border border-gray-200 outline-none focus:border-primary-light focus:ring-2 focus:ring-red-100 transition-all"
+                                                    placeholder="Your Website Title"
+                                                />
+                                                <p className="text-sm text-gray-500">Recommended length: 50-60 characters</p>
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <label className="font-medium text-gray-700">Meta Description</label>
+                                                <textarea
+                                                    value={settings.meta_description}
+                                                    onChange={(e) => handleSettingChange('meta_description', e.target.value)}
+                                                    className="w-full rounded-xl py-3 px-4 border border-gray-200 outline-none focus:border-primary-light focus:ring-2 focus:ring-red-100 transition-all min-h-32"
+                                                    placeholder="Brief description of your website..."
+                                                />
+                                                <p className="text-sm text-gray-500">Recommended length: 150-160 characters</p>
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <label className="font-medium text-gray-700">Meta Keywords</label>
+                                                <input
+                                                    type="text"
+                                                    value={settings.meta_keywords}
+                                                    onChange={(e) => handleSettingChange('meta_keywords', e.target.value)}
+                                                    className="w-full rounded-xl py-3 px-4 border border-gray-200 outline-none focus:border-primary-light focus:ring-2 focus:ring-red-100 transition-all"
+                                                    placeholder="keyword1, keyword2, keyword3"
+                                                />
+                                                <p className="text-sm text-gray-500">Separate keywords with commas</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Appearance Settings */}
+                            {activeTab === 'appearance' && (
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                    <div className="space-y-6">
+                                        <h2 className="text-2xl font-medium text-gray-800 mb-6">Color Scheme</h2>
+                                        <div className="space-y-6">
+                                            <div className="space-y-4">
+                                                <label className="font-medium text-gray-700">Primary Color</label>
+                                                <div className="flex items-center gap-4">
+                                                    <input
+                                                        type="color"
+                                                        value={settings.primary_color}
+                                                        onChange={(e) => handleSettingChange('primary_color', e.target.value)}
+                                                        className="w-16 h-16 rounded-lg cursor-pointer"
+                                                    />
+                                                    <input
+                                                        type="text"
+                                                        value={settings.primary_color}
+                                                        onChange={(e) => handleSettingChange('primary_color', e.target.value)}
+                                                        className="w-32 rounded-xl py-3 px-4 border border-gray-200 outline-none focus:border-primary-light focus:ring-2 focus:ring-red-100 transition-all"
+                                                        placeholder="#000000"
+                                                    />
+                                                </div>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {presetColors.map(color => (
+                                                        <button
+                                                            key={color}
+                                                            onClick={() => handleSettingChange('primary_color', color)}
+                                                            className="w-10 h-10 rounded-lg border-2 border-white shadow-sm hover:scale-110 transition-transform"
+                                                            style={{ backgroundColor: color }}
+                                                            aria-label={`Select color ${color}`}
+                                                        >
+                                                            {settings.primary_color === color && (
+                                                                <FaCheck className="text-white m-auto" />
+                                                            )}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            <h3 className="text-lg font-medium text-gray-800">Preview Device</h3>
+                                            <div className="flex gap-4">
+                                                {[
+                                                    { id: 'desktop', icon: FaDesktop, label: 'Desktop' },
+                                                    { id: 'tablet', icon: FaTabletAlt, label: 'Tablet' },
+                                                    { id: 'mobile', icon: FaMobile, label: 'Mobile' }
+                                                ].map(device => (
+                                                    <button
+                                                        key={device.id}
+                                                        onClick={() => setPreviewDevice(device.id)}
+                                                        className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all ${previewDevice === device.id
+                                                            ? 'bg-gray-100 text-gray-900'
+                                                            : 'text-gray-600 hover:bg-gray-50'
+                                                            }`}
+                                                    >
+                                                        <device.icon />
+                                                        {device.label}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-6">
+                                        <h2 className="text-2xl font-medium text-gray-800 mb-6">Preview</h2>
+                                        <div className="border border-gray-200 rounded-xl p-4 bg-gray-50">
+                                            {/* Preview content would go here */}
+                                            <div className="text-center text-gray-500">
+                                                Preview not available in demo
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Media Settings */}
+                            {activeTab === 'media' && (
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                    <div className="space-y-6">
+                                        <h2 className="text-2xl font-medium text-gray-800 mb-6">Website Media</h2>
+
+                                        {/* Logo Upload */}
+                                        <div className="space-y-4">
+                                            <label className="font-medium text-gray-700">Website Logo</label>
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-32 h-32 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center relative bg-gray-50">
+                                                    {settings.logo ? (
+                                                        <>
+                                                            <img
+                                                                src={settings.logo}
+                                                                alt="Website Logo"
+                                                                className="w-full h-full object-contain rounded-xl"
+                                                            />
+                                                            <button
+                                                                onClick={() => handleSettingChange('logo', null)}
+                                                                className="absolute top-2 right-2 p-1 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
+                                                            >
+                                                                <FaTrash className="text-sm" />
+                                                            </button>
+                                                        </>
+                                                    ) : (
+                                                        <label className="cursor-pointer flex flex-col items-center justify-center gap-2">
+                                                            <FaUpload className="text-gray-400 text-xl" />
+                                                            <span className="text-sm text-gray-500">Upload Logo</span>
+                                                            <input
+                                                                type="file"
+                                                                className="hidden"
+                                                                accept="image/*"
+                                                                onChange={(e) => handleMediaUpload(e, 'logo')}
+                                                            />
+                                                        </label>
                                                     )}
-                                                </button>
-                                            ))}
+                                                </div>
+                                                <div className="flex-1 space-y-2">
+                                                    <p className="text-sm text-gray-600">
+                                                        Recommended size: 200x200 pixels
+                                                    </p>
+                                                    <p className="text-sm text-gray-600">
+                                                        Supported formats: PNG, JPG, SVG
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Favicon Upload */}
+                                        <div className="space-y-4">
+                                            <label className="font-medium text-gray-700">Website Favicon</label>
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-16 h-16 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center relative bg-gray-50">
+                                                    {settings.favicon ? (
+                                                        <>
+                                                            <img
+                                                                src={settings.favicon}
+                                                                alt="Website Favicon"
+                                                                className="w-full h-full object-contain rounded-xl"
+                                                            />
+                                                            <button
+                                                                onClick={() => handleSettingChange('favicon', null)}
+                                                                className="absolute -top-2 -right-2 p-1 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
+                                                            >
+                                                                <FaTrash className="text-xs" />
+                                                            </button>
+                                                        </>
+                                                    ) : (
+                                                        <label className="cursor-pointer flex flex-col items-center justify-center gap-1">
+                                                            <FaUpload className="text-gray-400 text-sm" />
+                                                            <span className="text-xs text-gray-500">Upload</span>
+                                                            <input
+                                                                type="file"
+                                                                className="hidden"
+                                                                accept="image/x-icon,image/png"
+                                                                onChange={(e) => handleMediaUpload(e, 'favicon')}
+                                                            />
+                                                        </label>
+                                                    )}
+                                                </div>
+                                                <div className="flex-1 space-y-2">
+                                                    <p className="text-sm text-gray-600">
+                                                        Recommended size: 32x32 pixels
+                                                    </p>
+                                                    <p className="text-sm text-gray-600">
+                                                        Supported formats: ICO, PNG
+                                                    </p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-
-                                <div className="space-y-4 mt-8">
-                                    <label className="font-medium text-gray-700">Preview</label>
-                                    <div className="flex gap-4">
-                                        {[
-                                            { id: 'desktop', icon: FaDesktop },
-                                            { id: 'tablet', icon: FaTabletAlt },
-                                            { id: 'mobile', icon: FaMobile }
-                                        ].map((device) => (
-                                            <button
-                                                key={device.id}
-                                                onClick={() => setPreviewDevice(device.id)}
-                                                className={`p-3 rounded-xl transition-all ${previewDevice === device.id
-                                                    ? 'text-white'
-                                                    : 'text-gray-400 hover:text-gray-600'
-                                                    }`}
-                                                style={{
-                                                    backgroundColor: previewDevice === device.id ? primaryColor : 'transparent'
-                                                }}
-                                            >
-                                                <device.icon className="text-xl" />
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Preview */}
-                            <div className="space-y-6">
-                                <h2 className="text-2xl font-medium text-gray-800 mb-6">Live Preview</h2>
-                                <div className="border-2 rounded-xl p-4 aspect-video bg-gray-50">
-                                    <div className="w-full h-full flex items-center justify-center text-gray-400">
-                                        Preview window will be implemented here
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {activeTab === 'general' && (
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            {/* Basic Information */}
-                            <div className="space-y-6">
-                                <h2 className="text-2xl font-medium text-gray-800 mb-6">Basic Information</h2>
-
-                                <div className="space-y-6">
-                                    <div className="space-y-2">
-                                        <label className="font-medium text-gray-700 flex items-center gap-2">
-                                            <FaGlobe className="text-gray-400" />
-                                            Website Name
-                                        </label>
-                                        <input
-                                            type="text"
-                                            className="w-full rounded-xl py-3 px-4 border border-gray-200 outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition-all"
-                                            placeholder="MYTSV.com"
-                                            onChange={() => setIsDirty(true)}
-                                        />
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <label className="font-medium text-gray-700">Business Slogan</label>
-                                        <input
-                                            type="text"
-                                            className="w-full rounded-xl py-3 px-4 border border-gray-200 outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition-all"
-                                            placeholder="Your business directory slogan"
-                                            onChange={() => setIsDirty(true)}
-                                        />
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <label className="font-medium text-gray-700 flex items-center gap-2">
-                                            <FaEnvelope className="text-gray-400" />
-                                            Contact Email
-                                        </label>
-                                        <input
-                                            type="email"
-                                            className="w-full rounded-xl py-3 px-4 border border-gray-200 outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition-all"
-                                            placeholder="contact@mytsv.com"
-                                            onChange={() => setIsDirty(true)}
-                                        />
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <label className="font-medium text-gray-700 flex items-center gap-2">
-                                            <FaPhone className="text-gray-400" />
-                                            Support Phone
-                                        </label>
-                                        <input
-                                            type="tel"
-                                            className="w-full rounded-xl py-3 px-4 border border-gray-200 outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition-all"
-                                            placeholder="+1 (555) 000-0000"
-                                            onChange={() => setIsDirty(true)}
-                                        />
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <label className="font-medium text-gray-700 flex items-center gap-2">
-                                            <FaMapMarkerAlt className="text-gray-400" />
-                                            Default Location
-                                        </label>
-                                        <input
-                                            type="text"
-                                            className="w-full rounded-xl py-3 px-4 border border-gray-200 outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition-all"
-                                            placeholder="Chicago, IL"
-                                            onChange={() => setIsDirty(true)}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* SEO Settings */}
-                            <div className="space-y-6">
-                                <h2 className="text-2xl font-medium text-gray-800 mb-6">SEO Settings</h2>
-
-                                <div className="space-y-6">
-                                    <div className="space-y-2">
-                                        <label className="font-medium text-gray-700">Meta Title</label>
-                                        <input
-                                            type="text"
-                                            className="w-full rounded-xl py-3 px-4 border border-gray-200 outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition-all"
-                                            placeholder="MYTSV - Business Directory"
-                                            onChange={() => setIsDirty(true)}
-                                        />
-                                        <p className="text-sm text-gray-500">Recommended length: 50-60 characters</p>
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <label className="font-medium text-gray-700">Meta Description</label>
-                                        <textarea
-                                            className="w-full rounded-xl py-3 px-4 border border-gray-200 outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition-all min-h-[120px] resize-none"
-                                            placeholder="Discover local businesses in your area..."
-                                            onChange={() => setIsDirty(true)}
-                                        />
-                                        <p className="text-sm text-gray-500">Recommended length: 150-160 characters</p>
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <label className="font-medium text-gray-700">Keywords</label>
-                                        <input
-                                            type="text"
-                                            className="w-full rounded-xl py-3 px-4 border border-gray-200 outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition-all"
-                                            placeholder="business, directory, local businesses"
-                                            onChange={() => setIsDirty(true)}
-                                        />
-                                        <p className="text-sm text-gray-500">Separate keywords with commas</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                            )}
+                        </>
                     )}
                 </div>
             </div>
         </>
     );
-};
-
-export default Settings;
+}
