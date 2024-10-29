@@ -113,7 +113,7 @@ class AdminController extends Controller
                         'name' => $comment->user->name,
                         'avatar' => $comment->user->avatar
                     ],
-                    'video_title' => $comment->video->title,
+                    'video_title' => $comment->video->title ?? null,
                     'created_at' => $comment->created_at
                 ];
             });

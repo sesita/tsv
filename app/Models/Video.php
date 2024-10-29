@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use App\Enums\Video\Status;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Video extends Model
 {
@@ -60,6 +63,28 @@ class Video extends Model
         $list = $query->with(['category', 'user'])->paginate($paginate);
 
         return $list;
+    }
+
+    public function generateImage($image)
+    {
+        $sizes = [
+            'default' => [1280, 720],
+            'tablet' => [640, 360],
+            'mobile' => [320, 180],
+        ];
+
+        $folder = 'products/' . Str::random() . time();
+        $original = $image->storeAs($folder, 'original.webp', 'public');
+
+        $images = [];
+        foreach ($sizes as $key => $size) {
+            $image = Image::make(public_path(Storage::url($original)));
+            $images[$key] = $destination = $folder . '/' . $key . '.webp';
+            $image->resize($size[0], $size[1], function ($constraint) {
+                $constraint->aspectRatio();
+            })->save(public_path('storage/') . $destination, 80);
+        }
+        return $images;
     }
 
     public function views()
