@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Main;
 
 use App\Models\View;
 use App\Models\Video;
@@ -8,37 +8,13 @@ use App\Models\Comment;
 use App\Models\Interaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
 
-class VideoController extends Controller
+class VideoInteractionController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth:api'], ['only' => ['addComment', 'deleteComment', 'interaction']]);
-    }
-    public function getVideo($slug, Request $request)
-    {
-        $video = Video::with([
-            'comments' => function ($query) {
-                $query->with('replies');
-                $query->where('parent_id', null);
-            },
-            'user:avatar,name,id',
-            'category',
-        ])->where('slug', $slug)->first();
-
-        if ($video->id) {
-            $view = new View();
-            $view->setView($video->id, $request->ip());
-        }
-
-        if (Auth::user()) {
-            $interaction = Interaction::where('user_id', Auth::user()->id)->where('video_id', $video->id)->first();
-            if($interaction) $video['interaction'] = $interaction->is_liked ? 'like' : 'dislike';
-        } else {
-            $video['interaction'] = false;
-        }
-
-        return $video;
+        $this->middleware('auth:api');
     }
     public function addComment(Request $request)
     {

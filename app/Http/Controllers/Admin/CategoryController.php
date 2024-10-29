@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Dashboard\Admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Models\Video;
 use App\Models\Category;

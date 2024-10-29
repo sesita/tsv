@@ -1,13 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Main;
 
 use App\Models\User;
+use App\Models\View;
 use App\Models\Video;
 use App\Models\Review;
 use App\Models\Setting;
 use App\Models\Category;
 use App\Models\Location;
+use App\Models\Interaction;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +19,6 @@ class MainController extends Controller
 {
     public function primary(Request $request)
     {
-
         $data['user'] = Auth::user() ?? null;
 
         $location = Session::get('location') ? json_decode(Session::get('location')) : Location::location($request->ip());
@@ -53,6 +54,32 @@ class MainController extends Controller
         $video = new Video();
         $videos = $video->getVideos($request->all());
         return response($videos);
+    }
+    public function getVideo($slug, Request $request)
+    {
+        $video = Video::with([
+            'comments' => function ($query) {
+                $query->with('replies');
+                $query->where('parent_id', null);
+            },
+            'user:avatar,name,id',
+            'category',
+        ])->where('slug', $slug)->first();
+
+        if ($video->id) {
+            $view = new View();
+            $view->setView($video->id, $request->ip());
+        }
+
+        if (Auth::user()) {
+            $interaction = Interaction::where('user_id', Auth::user()->id)->where('video_id', $video->id)->first();
+            if ($interaction)
+                $video['interaction'] = $interaction->is_liked ? 'like' : 'dislike';
+        } else {
+            $video['interaction'] = false;
+        }
+
+        return response()->json($video);
     }
     public function getUser(Request $request)
     {
@@ -101,7 +128,6 @@ class MainController extends Controller
     }
     public function updateLocation(Request $request)
     {
-
         return response();
     }
 }

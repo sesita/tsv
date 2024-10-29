@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Dashboard\Admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Models\Setting;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Storage;
 
 class SettingController extends Controller
 {

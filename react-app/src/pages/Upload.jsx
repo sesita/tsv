@@ -71,8 +71,7 @@ const Upload = () => {
         // }
 
         try {
-            await axios.post(
-                "Dashboard/Upload",
+            await axios.post("Dashboard/Upload",
                 { ...videoInfo, video: selectedFile?.target?.files[0], thumbnail: thumbnail.target?.files[0], promoted: isPromoted },
                 {
                     headers: {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Dashboard\Admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
@@ -10,7 +10,6 @@ use App\Models\Video;
 use App\Models\View;
 use App\Models\Interaction;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {

@@ -1,16 +1,16 @@
 <?php
 
-use App\Http\Controllers\Dashboard\Admin\AdminController;
-use App\Http\Controllers\Dashboard\Admin\CategoryController;
-use App\Http\Controllers\Dashboard\Admin\SettingController;
-use App\Http\Controllers\Dashboard\Admin\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\MainController;
-use App\Http\Controllers\VideoController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Main\MainController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Auth\SocialController;
-use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Dashboard\VideoController;
+use App\Http\Controllers\Dashboard\ProfileController;
+use App\Http\Controllers\Main\VideoInteractionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,25 +47,19 @@ Route::prefix('Main')->group(function () {
 });
 
 Route::prefix('Video')->group(function () {
-    Route::get('{slug}', [VideoController::class, 'getVideo']);
-    Route::post('addComment', [VideoController::class, 'addComment']);
-    Route::post('deleteComment', [VideoController::class, 'deleteComment']);
-    Route::post('Interaction', [VideoController::class, 'interaction']);
-    Route::post('View', [VideoController::class, 'setView']);
+    Route::get('{slug}', [MainController::class, 'getVideo']);
+    Route::post('addComment', [VideoInteractionController::class, 'addComment']);
+    Route::post('deleteComment', [VideoInteractionController::class, 'deleteComment']);
+    Route::post('Interaction', [VideoInteractionController::class, 'interaction']);
+    Route::post('View', [VideoInteractionController::class, 'setView']);
 });
 
 Route::group(['middleware' => 'auth:api', 'prefix' => 'Dashboard'], function ($router) {
-    Route::post('Settings', [DashboardController::class, 'Settings']);
-    Route::post('Upload', [DashboardController::class, 'UploadVideo']);
-    Route::post('Update', [DashboardController::class, 'UpdateVideo']);
-    Route::get('Checkout', [DashboardController::class, 'Checkout']);
-    Route::get('MyVideos', [DashboardController::class, 'MyVideos']);
-    Route::get('MyVideo/{id}', [DashboardController::class, 'MyVideo']);
-    Route::get('VideoViews/{id}', [DashboardController::class, 'VideoViews']);
+    Route::apiResource('Videos', VideoController::class);
+    Route::post('Settings', [ProfileController::class, 'Settings']);
 
     Route::prefix('Admin')->group(function () {
         Route::apiResource('Users', UserController::class);
-        Route::apiResource('Videos', \App\Http\Controllers\Dashboard\Admin\VideoController::class);
         Route::apiResource('Categories', CategoryController::class);
         Route::get('getStats', [AdminController::class, 'getStats']);
         Route::get('Settings', [SettingController::class, 'index']);
