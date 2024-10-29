@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Dashboard\Admin\AdminController;
 use App\Http\Controllers\Dashboard\Admin\CategoryController;
 use App\Http\Controllers\Dashboard\Admin\SettingController;
 use App\Http\Controllers\Dashboard\Admin\UserController;
@@ -9,7 +10,6 @@ use App\Http\Controllers\MainController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\SocialController;
-use App\Http\Controllers\Dashboard\AdminController;
 use App\Http\Controllers\Dashboard\DashboardController;
 
 /*
@@ -67,12 +67,9 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'Dashboard'], function ($r
         Route::apiResource('Users', UserController::class);
         Route::apiResource('Videos', \App\Http\Controllers\Dashboard\Admin\VideoController::class);
         Route::apiResource('Categories', CategoryController::class);
+        Route::get('getStats', [AdminController::class, 'getStats']);
         Route::get('Settings', [SettingController::class, 'index']);
         Route::post('Settings', [SettingController::class, 'updateSetting']);
         Route::post('Settings/Upload-media', [SettingController::class, 'uploadMedia']);
     });
-    Route::any('Admin/{method}', function ($method, Request $request) {
-        $controller = new AdminController();
-        return $controller->callAction($method, [$request]);
-    })->middleware('admin');
 });

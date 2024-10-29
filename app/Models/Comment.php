@@ -16,7 +16,11 @@ class Comment extends Model
     protected $hidden = ['deleted_at', 'updated_at'];
 
     public $appends = ['user'];
-
+    
+    public function video()
+    {
+        return $this->belongsTo(Video::class);
+    }
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -31,7 +35,7 @@ class Comment extends Model
     }
     public function getUserAttribute()
     {
-        return $this->user()->first(['id','name','avatar']);
+        return $this->user()->first(['id', 'name', 'avatar']);
     }
     public function getRepliesAttribute()
     {
