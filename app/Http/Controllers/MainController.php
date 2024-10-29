@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Category;
-use App\Models\Location;
-use App\Models\Review;
 use App\Models\User;
 use App\Models\Video;
+use App\Models\Review;
+use App\Models\Setting;
+use App\Models\Category;
+use App\Models\Location;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -41,7 +42,7 @@ class MainController extends Controller
             'popular' => $video->getVideos($popularParams),
             'recommended' => $video->getVideos($request),
         ];
-        $data['settings'] = [];
+        $data['settings'] = Setting::all()->pluck('value', 'name');
 
         return response($data);
     }

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Dashboard\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Setting;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Storage;
 
 class SettingController extends Controller
 {
@@ -20,26 +22,26 @@ class SettingController extends Controller
             'settings.*.name.required' => 'Setting name is required.',
             'settings.*.value.required' => ':attribute is required.',
         ];
-    
+
         // Create attributes array before validation
         $attributes = [];
         foreach ($request->settings as $index => $setting) {
             $attributes["settings.{$index}.value"] = str_replace('_', ' ', ucfirst($setting['name']));
         }
-    
+
         $validatedData = $request->validate([
             'settings' => 'required|array',
             'settings.*.name' => 'required|string',
             'settings.*.value' => 'required',
         ], $messages, $attributes);
-    
+
         foreach ($request->settings as $setting) {
             Setting::updateOrCreate(
                 ['name' => $setting['name']],
                 ['value' => $setting['value']]
             );
         }
-    
+
         return response()->json(['message' => 'Settings updated successfully']);
     }
 
@@ -50,17 +52,17 @@ class SettingController extends Controller
             'type' => 'required|in:logo,favicon'
         ]);
 
-        $fileName = time() . '.' . $request->file->extension();
-        $request->file->move(public_path('uploads'), $fileName);
+        $fileName = 'primary/' . $request->file->getClientOriginalName() . '.' . $request->file->extension();
+        $request->file->move(public_path('storage/primary'), $fileName);
 
         $setting = Setting::updateOrCreate(
             ['name' => $request->type],
-            ['value' => '/uploads/' . $fileName]
+            ['value' => $fileName]
         );
 
         return response()->json([
-            'url' => '/uploads/' . $fileName,
-            'message' => 'File uploaded successfully'
+            'url' => $fileName,
+            'message' => 'Image uploaded successfully'
         ]);
     }
 }
