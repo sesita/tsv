@@ -5,6 +5,7 @@ const initialState = {
     videos: [],
     states: [],
     location: [],
+    settings: [],
     categories: [],
     user: {},
 };
@@ -18,6 +19,8 @@ const reducer = (state, action) => {
             return { ...state, states: action.payload };
         case "SET_LOCATION":
             return { ...state, location: action.payload };
+        case "SET_SETTINGS":
+            return { ...state, settings: action.payload };
         case "SET_CATEGORIES":
             return { ...state, categories: action.payload };
         case "SET_USER":

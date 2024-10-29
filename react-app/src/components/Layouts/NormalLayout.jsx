@@ -49,6 +49,7 @@ const NormalLayout = () => {
                 dispatch({ type: "SET_USER", payload: res.data?.user });
                 dispatch({ type: "SET_VIDEOS", payload: res.data?.videos });
                 dispatch({ type: "SET_LOCATION", payload: res.data?.location });
+                dispatch({ type: "SET_SETTINGS", payload: res.data?.settings });
                 dispatch({
                     type: "SET_STATES",
                     payload: Object.keys(res.data?.locations).map((key) => ({

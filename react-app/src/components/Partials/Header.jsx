@@ -231,7 +231,7 @@ const Header = ({ states, categories, locator }) => {
             <div className={`fixed top-0 left-0 w-full h-full bg-white z-30 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:hidden`}>
                 <div className="flex justify-between items-center p-4 border-b">
                     <Link to={"/"}>
-                        <img src="/assets/logo.png" alt="Logo" className="max-w-[120px]" />
+                        <img src={state.settings.logo} alt="Logo" className="max-w-[120px]" />
                     </Link>
                     <button onClick={toggleSidebar} className="text-red-700 text-2xl">
                         <IoMdClose className="text-3xl" />
@@ -245,7 +245,7 @@ const Header = ({ states, categories, locator }) => {
                                     <img src={state.user?.avatar} className="w-12 h-12 rounded-full mr-3 object-cover" />
                                     <div className="block text-dark-white">
                                         <p className="text-sm text-gray-700"> Welcome, Back </p>
-                                        <p className="text-lg font-medium">Test </p>
+                                        <p className="text-lg font-medium">{state.user?.name}</p>
                                     </div>
                                 </div>
                                 <Link to={"/User/Profile"} className="h-full text-2xl">
@@ -348,8 +348,8 @@ const Header = ({ states, categories, locator }) => {
                     <header className="container flex justify-between items-center py-5">
                         {/* Logo Section */}
                         <Link to="/">
-                            <img src="/assets/logo.png" alt="Logo" className="w-full hidden md:inline max-w-[150px]" />
-                            <img src="/assets/short-logo.png" alt="Logo" className="w-full md:hidden max-w-[50px]" />
+                            <img src={state.settings.logo} alt="Logo" className="w-full hidden md:inline max-w-[150px]" />
+                            <img src={state.settings.favicon} alt="Logo" className="w-full md:hidden max-w-[50px]" />
                         </Link>
 
                         {/* Search Bar Section */}

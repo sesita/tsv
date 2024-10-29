@@ -52,7 +52,7 @@ class SettingController extends Controller
             'type' => 'required|in:logo,favicon'
         ]);
 
-        $fileName = 'primary/' . $request->file->getClientOriginalName() . '.' . $request->file->extension();
+        $fileName = 'primary/' . $request->file->getClientOriginalName();
         $request->file->move(public_path('storage/primary'), $fileName);
 
         $setting = Setting::updateOrCreate(
