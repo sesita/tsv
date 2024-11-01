@@ -29,6 +29,7 @@ import SettingsAdmin from "./pages/Dashboard/Admin/Settings";
 import VideosList from "./pages/Dashboard/Admin/Videos/VideosList";
 import CategoriesForm from "./pages/Dashboard/Admin/Categories/CategoriesForm";
 import CategoriesList from "./pages/Dashboard/Admin/Categories/CategoriesList";
+import VideosForm from "./pages/Dashboard/Admin/Videos/VideosForm";
 
 const router = createBrowserRouter([
     {
@@ -63,7 +64,7 @@ const router = createBrowserRouter([
                         element: <ProfilePage />,
                     },
                     {
-                        path: "Video/:id",
+                        path: "Videos/:id",
                         element: <VideoPage />,
                     },
                     {
@@ -120,7 +121,16 @@ const router = createBrowserRouter([
                     },
                     {
                         path: "Videos",
-                        element: <VideosList />,
+                        children: [
+                            {
+                                path: "",
+                                element: <VideosList />,
+                            },
+                            {
+                                path: ":id",
+                                element: <VideosForm />,
+                            },
+                        ]
                     },
                     {
                         path: "Settings",

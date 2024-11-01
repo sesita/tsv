@@ -8,6 +8,8 @@ import Skeleton from "react-loading-skeleton";
 import { Swiper, SwiperSlide } from "swiper/react";
 import VideoBox from "../components/Common/VideoBox";
 import { Autoplay, EffectFade } from "swiper/modules";
+import { IoLocationSharp } from "react-icons/io5";
+import { BiInfoCircle } from "react-icons/bi";
 
 const Search = () => {
     const [videos, setVideos] = useState([]);
@@ -67,7 +69,17 @@ const Search = () => {
                 )}
             </Swiper>
             <div className="sm:container">
-                <div className="relative shadow-[0px_0px_14px_0px_rgba(0,0,0,0.25)] sm:pt-8 pt-6 sm:rounded-3xl sm:px-10 -mt-24 mb-16 z-10 bg-white pb-10">
+                <div className="relative shadow-[0px_0px_14px_0px_rgba(0,0,0,0.25)] sm:pt-6 pt-4 sm:rounded-3xl sm:px-10 -mt-24 mb-16 z-10 bg-white pb-10">
+                    <div className="flex flex-col items-end rounded-xl justify-center border-b pr-4 mb-6 pb-3">
+                        <button className="font-medium text-lg flex items-center gap-2">
+                            Chicago, Illinois
+                            <IoLocationSharp />
+                        </button>
+                        <span className="text-sm text-gray-700 flex items-center gap-1">
+                            <BiInfoCircle />
+                            Only Chicago videos showing
+                        </span>
+                    </div>
                     <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2">
                         {loading ? (
                             <>

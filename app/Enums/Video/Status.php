@@ -7,6 +7,7 @@ enum Status: int
     case PUBLISHED = 1;
     case WAITING = 2;
     case CANCELED = 3;
+    case UNPAID = 4;
 
     public static function fromName(string $name)
     {

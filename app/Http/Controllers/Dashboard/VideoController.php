@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Enums\Video\Package;
 use App\Models\View;
 use App\Models\Video;
 use App\Models\Location;
+use App\Enums\Video\Status;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -20,6 +22,10 @@ class VideoController extends Controller
 
         if ($search) {
             $query->search($search);
+        }
+
+        if(!Auth::user()->admin){
+            $query->where('user_id', Auth::user()->id);
         }
 
         $videos = $query->paginate(9);
@@ -43,17 +49,19 @@ class VideoController extends Controller
             'category' => 'required',
         ]);
 
-        $status = 'waiting';
+        $status = Status::WAITING;
+        $package = Package::FREE;
+
         if ($request->file('video')) {
             $videoName = 'videos/' . Str::random() . time() . '.mp4';
             $request->video->move(public_path('storage/videos'), $videoName);
-            $status = 'unpaid';
+            $status = Status::UNPAID;
         } else {
             $videoName = $request->iframe;
         }
 
         if ($request->promoted) {
-            $status = 'unpaid';
+            $package = Package::STANDARD;
         }
 
         if ($request->file('thumbnail')) {
@@ -66,7 +74,7 @@ class VideoController extends Controller
         do {
             $videoSlug = $counter > 1 ? $slug . '-' . $counter : $slug;
             $counter++;
-        } while (Video::where('slug', $videoSlug)->exists());
+        } while (Video::withTrashed()->where('slug', $videoSlug)->exists());
 
         if ($request->location) {
             $location = Location::find($request->location);
@@ -80,43 +88,13 @@ class VideoController extends Controller
             'price' => $request->price,
             'thumbnail' => $thumbnail ?? null,
             'status' => $status,
+            'package' => $package,
             'category_id' => $request->category,
             'location_id' => $location->id ?? 1,
             'description' => $request->description,
         ]);
 
         return response(['status' => 'success', 'message' => 'Video Uploaded Successfully']);
-    }
-    public function update(Request $request)
-    {
-        $request->validate([
-            'title' => 'required',
-            'price' => 'required|integer|max:3',
-            'description' => 'required',
-            'category_id' => 'required',
-        ]);
-
-        if ($request->file('thumbnail')) {
-            $thumbnail = 'thumbnails/' . Str::random() . time() . '.webp';
-            $request->thumbnail->move(public_path('storage/thumbnails'), $thumbnail);
-        }
-
-        $updateData = [
-            'title' => $request->title,
-            'price' => $request->price,
-            'category_id' => $request->category_id,
-            'location_id' => $request->location_id,
-            'description' => $request->description,
-        ];
-
-        if (isset($thumbnail)) {
-            $updateData['thumbnail'] = $thumbnail;
-        }
-
-        $video = Video::where('id', $request->id)->firstOrFail();
-        $video->update($updateData);
-
-        return response(['status' => 'success', 'message' => 'Video Updated Successfully']);
     }
     public function views($id, Request $request)
     {
