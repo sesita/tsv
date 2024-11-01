@@ -178,8 +178,6 @@ const SmartVideosList = ({ userRole = 'user' }) => {
                                 </td>
                             </tr>
                         ) : (
-
-                            
                             videos && videos.length > 0 ? (
                                 videos.map((video) => (
                                     <React.Fragment key={video.id}>
@@ -334,7 +332,8 @@ const SmartVideosList = ({ userRole = 'user' }) => {
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={handlePagination}
-            /></>
+            />
+        </>
     );
 };
 
