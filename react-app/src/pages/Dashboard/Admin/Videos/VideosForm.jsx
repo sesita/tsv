@@ -3,6 +3,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import VideoUploadForm from '../../../../components/Dashboard/VideoUploadForm';
+import TotalInfo from '../../../../components/Analytics/TotalInfo';
+import { MdOutlineVideoSettings } from 'react-icons/md';
+import Graph from '../../../../components/Analytics/Graph';
 
 const VideosForm = () => {
     const { id } = useParams();
@@ -11,7 +14,6 @@ const VideosForm = () => {
     const [categories, setCategories] = useState([]);
     const [locations, setLocations] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [additionalInfo, setAdditionalInfo] = useState({});
 
     useEffect(() => {
         fetchVideoAndFormData();
@@ -19,15 +21,13 @@ const VideosForm = () => {
 
     const fetchVideoAndFormData = async () => {
         try {
-            const [videoRes, categoriesRes, locationsRes, statsRes] = await Promise.all([
-                axios.get(`Admin/Videos/${id}`),
+            const [videoRes, categoriesRes, locationsRes] = await Promise.all([
+                axios.get(`Dashboard/Videos/${id}`),
                 axios.get("Main/getCategories"),
                 axios.get("Main/getLocations"),
-                axios.get(`Admin/Videos/${id}/stats`)
             ]);
 
             setVideo(videoRes.data);
-            setAdditionalInfo(statsRes.data);
             setCategories(categoriesRes.data.map(val => ({
                 label: val.title,
                 value: val.id
@@ -74,36 +74,24 @@ const VideosForm = () => {
     if (!video) return <div className="text-center p-8">Loading...</div>;
 
     return (
-        <div className="container mx-auto p-4">
-            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-                <h1 className="text-2xl font-bold mb-4">Edit Video (Admin)</h1>
+        <>
+            <h1 className="text-4xl font-medium flex items-center gap-3 mb-4 text-gray-700">
+                <MdOutlineVideoSettings />
+                {video.title}
+            </h1>
+            <TotalInfo info={video} />
 
-                {/* Additional admin stats/info */}
-                <div className="grid grid-cols-3 gap-4 mb-6">
-                    <div className="p-4 bg-gray-50 rounded-lg">
-                        <h3 className="font-semibold mb-2">Views</h3>
-                        <p className="text-xl">{additionalInfo.views}</p>
-                    </div>
-                    <div className="p-4 bg-gray-50 rounded-lg">
-                        <h3 className="font-semibold mb-2">User</h3>
-                        <p className="text-xl">{additionalInfo.userName}</p>
-                    </div>
-                    <div className="p-4 bg-gray-50 rounded-lg">
-                        <h3 className="font-semibold mb-2">Upload Date</h3>
-                        <p className="text-xl">{new Date(additionalInfo.uploadDate).toLocaleDateString()}</p>
-                    </div>
-                </div>
+            <VideoUploadForm
+                initialData={video}
+                onSubmit={handleSubmit}
+                categories={categories}
+                locations={locations}
+                mode="admin"
+                isLoading={isLoading}
+            />
 
-                <VideoUploadForm
-                    initialData={video}
-                    onSubmit={handleSubmit}
-                    categories={categories}
-                    locations={locations}
-                    mode="admin"
-                    isLoading={isLoading}
-                />
-            </div>
-        </div>
+            <Graph videoId={video.id} />
+        </>
     );
 };
 

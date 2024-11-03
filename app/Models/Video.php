@@ -4,10 +4,10 @@ namespace App\Models;
 
 use App\Enums\Video\Status;
 use Illuminate\Support\Str;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\ImageManager;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
+use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -67,25 +67,30 @@ class Video extends Model
 
     public function generateImage($image)
     {
+        $manager = new ImageManager(new Driver());
+
         $sizes = [
             'default' => [1280, 720],
             'tablet' => [640, 360],
             'mobile' => [320, 180],
         ];
 
-        $folder = 'products/' . Str::random() . time();
-        $original = $image->storeAs($folder, 'original.webp', 'public');
+        $folder = 'videos/' . Str::random(10) . '_' . time();
 
-        $images = [];
-        foreach ($sizes as $key => $size) {
-            $image = Image::make(public_path(Storage::url($original)));
-            $images[$key] = $destination = $folder . '/' . $key . '.webp';
-            $image->resize($size[0], $size[1], function ($constraint) {
-                $constraint->aspectRatio();
-            })->save(public_path('storage/') . $destination, 80);
+        $image->storeAs($folder, 'original.webp', 'public');
+
+        $generatedImages = [];
+
+        foreach ($sizes as $key => $dimensions) {
+            $img = $manager->read($image);
+            $img->scale($dimensions[0], $dimensions[1]);
+            $img->toWebp()->save($folder);
+            $generatedImages[$key] = $folder;
         }
-        return $images;
+
+        return $generatedImages;
     }
+
 
     public function views()
     {

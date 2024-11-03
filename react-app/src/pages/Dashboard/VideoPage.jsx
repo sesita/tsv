@@ -3,6 +3,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import VideoUploadForm from '../../components/Dashboard/VideoUploadForm';
+import { MdOutlineVideoSettings } from 'react-icons/md';
+import TotalInfo from '../../components/Analytics/TotalInfo';
+import Graph from '../../components/Analytics/Graph';
 
 const EditUserVideo = () => {
     const { id } = useParams();
@@ -67,17 +70,24 @@ const EditUserVideo = () => {
     if (!video) return <div className="text-center p-8">Loading...</div>;
 
     return (
-        <div className="container mx-auto p-4">
-            <h1 className="text-2xl font-bold mb-6">Edit Video</h1>
+        <>
+            <h1 className="text-4xl font-medium flex items-center gap-3 mb-4 text-gray-700">
+                <MdOutlineVideoSettings />
+                {video.title}
+            </h1>
+            <TotalInfo info={video} />
+
             <VideoUploadForm
                 initialData={video}
                 onSubmit={handleSubmit}
                 categories={categories}
                 locations={locations}
-                mode="edit"
+                mode="admin"
                 isLoading={isLoading}
             />
-        </div>
+
+            <Graph videoId={video.id} />
+        </>
     );
 };
 

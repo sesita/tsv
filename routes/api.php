@@ -35,7 +35,6 @@ Route::group(['middleware' => 'api', 'prefix' => 'Auth'], function ($router) {
     Route::post('Me', [AuthController::class, 'me']);
 });
 
-
 Route::prefix('Main')->group(function () {
     Route::get('primary', [MainController::class, 'primary']);
     Route::get('getUser', [MainController::class, 'getUser']);
@@ -56,6 +55,7 @@ Route::prefix('Video')->group(function () {
 
 Route::group(['middleware' => 'auth:api', 'prefix' => 'Dashboard'], function ($router) {
     Route::apiResource('Videos', VideoController::class);
+    Route::get('VideoViews/{id}', [VideoController::class, 'views']);
     Route::post('Settings', [ProfileController::class, 'Settings']);
 
     Route::prefix('Admin')->group(function () {

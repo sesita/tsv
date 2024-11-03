@@ -2,7 +2,7 @@ import NumberFormatter from "../Common/FormatNumber";
 
 const TotalInfo = ({ info }) => {
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 md:gap-3 gap-y-6 rounded-2xl shadow-xl p-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 md:gap-3 gap-y-6 rounded-2xl p-8 mb-6 border-b">
             <div>
                 <h5 className="text-black font-medium text-[16px]">
                     Total Video Views

@@ -25,7 +25,6 @@ const SmartVideosList = ({ userRole = 'user' }) => {
             const response = await axios.get('Dashboard/Videos', {
                 params: { page, search },
             });
-
             setVideos(response.data.data);
             setTotalPages(response.data.last_page);
         } catch (error) {
@@ -62,11 +61,7 @@ const SmartVideosList = ({ userRole = 'user' }) => {
         formData.append("status", status);
 
         if (videoFileOrLink) {
-            if (uploadType === "file") {
-                formData.append("video", videoFileOrLink);
-            } else if (uploadType === "youtube") {
-                formData.append("iframe", videoFileOrLink);
-            }
+            formData.append("video", videoFileOrLink);
         }
 
         try {

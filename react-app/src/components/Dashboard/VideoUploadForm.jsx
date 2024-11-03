@@ -153,8 +153,8 @@ const VideoUploadForm = ({
                                     </div>
                                 )
                             ) : (
-                                <div className="p-4 bg-gray-100 rounded-xl">
-                                    <p className="text-gray-600">Current video file: {initialData.videoUrl}</p>
+                                <div className="p-4 bg-gray-100 rounded-xl h-96">
+                                    <ReactPlayer url={videoInfo.video} width="100%" height="100%" controls />
                                 </div>
                             )
                         ) : (
