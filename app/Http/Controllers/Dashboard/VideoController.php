@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Enums\Video\Package;
 use App\Models\View;
 use App\Models\Video;
 use App\Models\Location;
 use App\Enums\Video\Status;
+use App\Models\Transaction;
 use Illuminate\Support\Str;
+use App\Enums\Video\Package;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -56,7 +57,7 @@ class VideoController extends Controller
         if ($request->file('video')) {
             $videoName = 'videos/' . Str::random() . time() . '.mp4';
             $request->video->move(public_path('storage/videos'), $videoName);
-            $status = Status::UNPAID;
+            $package = Package::STANDARD;
         } else {
             $videoName = $request->video;
         }
@@ -97,6 +98,12 @@ class VideoController extends Controller
             'location_id' => $location->id ?? 1,
             'description' => $request->description,
         ]);
+
+        if(!Auth::user()->admin && $package == Package::STANDARD) {
+            $transaction = new Transaction();
+            $res = $transaction->createOrder($request);
+            return response()->json($transaction);
+        }
 
         return response()->json($video);
     }

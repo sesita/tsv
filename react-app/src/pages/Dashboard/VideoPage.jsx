@@ -54,7 +54,7 @@ const EditUserVideo = () => {
                 }
             });
 
-            await axios.put(`Dashboard/Video/${id}`, form, {
+            await axios.post(`Dashboard/Videos`, form, {
                 headers: { "Content-Type": "multipart/form-data" }
             });
 

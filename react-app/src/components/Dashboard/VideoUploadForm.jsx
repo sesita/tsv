@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Select from "react-select";
 import classNames from "classnames";
 import ReactPlayer from "react-player";
@@ -7,81 +7,127 @@ import { BsMegaphone } from "react-icons/bs";
 import { MdOutlineFileUpload } from "react-icons/md";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 
+const PRICE_OPTIONS = [1, 2, 3];
+const ALLOWED_VIDEO_TYPE = "video/";
+const UPLOAD_PRICE = 99;
+const PROMOTION_PRICE = 99;
+
+const selectStyles = {
+    control: (provided) => ({
+        ...provided,
+        borderRadius: "1rem",
+        padding: "0.3rem 0.5rem",
+        outline: "none",
+        fontWeight: "500",
+    }),
+    placeholder: (provided) => ({
+        ...provided,
+        color: "#6b7280",
+    }),
+};
+
 const VideoUploadForm = ({
     initialData = {},
     onSubmit,
     categories = [],
     locations = [],
-    mode = 'create', // 'create', 'edit', 'admin'
+    mode = 'create',
     isLoading = false
 }) => {
-    const [videoInfo, setVideoInfo] = useState(initialData);
-    const [thumbnail, setThumbnail] = useState(null);
-    const [isPromoted, setIsPromoted] = useState(initialData.promoted || false);
-    const [selectedFile, setSelectedFile] = useState(null);
-    const [uploadType, setUploadType] = useState(initialData.iframe ? "youtube" : "file");
-    const [selectedCountry, setSelectedCountry] = useState(null);
-    const [cityOptions, setCityOptions] = useState([]);
+    const [formState, setFormState] = useState({
+        videoInfo: initialData,
+        thumbnail: null,
+        isPromoted: initialData.promoted || false,
+        selectedFile: null,
+        uploadType: initialData.iframe ? "youtube" : "file",
+        selectedCountry: null,
+        cityOptions: []
+    });
+
+    const {
+        videoInfo,
+        thumbnail,
+        isPromoted,
+        selectedFile,
+        uploadType,
+        selectedCountry,
+        cityOptions
+    } = formState;
 
     useEffect(() => {
-        if (initialData.location) {
-            const country = locations.find(loc =>
-                Object.keys(loc).some(key => loc[key] === initialData.location)
-            );
-            if (country) {
-                setSelectedCountry({
+        if (!initialData.location) return;
+
+        const country = locations.find(loc =>
+            Object.keys(loc).some(key => loc[key] === initialData.location)
+        );
+
+        if (country) {
+            setFormState(prev => ({
+                ...prev,
+                videoInfo: initialData,
+                selectedCountry: {
                     value: country.value,
                     label: country.label
-                });
-            }
+                }
+            }));
         }
     }, [initialData, locations]);
 
-    const handleFileInputChange = (e) => {
-        const file = e.target.files[0];
-        if (!file.type.startsWith("video/")) {
+    const handleFileValidation = useCallback((file) => {
+        if (!file.type.startsWith(ALLOWED_VIDEO_TYPE)) {
             alert("Please upload a video file");
-            return;
+            return false;
         }
-        setSelectedFile(file);
-    };
+        return true;
+    }, []);
 
-    const changeInput = (e) => {
-        setVideoInfo({
-            ...videoInfo,
-            [e.target.name]: e.target.value,
-        });
-    };
+    const handleFileInputChange = useCallback((e) => {
+        const file = e.target.files[0];
+        if (handleFileValidation(file)) {
+            setFormState(prev => ({ ...prev, selectedFile: file }));
+        }
+    }, [handleFileValidation]);
 
-    const handleCountryChange = (selectedOption) => {
-        setSelectedCountry(selectedOption);
-        setCityOptions([]);
-        setVideoInfo({ ...videoInfo, location: selectedOption.value });
-    };
+    const handleInputChange = useCallback((e) => {
+        const { name, value } = e.target;
+        setFormState(prev => ({
+            ...prev,
+            videoInfo: { ...prev.videoInfo, [name]: value }
+        }));
+    }, []);
 
-    const handleCityChange = (selectedOption) => {
-        setVideoInfo({ ...videoInfo, location: selectedOption.value });
-    };
+    const handleCountryChange = useCallback((selectedOption) => {
+        setFormState(prev => ({
+            ...prev,
+            selectedCountry: selectedOption,
+            cityOptions: [],
+            videoInfo: { ...prev.videoInfo, location: selectedOption.value }
+        }));
+    }, []);
 
-    const handleCategoryChange = (selectedOption) => {
-        setVideoInfo({ ...videoInfo, category: selectedOption.value });
-    };
+    const handleCityChange = useCallback((selectedOption) => {
+        setFormState(prev => ({
+            ...prev,
+            videoInfo: { ...prev.videoInfo, location: selectedOption.value }
+        }));
+    }, []);
 
-    const handleDragOver = (e) => {
-        e.preventDefault();
-    };
+    const handleCategoryChange = useCallback((selectedOption) => {
+        setFormState(prev => ({
+            ...prev,
+            videoInfo: { ...prev.videoInfo, category: selectedOption.value }
+        }));
+    }, []);
 
-    const handleDrop = (e) => {
+    const handleDrop = useCallback((e) => {
         e.preventDefault();
         const file = e.dataTransfer.files[0];
-        if (!file.type.startsWith("video/")) {
-            alert("Please upload a video file");
-            return;
+        if (handleFileValidation(file)) {
+            setFormState(prev => ({ ...prev, selectedFile: file }));
         }
-        setSelectedFile(file);
-    };
+    }, [handleFileValidation]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = useCallback((e) => {
         e.preventDefault();
         const formData = {
             ...videoInfo,
@@ -91,82 +137,104 @@ const VideoUploadForm = ({
             uploadType
         };
         onSubmit(formData);
-    };
+    }, [videoInfo, isPromoted, selectedFile, thumbnail, uploadType, onSubmit]);
+
+    const handleUploadTypeChange = useCallback((type) => {
+        setFormState(prev => ({ ...prev, uploadType: type }));
+    }, []);
+
+    const handlePromotedChange = useCallback(() => {
+        setFormState(prev => ({ ...prev, isPromoted: !prev.isPromoted }));
+    }, []);
+
+    const handleThumbnailChange = useCallback((e) => {
+        setFormState(prev => ({ ...prev, thumbnail: e }));
+    }, []);
 
     const isPayable = mode === 'create' && (isPromoted || uploadType === "file");
-    const price = (isPromoted ? 99 : 0) + (uploadType === "file" ? 99 : 0);
+    const price = (isPromoted ? PROMOTION_PRICE : 0) + (uploadType === "file" ? UPLOAD_PRICE : 0);
+
+    const renderVideoUpload = () => {
+        if (uploadType !== "file") {
+            return (
+                <input
+                    type="text"
+                    className="w-full rounded-xl p-4 border-2 border-gray-300 focus:border-blue-500 focus:outline-none"
+                    placeholder="Enter YouTube video link or iframe..."
+                    name="iframe"
+                    value={videoInfo?.iframe || ""}
+                    onChange={handleInputChange}
+                />
+            );
+        }
+
+        if (mode !== 'create') {
+            return (
+                <div className="p-4 bg-gray-100 rounded-xl h-96">
+                    <ReactPlayer url={videoInfo.video} width="100%" height="100%" controls />
+                </div>
+            );
+        }
+
+        if (selectedFile) {
+            return (
+                <ReactPlayer
+                    className="w-full h-full rounded-xl"
+                    url={URL.createObjectURL(selectedFile)}
+                    controls
+                />
+            );
+        }
+
+        return (
+            <div className="flex flex-col items-center p-8 border-2 border-dashed rounded-3xl">
+                <FaUpload className="text-4xl mb-4 text-gray-400" />
+                <p className="text-lg font-medium mb-2">Drag and drop your video here</p>
+                <p className="text-sm text-gray-500 mb-4">or</p>
+                <label className="px-4 py-2 bg-primary text-white rounded-lg cursor-pointer">
+                    Choose File
+                    <input
+                        type="file"
+                        className="hidden"
+                        accept="video/*"
+                        onChange={handleFileInputChange}
+                    />
+                </label>
+            </div>
+        );
+    };
 
     return (
         <form onSubmit={handleSubmit}>
             <div className="md:flex justify-between gap-8 mb-10 rounded-2xl">
                 <div className="w-full">
                     {mode === 'create' && (
-                        <div className="flex rounded-lg bg-gray-200 p-1 mb-4">
+                        <div className="flex rounded-xl bg-gray-200 p-1 mb-4">
                             <button
                                 type="button"
-                                className={`flex-1 py-2 px-4 items-center flex justify-center gap-2 rounded-md ${uploadType === "youtube" && "bg-white shadow"
-                                    }`}
-                                onClick={() => setUploadType("youtube")}
+                                className={`flex-1 py-2 px-4 items-center flex justify-center gap-2 rounded-xl ${uploadType === "youtube" && "bg-white shadow"}`}
+                                onClick={() => handleUploadTypeChange("youtube")}
                             >
                                 <FaYoutube className="text-xl" />
                                 YouTube Link (Free)
                             </button>
                             <button
                                 type="button"
-                                className={`flex-1 py-2 px-4 items-center flex justify-center gap-2 rounded-md ${uploadType === "file" && "bg-white shadow"
-                                    }`}
-                                onClick={() => setUploadType("file")}
+                                className={`flex-1 py-2 px-4 items-center flex justify-center gap-2 rounded-xl ${uploadType === "file" && "bg-white shadow"}`}
+                                onClick={() => handleUploadTypeChange("file")}
                             >
                                 <FaUpload className="text-xl" />
-                                File Upload ($99)
+                                File Upload (${UPLOAD_PRICE})
                             </button>
                         </div>
                     )}
 
                     <div
                         className="relative w-full group rounded-2xl cursor-pointer mb-4"
-                        onDragOver={handleDragOver}
+                        onDragOver={(e) => e.preventDefault()}
                         onDrop={handleDrop}
                     >
-                        {uploadType === "file" ? (
-                            mode === 'create' ? (
-                                selectedFile ? (
-                                    <ReactPlayer
-                                        className="w-full h-full rounded-xl"
-                                        url={URL.createObjectURL(selectedFile)}
-                                        controls
-                                    />
-                                ) : (
-                                    <div className="flex flex-col items-center p-8 border-2 border-dashed rounded-xl">
-                                        <FaUpload className="text-4xl mb-4 text-gray-400" />
-                                        <p className="text-lg font-medium mb-2">Drag and drop your video here</p>
-                                        <p className="text-sm text-gray-500 mb-4">or</p>
-                                        <label className="px-4 py-2 bg-primary text-white rounded-lg cursor-pointer">
-                                            Choose File
-                                            <input
-                                                type="file"
-                                                className="hidden"
-                                                accept="video/*"
-                                                onChange={handleFileInputChange}
-                                            />
-                                        </label>
-                                    </div>
-                                )
-                            ) : (
-                                <div className="p-4 bg-gray-100 rounded-xl h-96">
-                                    <ReactPlayer url={videoInfo.video} width="100%" height="100%" controls />
-                                </div>
-                            )
-                        ) : (
-                            <input
-                                type="text"
-                                className="w-full rounded-xl p-4 border-2 border-gray-300 focus:border-blue-500 focus:outline-none"
-                                placeholder="Enter YouTube video link or iframe..."
-                                name="iframe"
-                                value={videoInfo?.iframe || ""}
-                                onChange={changeInput}
-                            />
-                        )}
+                        {renderVideoUpload()}
                     </div>
 
                     {mode === 'create' && (
@@ -175,16 +243,18 @@ const VideoUploadForm = ({
                                 type="checkbox"
                                 id="promote"
                                 checked={isPromoted}
-                                onChange={() => setIsPromoted(!isPromoted)}
+                                onChange={handlePromotedChange}
                                 className="hidden"
                             />
                             <label
                                 htmlFor="promote"
-                                className={`flex items-center px-4 py-2 rounded-full cursor-pointer transition-all ${isPromoted ? "bg-primary text-white" : "bg-gray-200 text-gray-700"
-                                    }`}
+                                className={classNames(
+                                    "flex items-center px-4 py-2 rounded-full cursor-pointer transition-all",
+                                    isPromoted ? "bg-primary text-white" : "bg-gray-200 text-gray-700"
+                                )}
                             >
-                                <BsMegaphone className={`mr-2 ${isPromoted ? "animate-pulse" : ""}`} />
-                                Promote for $99/month
+                                <BsMegaphone className={classNames("mr-2", { "animate-pulse": isPromoted })} />
+                                Promote for ${PROMOTION_PRICE}/month
                             </label>
                         </div>
                     )}
@@ -196,38 +266,14 @@ const VideoUploadForm = ({
                             onChange={handleCountryChange}
                             placeholder="State"
                             className="mb-2"
-                            styles={{
-                                control: (provided) => ({
-                                    ...provided,
-                                    borderRadius: "1rem",
-                                    padding: "0.3rem 0.5rem",
-                                    outline: "none",
-                                    fontWeight: "500",
-                                }),
-                                placeholder: (provided) => ({
-                                    ...provided,
-                                    color: "#6b7280",
-                                }),
-                            }}
+                            styles={selectStyles}
                         />
                         <Select
                             options={cityOptions}
                             isDisabled={!selectedCountry}
                             onChange={handleCityChange}
                             placeholder="City"
-                            styles={{
-                                control: (provided) => ({
-                                    ...provided,
-                                    borderRadius: "1rem",
-                                    padding: "0.3rem 0.5rem",
-                                    outline: "none",
-                                    fontWeight: "500",
-                                }),
-                                placeholder: (provided) => ({
-                                    ...provided,
-                                    color: "#6b7280",
-                                }),
-                            }}
+                            styles={selectStyles}
                         />
                     </div>
                 </div>
@@ -241,7 +287,7 @@ const VideoUploadForm = ({
                             className="text-lg font-medium rounded-2xl border py-2 px-4 outline-none"
                             placeholder="Title..."
                             value={videoInfo?.title || ""}
-                            onChange={changeInput}
+                            onChange={handleInputChange}
                             required
                         />
                     </div>
@@ -253,46 +299,34 @@ const VideoUploadForm = ({
                             value={categories.find(cat => cat.value === videoInfo?.category)}
                             onChange={handleCategoryChange}
                             placeholder="Category"
-                            styles={{
-                                control: (provided) => ({
-                                    ...provided,
-                                    borderRadius: "1rem",
-                                    padding: "0.3rem 0.5rem",
-                                    outline: "none",
-                                    fontWeight: "500",
-                                }),
-                                placeholder: (provided) => ({
-                                    ...provided,
-                                    color: "#6b7280",
-                                }),
-                            }}
+                            styles={selectStyles}
                         />
                     </div>
 
                     <div className="flex flex-col gap-2">
                         <label className="text-sm font-medium text-gray-500">Average Price</label>
                         <div className="flex items-center gap-4">
-                            {[1, 2, 3].map((price) => (
-                                <div key={price}>
+                            {PRICE_OPTIONS.map((priceOption) => (
+                                <div key={priceOption}>
                                     <input
                                         type="radio"
-                                        id={`price${price}`}
+                                        id={`price${priceOption}`}
                                         name="price"
-                                        value={price}
+                                        value={priceOption}
                                         className="hidden peer"
-                                        onChange={changeInput}
-                                        checked={Number(videoInfo?.price) === price}
+                                        onChange={handleInputChange}
+                                        checked={Number(videoInfo?.price) === priceOption}
                                     />
                                     <label
-                                        htmlFor={`price${price}`}
+                                        htmlFor={`price${priceOption}`}
                                         className={classNames(
                                             "flex items-center px-4 py-2 rounded-full cursor-pointer transition-all",
-                                            Number(videoInfo?.price) === price
+                                            Number(videoInfo?.price) === priceOption
                                                 ? "bg-primary text-white"
                                                 : "bg-gray-200 text-gray-700"
                                         )}
                                     >
-                                        {'$'.repeat(price)}
+                                        {'$'.repeat(priceOption)}
                                     </label>
                                 </div>
                             ))}
@@ -332,7 +366,7 @@ const VideoUploadForm = ({
                             type="file"
                             className="hidden"
                             accept="image/*"
-                            onChange={(e) => setThumbnail(e)}
+                            onChange={handleThumbnailChange}
                         />
                     </div>
 
@@ -348,7 +382,7 @@ const VideoUploadForm = ({
                             className="text-lg font-medium rounded-2xl border py-2 px-4 outline-none"
                             placeholder="Description..."
                             value={videoInfo?.description || ""}
-                            onChange={changeInput}
+                            onChange={handleInputChange}
                             required
                         />
                     </div>
@@ -356,7 +390,7 @@ const VideoUploadForm = ({
             </div>
 
             <div className="flex justify-end mb-4">
-                <div className={`flex items-center gap-8 ${isPayable && "border-b pb-4"}`}>
+                <div className={classNames("flex items-center gap-8", { "border-b pb-4": isPayable })}>
                     {isPayable && (
                         <span className="text-gray-700 font-bold text-3xl">${price}</span>
                     )}
