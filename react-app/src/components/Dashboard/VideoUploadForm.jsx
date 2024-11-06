@@ -2,10 +2,11 @@ import { useState, useEffect, useCallback } from 'react';
 import Select from "react-select";
 import classNames from "classnames";
 import ReactPlayer from "react-player";
-import { FaInfoCircle, FaYoutube, FaUpload } from "react-icons/fa";
+import { FaInfoCircle, FaUpload, FaYoutube } from "react-icons/fa";
 import { BsMegaphone } from "react-icons/bs";
 import { MdOutlineFileUpload } from "react-icons/md";
 import { Tooltip as ReactTooltip } from "react-tooltip";
+import axios from 'axios';
 
 const PRICE_OPTIONS = [1, 2, 3];
 const ALLOWED_VIDEO_TYPE = "video/";
@@ -26,14 +27,7 @@ const selectStyles = {
     }),
 };
 
-const VideoUploadForm = ({
-    initialData = {},
-    onSubmit,
-    categories = [],
-    locations = [],
-    mode = 'create',
-    isLoading = false
-}) => {
+const VideoUploadForm = ({ initialData, categories, locations, mode = 'user', isLoading = false }) => {
     const [formState, setFormState] = useState({
         videoInfo: initialData,
         thumbnail: null,
@@ -44,15 +38,7 @@ const VideoUploadForm = ({
         cityOptions: []
     });
 
-    const {
-        videoInfo,
-        thumbnail,
-        isPromoted,
-        selectedFile,
-        uploadType,
-        selectedCountry,
-        cityOptions
-    } = formState;
+    const { videoInfo, thumbnail, isPromoted, selectedFile, uploadType, selectedCountry } = formState;
 
     useEffect(() => {
         if (!initialData.location) return;
@@ -100,7 +86,6 @@ const VideoUploadForm = ({
         setFormState(prev => ({
             ...prev,
             selectedCountry: selectedOption,
-            cityOptions: [],
             videoInfo: { ...prev.videoInfo, location: selectedOption.value }
         }));
     }, []);
@@ -127,7 +112,7 @@ const VideoUploadForm = ({
         }
     }, [handleFileValidation]);
 
-    const handleSubmit = useCallback((e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         const formData = {
             ...videoInfo,
@@ -136,8 +121,11 @@ const VideoUploadForm = ({
             thumbnail: thumbnail?.target?.files[0],
             uploadType
         };
-        onSubmit(formData);
-    }, [videoInfo, isPromoted, selectedFile, thumbnail, uploadType, onSubmit]);
+
+        axios.post(`Dashboard/Videos`, formData, {
+            headers: { "Content-Type": "multipart/form-data" }
+        });
+    };
 
     const handleUploadTypeChange = useCallback((type) => {
         setFormState(prev => ({ ...prev, uploadType: type }));
@@ -204,6 +192,7 @@ const VideoUploadForm = ({
         );
     };
 
+
     return (
         <form onSubmit={handleSubmit}>
             <div className="md:flex justify-between gap-8 mb-10 rounded-2xl">
@@ -269,7 +258,7 @@ const VideoUploadForm = ({
                             styles={selectStyles}
                         />
                         <Select
-                            options={cityOptions}
+                            options={formState.cityOptions}
                             isDisabled={!selectedCountry}
                             onChange={handleCityChange}
                             placeholder="City"

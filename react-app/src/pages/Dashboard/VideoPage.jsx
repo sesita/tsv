@@ -54,9 +54,6 @@ const EditUserVideo = () => {
                 }
             });
 
-            await axios.post(`Dashboard/Videos`, form, {
-                headers: { "Content-Type": "multipart/form-data" }
-            });
 
             toast.success("Video updated successfully!");
             navigate('/User/Videos');
@@ -79,10 +76,9 @@ const EditUserVideo = () => {
 
             <VideoUploadForm
                 initialData={video}
-                onSubmit={handleSubmit}
                 categories={categories}
                 locations={locations}
-                mode="admin"
+                mode="user"
                 isLoading={isLoading}
             />
 
