@@ -1,12 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import Select from "react-select";
-import classNames from "classnames";
-import ReactPlayer from "react-player";
 import { FaInfoCircle, FaUpload, FaYoutube } from "react-icons/fa";
-import { BsMegaphone } from "react-icons/bs";
+import { BsGlobeAmericas, BsMegaphone } from "react-icons/bs";
 import { MdOutlineFileUpload } from "react-icons/md";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import ReactPlayer from 'react-player';
+import NumberFormatter from '../Common/FormatNumber';
 
 const PRICE_OPTIONS = [1, 2, 3];
 const ALLOWED_VIDEO_TYPE = "video/";
@@ -27,41 +29,61 @@ const selectStyles = {
     }),
 };
 
-const VideoUploadForm = ({ initialData, categories, locations, mode = 'user', isLoading = false }) => {
+const VideoUploadForm = ({ videoId, mode = 'user' }) => {
+    const navigate = useNavigate();
     const [formState, setFormState] = useState({
-        videoInfo: initialData,
+        videoInfo: null,
         thumbnail: null,
-        isPromoted: initialData.promoted || false,
+        isPromoted: false,
         selectedFile: null,
-        uploadType: initialData.iframe ? "youtube" : "file",
+        uploadType: "file",
         selectedCountry: null,
-        cityOptions: []
+        selectedCity: null,
+        categories: [],
+        locations: [],
+        cities: []
     });
 
-    const { videoInfo, thumbnail, isPromoted, selectedFile, uploadType, selectedCountry } = formState;
-
-    useEffect(() => {
-        if (!initialData.location) return;
-
-        const country = locations.find(loc =>
-            Object.keys(loc).some(key => loc[key] === initialData.location)
-        );
-
-        if (country) {
+    const fetchVideoAndFormData = useCallback(async () => {
+        try {
+            const [videoRes, categoriesRes, locationsRes] = await Promise.all([
+                axios.get(`Dashboard/Videos/${videoId}`),
+                axios.get("Main/getCategories"),
+                axios.get("Main/getLocations")
+            ]);
             setFormState(prev => ({
                 ...prev,
-                videoInfo: initialData,
-                selectedCountry: {
-                    value: country.value,
-                    label: country.label
-                }
+                videoInfo: videoRes.data,
+                isPromoted: videoRes.data.promoted || false,
+                uploadType: videoRes.data.iframe ? "youtube" : "file",
+                categories: categoriesRes.data.map(val => ({ label: val.title, value: val.id })),
+                locations: Object.keys(locationsRes.data).map(key => ({ value: key, label: locationsRes.data[key] }))
             }));
+        } catch (error) {
+            toast.error("Failed to load video data");
+            navigate('/User/Videos');
         }
-    }, [initialData, locations]);
+    }, [videoId, navigate]);
+
+    const fetchCities = useCallback(async (countrySlug) => {
+        try {
+            const citiesRes = await axios.get(`Main/getLocations/${countrySlug}`);
+            setFormState(prev => ({
+                ...prev,
+                cities: Object.keys(citiesRes.data).map(key => ({ value: key, label: citiesRes.data[key] }))
+            }));
+        } catch (error) {
+            toast.error("Failed to load cities");
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchVideoAndFormData();
+    }, [fetchVideoAndFormData]);
 
     const handleFileValidation = useCallback((file) => {
         if (!file.type.startsWith(ALLOWED_VIDEO_TYPE)) {
-            alert("Please upload a video file");
+            toast.error("Please upload a video file");
             return false;
         }
         return true;
@@ -83,24 +105,27 @@ const VideoUploadForm = ({ initialData, categories, locations, mode = 'user', is
     }, []);
 
     const handleCountryChange = useCallback((selectedOption) => {
+        fetchCities(selectedOption.value);
         setFormState(prev => ({
             ...prev,
             selectedCountry: selectedOption,
-            videoInfo: { ...prev.videoInfo, location: selectedOption.value }
+            selectedCity: null,
+            videoInfo: { ...prev.videoInfo, location_id: selectedOption.value }
         }));
-    }, []);
+    }, [fetchCities]);
 
     const handleCityChange = useCallback((selectedOption) => {
         setFormState(prev => ({
             ...prev,
-            videoInfo: { ...prev.videoInfo, location: selectedOption.value }
+            selectedCity: selectedOption,
+            videoInfo: { ...prev.videoInfo, location_id: selectedOption.value }
         }));
     }, []);
 
     const handleCategoryChange = useCallback((selectedOption) => {
         setFormState(prev => ({
             ...prev,
-            videoInfo: { ...prev.videoInfo, category: selectedOption.value }
+            videoInfo: { ...prev.videoInfo, category_id: selectedOption.value }
         }));
     }, []);
 
@@ -112,63 +137,85 @@ const VideoUploadForm = ({ initialData, categories, locations, mode = 'user', is
         }
     }, [handleFileValidation]);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const formData = {
-            ...videoInfo,
-            promoted: isPromoted,
-            video: selectedFile,
-            thumbnail: thumbnail?.target?.files[0],
-            uploadType
-        };
-
-        axios.post(`Dashboard/Videos`, formData, {
-            headers: { "Content-Type": "multipart/form-data" }
-        });
-    };
-
     const handleUploadTypeChange = useCallback((type) => {
         setFormState(prev => ({ ...prev, uploadType: type }));
     }, []);
 
     const handlePromotedChange = useCallback(() => {
-        setFormState(prev => ({ ...prev, isPromoted: !prev.isPromoted }));
+        setFormState(prev => ({ ...prev, isPromoted: !prev.isPromoted, videoInfo: { ...prev.videoInfo, promoted: !prev.isPromoted } }));
     }, []);
 
     const handleThumbnailChange = useCallback((e) => {
         setFormState(prev => ({ ...prev, thumbnail: e }));
     }, []);
 
-    const isPayable = mode === 'create' && (isPromoted || uploadType === "file");
-    const price = (isPromoted ? PROMOTION_PRICE : 0) + (uploadType === "file" ? UPLOAD_PRICE : 0);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setFormState(prev => ({ ...prev, isLoading: true }));
+
+        try {
+            const payload = new FormData();
+            payload.append('title', formState.videoInfo.title);
+            payload.append('description', formState.videoInfo.description);
+            payload.append('category', formState.videoInfo.category_id);
+            payload.append('location', formState.videoInfo.location_id);
+            payload.append('price', formState.videoInfo.price);
+            payload.append('thumbnail', formState.videoInfo.thumbnail);
+            payload.append('video', formState.videoInfo.video);
+
+            if (formState.thumbnail) {
+                payload.append('thumbnail', formState.thumbnail.target.files[0]);
+            }
+
+            if (formState.selectedFile) {
+                payload.append('video', formState.selectedFile);
+            }
+
+            await axios.post('/Dashboard/Videos', payload, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            toast.success("Video uploaded successfully");
+            navigate('/User/Videos');
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Failed to update video");
+        } finally {
+            setFormState(prev => ({ ...prev, isLoading: false }));
+        }
+    };
+
+    const isPayable = mode === 'create' && (formState.isPromoted || formState.uploadType === "file");
+    const price = (formState.isPromoted ? PROMOTION_PRICE : 0) + (formState.uploadType === "file" ? UPLOAD_PRICE : 0);
 
     const renderVideoUpload = () => {
-        if (uploadType !== "file") {
+        if (formState.uploadType !== "file") {
             return (
                 <input
                     type="text"
                     className="w-full rounded-xl p-4 border-2 border-gray-300 focus:border-blue-500 focus:outline-none"
                     placeholder="Enter YouTube video link or iframe..."
                     name="iframe"
-                    value={videoInfo?.iframe || ""}
+                    value={formState.videoInfo?.iframe || ""}
                     onChange={handleInputChange}
                 />
             );
         }
 
-        if (mode !== 'create') {
+        if (mode !== 'create' && formState.videoInfo?.video) {
             return (
                 <div className="p-4 bg-gray-100 rounded-xl h-96">
-                    <ReactPlayer url={videoInfo.video} width="100%" height="100%" controls />
+                    <ReactPlayer url={formState.videoInfo.video} width="100%" height="100%" controls />
                 </div>
             );
         }
 
-        if (selectedFile) {
+        if (formState.selectedFile) {
             return (
                 <ReactPlayer
                     className="w-full h-full rounded-xl"
-                    url={URL.createObjectURL(selectedFile)}
+                    url={URL.createObjectURL(formState.selectedFile)}
                     controls
                 />
             );
@@ -192,16 +239,65 @@ const VideoUploadForm = ({ initialData, categories, locations, mode = 'user', is
         );
     };
 
-
     return (
         <form onSubmit={handleSubmit}>
+            {mode !== 'create' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 md:gap-3 gap-y-6 rounded-2xl p-8 mb-6 border-b">
+                    <div>
+                        <h5 className="text-black font-medium text-[16px]">
+                            Total Video Views
+                        </h5>
+                        <h2 className="text-[#0A2A8D] font-bold text-[28px]">
+                            <NumberFormatter value={formState.videoInfo?.views} />
+                        </h2>
+                        <p className="text-[#071148] text-[14px] font-[400]">
+                            {new Date(formState.videoInfo?.created_at).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                            <span className="mx-2">-</span>
+                            {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                        </p>
+                    </div>
+                    <div>
+                        <h5 className="text-black font-medium text-[16px]">Total Comments</h5>
+                        <h2 className="text-[#0A2A8D] font-bold text-[28px]">
+                            <NumberFormatter value={formState.videoInfo?.comments_count} />
+                        </h2>
+                        <p className="text-[#071148] text-[14px] font-[400]">
+                            {new Date(formState.videoInfo?.created_at).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                            <span className="mx-2">-</span>
+                            {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                        </p>
+                    </div>
+                    <div>
+                        <h5 className="text-black font-medium text-[16px]">Total Like</h5>
+                        <h2 className="text-[#0A2A8D] font-bold text-[28px]">
+                            <NumberFormatter value={formState.videoInfo?.likes} />
+                        </h2>
+                        <p className="text-[#071148] text-[14px] font-[400]">
+                            {new Date(formState.videoInfo?.created_at).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                            <span className="mx-2">-</span>
+                            {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                        </p>
+                    </div>
+                    <div>
+                        <h5 className="text-black font-medium text-[16px]">Total Share</h5>
+                        <h2 className="text-[#0A2A8D] font-bold text-[28px]">
+                            <NumberFormatter value={formState.videoInfo?.shares} />
+                        </h2>
+                        <p className="text-[#071148] text-[14px] font-[400]">
+                            {new Date(formState.videoInfo?.created_at).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                            <span className="mx-2">-</span>
+                            {new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                        </p>
+                    </div>
+                </div>
+            )}
             <div className="md:flex justify-between gap-8 mb-10 rounded-2xl">
                 <div className="w-full">
                     {mode === 'create' && (
                         <div className="flex rounded-xl bg-gray-200 p-1 mb-4">
                             <button
                                 type="button"
-                                className={`flex-1 py-2 px-4 items-center flex justify-center gap-2 rounded-xl ${uploadType === "youtube" && "bg-white shadow"}`}
+                                className={`flex-1 py-2 px-4 items-center flex justify-center gap-2 rounded-xl ${formState.uploadType === "youtube" && "bg-white shadow"}`}
                                 onClick={() => handleUploadTypeChange("youtube")}
                             >
                                 <FaYoutube className="text-xl" />
@@ -209,7 +305,7 @@ const VideoUploadForm = ({ initialData, categories, locations, mode = 'user', is
                             </button>
                             <button
                                 type="button"
-                                className={`flex-1 py-2 px-4 items-center flex justify-center gap-2 rounded-xl ${uploadType === "file" && "bg-white shadow"}`}
+                                className={`flex-1 py-2 px-4 items-center flex justify-center gap-2 rounded-xl ${formState.uploadType === "file" && "bg-white shadow"}`}
                                 onClick={() => handleUploadTypeChange("file")}
                             >
                                 <FaUpload className="text-xl" />
@@ -231,38 +327,49 @@ const VideoUploadForm = ({ initialData, categories, locations, mode = 'user', is
                             <input
                                 type="checkbox"
                                 id="promote"
-                                checked={isPromoted}
+                                checked={formState.isPromoted}
                                 onChange={handlePromotedChange}
                                 className="hidden"
                             />
                             <label
                                 htmlFor="promote"
-                                className={classNames(
-                                    "flex items-center px-4 py-2 rounded-full cursor-pointer transition-all",
-                                    isPromoted ? "bg-primary text-white" : "bg-gray-200 text-gray-700"
-                                )}
+                                className={`flex items-center px-4 py-2 rounded-full cursor-pointer transition-all ${formState.isPromoted ? "bg-primary text-white" : "bg-gray-200 text-gray-700"}`}
                             >
-                                <BsMegaphone className={classNames("mr-2", { "animate-pulse": isPromoted })} />
+                                <BsMegaphone className={`mr-2 ${formState.isPromoted && "animate-pulse"}`} />
                                 Promote for ${PROMOTION_PRICE}/month
                             </label>
                         </div>
                     )}
 
                     <div className="flex flex-col gap-4">
+                        {mode !== 'create' && (
+                            <div className='ml-1'>
+                                <h2 className='font-medium text-gray-700 text-2xl flex items-center gap-2'>
+                                    {formState.videoInfo?.location?.title}
+                                    <BsGlobeAmericas className='mt-1' />
+                                </h2>
+                                <span className='text-gray-600 text-sm flex items-center gap-1.5 mt-1.5'>
+                                    <FaInfoCircle className='text-gray-500' />
+                                    Keep blank to save same location
+                                </span>
+                            </div>
+                        )}
                         <Select
-                            options={locations}
-                            value={selectedCountry}
+                            options={formState.locations}
+                            value={formState.selectedCountry}
                             onChange={handleCountryChange}
-                            placeholder="State"
+                            placeholder="Country"
                             className="mb-2"
                             styles={selectStyles}
                         />
                         <Select
-                            options={formState.cityOptions}
-                            isDisabled={!selectedCountry}
+                            options={formState.cities}
+                            value={formState.selectedCity}
                             onChange={handleCityChange}
                             placeholder="City"
+                            className="mb-2"
                             styles={selectStyles}
+                            isDisabled={!formState.selectedCountry}
                         />
                     </div>
                 </div>
@@ -275,7 +382,7 @@ const VideoUploadForm = ({ initialData, categories, locations, mode = 'user', is
                             name="title"
                             className="text-lg font-medium rounded-2xl border py-2 px-4 outline-none"
                             placeholder="Title..."
-                            value={videoInfo?.title || ""}
+                            value={formState.videoInfo?.title || ""}
                             onChange={handleInputChange}
                             required
                         />
@@ -284,16 +391,16 @@ const VideoUploadForm = ({ initialData, categories, locations, mode = 'user', is
                     <div className="flex flex-col gap-2">
                         <label className="text-sm font-medium text-gray-500">Category</label>
                         <Select
-                            options={categories}
-                            value={categories.find(cat => cat.value === videoInfo?.category)}
+                            options={formState.categories}
+                            value={formState.categories.find(cat => cat.value === formState.videoInfo?.category_id)}
                             onChange={handleCategoryChange}
                             placeholder="Category"
                             styles={selectStyles}
                         />
                     </div>
 
-                    <div className="flex flex-col gap-2">
-                        <label className="text-sm font-medium text-gray-500">Average Price</label>
+                    <div className="flex flex-col gap-2 mb-3">
+                        <label className="text-sm font-medium text-gray-500 mb-2">Average Price</label>
                         <div className="flex items-center gap-4">
                             {PRICE_OPTIONS.map((priceOption) => (
                                 <div key={priceOption}>
@@ -304,16 +411,11 @@ const VideoUploadForm = ({ initialData, categories, locations, mode = 'user', is
                                         value={priceOption}
                                         className="hidden peer"
                                         onChange={handleInputChange}
-                                        checked={Number(videoInfo?.price) === priceOption}
+                                        checked={Number(formState.videoInfo?.price) === priceOption}
                                     />
                                     <label
                                         htmlFor={`price${priceOption}`}
-                                        className={classNames(
-                                            "flex items-center px-4 py-2 rounded-full cursor-pointer transition-all",
-                                            Number(videoInfo?.price) === priceOption
-                                                ? "bg-primary text-white"
-                                                : "bg-gray-200 text-gray-700"
-                                        )}
+                                        className={`px-4 py-2 rounded-full cursor-pointer transition-all ${Number(formState.videoInfo?.price) === priceOption ? "bg-primary text-white" : "bg-gray-200 text-gray-700"}`}
                                     >
                                         {'$'.repeat(priceOption)}
                                     </label>
@@ -332,11 +434,11 @@ const VideoUploadForm = ({ initialData, categories, locations, mode = 'user', is
                             htmlFor="thumbnail"
                             className="justify-between rounded-2xl border py-3 px-4 outline-none flex items-center text-gray-500"
                         >
-                            {thumbnail || initialData.thumbnail ? (
+                            {formState.thumbnail || formState.videoInfo?.thumbnail ? (
                                 <img
-                                    src={thumbnail?.target?.files[0]
-                                        ? URL.createObjectURL(thumbnail.target.files[0])
-                                        : initialData.thumbnail}
+                                    src={formState.thumbnail?.target?.files[0]
+                                        ? URL.createObjectURL(formState.thumbnail.target.files[0])
+                                        : formState.videoInfo.thumbnail}
                                     alt="Thumbnail"
                                     className="w-full h-full object-cover rounded-xl hover:opacity-50 cursor-pointer transition-all max-h-80"
                                 />
@@ -370,7 +472,7 @@ const VideoUploadForm = ({ initialData, categories, locations, mode = 'user', is
                             rows="4"
                             className="text-lg font-medium rounded-2xl border py-2 px-4 outline-none"
                             placeholder="Description..."
-                            value={videoInfo?.description || ""}
+                            value={formState.videoInfo?.description || ""}
                             onChange={handleInputChange}
                             required
                         />
@@ -379,16 +481,16 @@ const VideoUploadForm = ({ initialData, categories, locations, mode = 'user', is
             </div>
 
             <div className="flex justify-end mb-4">
-                <div className={classNames("flex items-center gap-8", { "border-b pb-4": isPayable })}>
+                <div className={`flex items-center gap-8 ${isPayable && "border-b pb-4"}`}>
                     {isPayable && (
                         <span className="text-gray-700 font-bold text-3xl">${price}</span>
                     )}
                     <button
                         type="submit"
-                        disabled={isLoading}
+                        disabled={formState.isLoading}
                         className="bg-primary py-4 px-12 text-white font-medium text-lg rounded-2xl disabled:opacity-50"
                     >
-                        {isLoading
+                        {formState.isLoading
                             ? "Processing..."
                             : mode === 'create'
                                 ? (price > 0 ? "Pay Now" : "Publish Video")

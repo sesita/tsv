@@ -50,8 +50,6 @@ const Graph = ({ videoId }) => {
 
             const { labels, data } = response.data;
 
-            console.log("API Response:", response.data); // For debugging
-
             setChartData({
                 labels,
                 datasets: [
