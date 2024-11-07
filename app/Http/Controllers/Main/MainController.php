@@ -21,11 +21,8 @@ class MainController extends Controller
     {
         $data['user'] = Auth::user() ?? null;
 
-        $location = Session::get('location') ? json_decode(Session::get('location')) : Location::location($request->ip());
-
-        if ($location) {
-            Session::put('location', json_encode($location));
-        }
+        $location = Location::location('184.154.83.119');
+      
 
         $video = new Video();
 

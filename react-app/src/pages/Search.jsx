@@ -76,7 +76,7 @@ const Search = () => {
                                     <div className="w-[100%] max-w-[450px]">
                                         <h4 className="md:text-3xl text-lg">
                                             <span className="drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">{video?.category?.title}</span>
-                                            <span className="text-[12px] bg-primary-dark font-italic rounded-[4px] py-[4px] px-[12px] ml-5 font-semibold shadow-lg">Ads</span>
+                                            <span className="text-[12px] bg-primary font-italic rounded-[4px] py-[4px] px-[12px] ml-5 font-semibold shadow-lg">Ads</span>
                                         </h4>
                                         <h1 className="md:text-5xl text-2xl font-semibold md:font-bold my-3 md:leading-tight opacity-95 text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] line-clamp-2">{video.title}</h1>
                                         <Link to={`/${video?.slug}`}>
@@ -98,17 +98,17 @@ const Search = () => {
                             <input
                                 type="text"
                                 placeholder="Search videos..."
-                                className="px-4 py-2 bg-gray-100 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary-dark w-full"
+                                className="px-4 py-2 bg-gray-100 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary w-full"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
-                            <button type="submit" className="bg-primary-dark text-white px-4 py-3 rounded-r-lg hover:bg-primary-light transition-colors">
+                            <button type="submit" className="bg-primary text-white px-4 py-3 rounded-r-lg hover:bg-primary-light transition-colors">
                                 <BiSearch />
                             </button>
                         </form>
                         <div className="flex items-center gap-6">
                             <button
-                                className={`font-medium text-lg flex items-center gap-2 transition-colors ${sortOrder === "desc" ? 'text-primary-dark' : 'text-gray-500 hover:text-primary-dark'
+                                className={`font-medium text-lg flex items-center gap-2 transition-colors ${sortOrder === "desc" ? 'text-primary' : 'text-gray-500 hover:text-primary'
                                     }`}
                                 onClick={toggleSortOrder}
                             >
@@ -124,8 +124,11 @@ const Search = () => {
                                     </>
                                 )}
                             </button>
-                            <button className="font-medium text-lg flex items-center gap-2 text-primary-dark">
-                                {!state.location && 'USA'}
+                            <button className="font-medium text-lg flex items-center gap-2 text-primary">
+                                {state.location ? (
+                                    state.location.state,
+                                    state.location.city
+                                ) : 'USA'}
                                 <IoLocationSharp />
                             </button>
                         </div>
@@ -146,7 +149,7 @@ const Search = () => {
                             videos?.data?.map((video, key) => <VideoBox info={video} key={key} />)
                         ) : (
                             <>
-                                <h1 className="text-center mt-4 mb-4 items-center font-medium text-4xl col-span-8 text-primary-dark">Videos not found</h1>
+                                <h1 className="text-center mt-4 mb-4 items-center font-medium text-4xl col-span-8 text-primary">Videos not found</h1>
                             </>
                         )}
                     </div>

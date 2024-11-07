@@ -175,7 +175,7 @@ const Video = () => {
                                     <img src={imageUrl(video.thumbnail?.default)}
                                         className="w-full h-full object-cover md:rounded-2xl" alt={video.title} />
                                 </picture>
-                                <button className="absolute bg-primary-dark text-white text-[65px] p-5 rounded-full">{loading ? <AiOutlineLoading className="animate-spin" /> : <IoMdPlay className="pl-2" />}</button>
+                                <button className="absolute bg-primary text-white text-[65px] p-5 rounded-full">{loading ? <AiOutlineLoading className="animate-spin" /> : <IoMdPlay className="pl-2" />}</button>
                             </>
                         ) : (
                             <div className="player-wrapper w-full h-full rounded-xl">

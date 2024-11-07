@@ -34,7 +34,7 @@ const VideoBox = ({ info }) => {
                         {/* Play Button Overlay */}
                         <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                             <div className="text-white text-5xl">
-                                <IoIosPlay className="bg-primary-dark p-2 rounded-full" />
+                                <IoIosPlay className="bg-primary p-2 rounded-full" />
                             </div>
                         </div>
                     </div>
