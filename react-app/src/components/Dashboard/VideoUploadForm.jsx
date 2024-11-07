@@ -160,25 +160,31 @@ const VideoUploadForm = ({ videoId, mode = 'user' }) => {
             payload.append('category', formState.videoInfo.category_id);
             payload.append('location', formState.videoInfo.location_id);
             payload.append('price', formState.videoInfo.price);
-            payload.append('thumbnail', formState.videoInfo.thumbnail);
-            payload.append('video', formState.videoInfo.video);
+            payload.append('promoted', formState.videoInfo.promoted ?? false);
 
             if (formState.thumbnail) {
                 payload.append('thumbnail', formState.thumbnail.target.files[0]);
+            } else {
+                payload.append('thumbnail', formState.videoInfo.thumbnail);
             }
 
             if (formState.selectedFile) {
                 payload.append('video', formState.selectedFile);
+            } else {
+                payload.append('video', formState.videoInfo.video);
             }
 
-            await axios.post('/Dashboard/Videos', payload, {
+            const res = await axios.post('/Dashboard/Videos', payload, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             });
 
-            toast.success("Video uploaded successfully");
-            navigate('/User/Videos');
+            if (res.data.status == 'success') {
+                toast.success("Video uploaded successfully");
+                navigate('/User/Videos');
+            }
+
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to update video");
         } finally {
@@ -196,8 +202,8 @@ const VideoUploadForm = ({ videoId, mode = 'user' }) => {
                     type="text"
                     className="w-full rounded-xl p-4 border-2 border-gray-300 focus:border-blue-500 focus:outline-none"
                     placeholder="Enter YouTube video link or iframe..."
-                    name="iframe"
-                    value={formState.videoInfo?.iframe || ""}
+                    name="video"
+                    value={formState.videoInfo?.video || ""}
                     onChange={handleInputChange}
                 />
             );

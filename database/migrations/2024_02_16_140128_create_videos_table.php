@@ -25,7 +25,7 @@ return new class extends Migration
             $table->integer('package');
             $table->integer('price');
             $table->text('description')->nullable();
-            $table->text('thumbnail')->nullable();
+            $table->json('thumbnail');
             $table->integer('status');
             $table->softDeletes();
             $table->timestamps();

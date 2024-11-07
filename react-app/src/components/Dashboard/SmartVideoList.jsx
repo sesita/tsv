@@ -7,6 +7,8 @@ import { CiEdit, CiSearch } from "react-icons/ci";
 import { MdOutlineDelete, MdOutlineVideoSettings } from "react-icons/md";
 import ReactPlayer from "react-player";
 import Pagination from "../Common/Pagination";
+import { debounce, imageUrl } from "../../helper";
+import { useCallback } from "react";
 
 const SmartVideosList = ({ userRole = 'user' }) => {
     const [videos, setVideos] = useState([]);
@@ -34,9 +36,16 @@ const SmartVideosList = ({ userRole = 'user' }) => {
         }
     };
 
+    const debouncedFetchVideos = useCallback(
+        debounce((search, page) => {
+            fetchVideos(page, search);
+        }, 500),
+        []
+    );
+
     useEffect(() => {
-        fetchVideos(currentPage, search);
-    }, [currentPage, search, userRole]);
+        debouncedFetchVideos(search, currentPage);
+    }, [search, currentPage, debouncedFetchVideos]);
 
     const handleSearch = (search) => {
         setSearch(search);
@@ -178,8 +187,13 @@ const SmartVideosList = ({ userRole = 'user' }) => {
                                     <React.Fragment key={video.id}>
                                         <tr className={`${video.status === 'WAITING' && userRole === 'admin' ? 'bg-gray-100' : 'bg-white'}`}>
                                             <th scope="row" className="px-6 py-4 font-medium text-gray-900">
-                                                <Link to={`${video.id}`} className="hover:text-primary">
-                                                    <img src={video.thumbnail} className="rounded-lg w-64 h-28 object-cover mb-2" alt={video.title} />
+                                                <Link to={`${video.id}`} className="hover:text-primary w-fit flex flex-col">
+                                                    <picture>
+                                                        <source media="(max-width: 767px)" srcSet={imageUrl(video.thumbnail?.mobile)} />
+                                                        <source media="(max-width: 1023px)" srcSet={imageUrl(video.thumbnail?.tablet)} />
+                                                        <img src={imageUrl(video.thumbnail?.default)}
+                                                            className="object-cover w-64 max-h-52 group-hover:opacity-40 rounded-3xl transition-all duration-200 mb-2" />
+                                                    </picture>
                                                     <p className="line-clamp-2">{video.title}</p>
                                                 </Link>
                                             </th>

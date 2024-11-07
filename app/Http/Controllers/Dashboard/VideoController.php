@@ -46,7 +46,7 @@ class VideoController extends Controller
             'title' => 'required',
             'description' => 'required',
             'price' => 'required|integer|max:3',
-            'video' => 'nullable|mimes:mp4,mov,ogg,webm',
+            'video' => 'required',
             'thumbnail' => 'required',
             'category' => 'required',
         ]);
@@ -54,23 +54,11 @@ class VideoController extends Controller
         $status = Status::WAITING;
         $package = Package::FREE;
 
-        if ($request->file('video')) {
-            $videoName = 'videos/' . Str::random() . time() . '.mp4';
-            $request->video->move(public_path('storage/videos'), $videoName);
-            $package = Package::STANDARD;
-        } else {
-            $videoName = $request->video;
-        }
-
-        if ($request->promoted) {
-            $package = Package::STANDARD;
+        if ($request->promoted === true) {
+            $package = Package::PROMOTED;
         }
 
         $video = new Video();
-
-        if ($request->file('thumbnail')) {
-            $thumbnail = $video->generateImage($request->file('thumbnail'));
-        }
 
         $slug = Str::slug($request->title);
         $counter = 1;
@@ -79,19 +67,37 @@ class VideoController extends Controller
             $counter++;
         } while (Video::withTrashed()->where('slug', $videoSlug)->exists());
 
+        if ($request->file('video')) {
+            $videoName = 'videos/' . $videoSlug . '.mp4';
+            $request->video->move(public_path('storage/videos'), $videoName);
+            if ($package == Package::PROMOTED) {
+                $package = Package::PREMIUM;
+            } else {
+                $package = Package::FILE;
+            }
+        } else {
+            $videoName = $request->video;
+        }
+
+        if ($request->file('thumbnail')) {
+            $thumbnail = $video->generateImage($request->file('thumbnail'), $videoSlug);
+        } else {
+            $thumbnail = $request->thumbnail;
+        }
+
         if ($request->location) {
             $location = Location::find($request->location);
         }
 
         $video = Video::updateOrCreate([
             'id' => $request->id
-        ],[
+        ], [
             'slug' => $videoSlug,
             'video' => $videoName,
             'user_id' => $userId,
             'title' => $request->title,
             'price' => $request->price,
-            'thumbnail' => $thumbnail ?? null,
+            'thumbnail' => json_encode($thumbnail),
             'status' => $status,
             'package' => $package,
             'category_id' => $request->category,
@@ -99,10 +105,10 @@ class VideoController extends Controller
             'description' => $request->description,
         ]);
 
-        if(!Auth::user()->admin && $package == Package::STANDARD) {
+        if ($package !== Package::FREE) {
             $transaction = new Transaction();
-            $res = $transaction->createOrder($request);
-            return response()->json($transaction);
+            $res = $transaction->createOrder($package);
+            return response()->json($res);
         }
 
         return response()->json($video);

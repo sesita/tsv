@@ -6,6 +6,7 @@ import { MdOutlineVideoSettings } from 'react-icons/md';
 import Pagination from '../../../../components/Common/Pagination';
 import { CiEdit } from 'react-icons/ci';
 import { FaSave, FaTrash } from 'react-icons/fa';
+import { imageUrl } from '../../../../helper';
 
 const Categories = () => {
     const params = useParams();
@@ -159,7 +160,12 @@ const Categories = () => {
                                     <tr className={`${video.status === 'WAITING' ? 'bg-gray-100' : 'bg-white'}`} key={video.id}>
                                         <th scope="row" className="px-6 py-4 font-medium text-gray-900" width="25%">
                                             <Link className="hover:text-primary">
-                                                <img src={video.thumbnail} className="rounded-lg w-64 h-28 object-cover mb-2" alt={video.title} />
+                                                <picture>
+                                                    <source media="(max-width: 767px)" srcSet={imageUrl(video.thumbnail?.mobile)} />
+                                                    <source media="(max-width: 1023px)" srcSet={imageUrl(video.thumbnail?.tablet)} />
+                                                    <img src={imageUrl(video.thumbnail?.default)}
+                                                        className="rounded-lg w-64 h-28 object-cover mb-2" alt={video.title} />
+                                                </picture>
                                                 <p className="line-clamp-2">{video.title}</p>
                                             </Link>
                                         </th>

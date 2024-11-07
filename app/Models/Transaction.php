@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Video\Package;
 use Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -14,13 +15,14 @@ class Transaction extends Model
 
     protected $fillable = ['transaction_id', 'video_id', 'price', 'status'];
 
-    public function createOrder(Request $request){
+    public function createOrder($package)
+    {
         $price_ids = [];
 
-        if ($request->file) {
+        if ($package == Package::PROMOTED || $package == Package::PREMIUM) {
             $price_ids[] = 'price_1Q4iXcB9uNXBCzh8d6fGt3yg';
         }
-        if ($request->promoted) {
+        if ($package == Package::FILE || $package == Package::PREMIUM) {
             $price_ids[] = 'price_1Q4kseB9uNXBCzh8NqBXqFLK';
         }
 
@@ -30,18 +32,15 @@ class Transaction extends Model
             $customer->createAsStripeCustomer();
         }
 
-        $transactionId = Str::random(10) . time();
-
-        $this->create([
-            'price' => 199,
-            'status' => 'created',
-            'transaction_id' => $transactionId,
-        ]);
-
-        $checkoutSession = $request->user()->checkout($price_ids, [
+        $checkoutSession = Auth::user()->checkout($price_ids, [
             'success_url' => route('checkout-success') . '?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => route('checkout-cancel') . '?session_id={CHECKOUT_SESSION_ID}',
-            'metadata' => ['transaction_id' => $transactionId],
+        ]);
+
+        $this->create([
+            'status' => 'created',
+            'price' => $price_ids > 2 ? 199 : 99,
+            'transaction_id' => $checkoutSession->id,
         ]);
 
         return $checkoutSession;

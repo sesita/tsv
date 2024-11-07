@@ -14,6 +14,7 @@ import { usePrimary } from "../context/PrimaryContext";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { FiShare2 } from "react-icons/fi";
 import { Rating } from 'react-simple-star-rating'
+import { imageUrl } from "../helper";
 
 const Video = () => {
     const { slug } = useParams();
@@ -168,7 +169,12 @@ const Video = () => {
                     <div className="max-h-[800px] md:h-[500px] h-[220px] w-full flex justify-center items-center relative">
                         {loading ? (
                             <>
-                                <img src={video.thumbnail} alt="" className="w-full h-full object-cover md:rounded-2xl" />
+                                <picture>
+                                    <source media="(max-width: 767px)" srcSet={imageUrl(video.thumbnail?.mobile)} />
+                                    <source media="(max-width: 1023px)" srcSet={imageUrl(video.thumbnail?.tablet)} />
+                                    <img src={imageUrl(video.thumbnail?.default)}
+                                        className="w-full h-full object-cover md:rounded-2xl" alt={video.title} />
+                                </picture>
                                 <button className="absolute bg-primary-dark text-white text-[65px] p-5 rounded-full">{loading ? <AiOutlineLoading className="animate-spin" /> : <IoMdPlay className="pl-2" />}</button>
                             </>
                         ) : (

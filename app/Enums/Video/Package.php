@@ -4,6 +4,7 @@ namespace App\Enums\Video;
 
 enum Package: int {
     case FREE = 1;
-    case STANDARD = 2;
-    case PREMIUM = 3;
+    case FILE = 2;
+    case PROMOTED = 3;
+    case PREMIUM = 4;
 }

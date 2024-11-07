@@ -6,9 +6,6 @@ import Graph from '../../components/Analytics/Graph';
 const EditUserVideo = () => {
     const { id } = useParams();
 
-
-
-
     return (
         <>
             <h1 className="text-4xl font-medium flex items-center gap-3 mb-4 text-gray-700">

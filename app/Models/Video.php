@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Storage;
 
 class Video extends Model
 {
@@ -64,8 +65,7 @@ class Video extends Model
 
         return $list;
     }
-
-    public function generateImage($image)
+    public function generateImage($image, $slug)
     {
         $manager = new ImageManager(new Driver());
 
@@ -75,22 +75,20 @@ class Video extends Model
             'mobile' => [320, 180],
         ];
 
-        $folder = 'videos/' . Str::random(10) . '_' . time();
-
+        $folder = 'videos/' . $slug;
         $image->storeAs($folder, 'original.webp', 'public');
 
         $generatedImages = [];
-
         foreach ($sizes as $key => $dimensions) {
             $img = $manager->read($image);
-            $img->scale($dimensions[0], $dimensions[1]);
-            $img->toWebp()->save($folder);
-            $generatedImages[$key] = $folder;
+            $img->cover($dimensions[0], $dimensions[1]);
+            $path = "{$folder}/{$key}.webp";
+            $img->toWebp()->save("storage/{$path}");
+            $generatedImages[$key] = $path;
         }
 
         return $generatedImages;
     }
-
 
     public function views()
     {
@@ -128,8 +126,10 @@ class Video extends Model
     }
     public function getStatusAttribute($value)
     {
+        if ($value instanceof Status) return $value->name;
         return Status::from($value)->name;
     }
+
     public function getLocationAttribute($value)
     {
         $location = $this->location()->first();
@@ -161,9 +161,7 @@ class Video extends Model
 
     public function getThumbnailAttribute($value)
     {
-        if ($value) {
-            return asset('storage/' . $value);
-        }
+        return json_decode($value);
     }
 
     public function getSharesAttribute($value)

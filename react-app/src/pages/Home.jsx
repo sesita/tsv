@@ -12,6 +12,7 @@ import VideoBox from "../components/Common/VideoBox";
 import { Autoplay, EffectFade, Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { PrimaryContext } from "../context/PrimaryContext";
+import { imageUrl } from "../helper";
 
 const Home = () => {
     const { state } = useContext(PrimaryContext);
@@ -64,7 +65,12 @@ const Home = () => {
                     sliderVideos.data?.map((video) => (
                         <SwiperSlide key={video.id}>
                             <section className="md:pt-16 pt-8 md:pb-32 pb-28">
-                                <img src={video?.thumbnail} className="absolute w-full h-full top-0 object-cover" alt="Cover" />
+                                <picture>
+                                    <source media="(max-width: 767px)" srcSet={imageUrl(video.thumbnail?.mobile)} />
+                                    <source media="(max-width: 1023px)" srcSet={imageUrl(video.thumbnail?.tablet)} />
+                                    <img src={imageUrl(video.thumbnail?.default)}
+                                        className="absolute w-full h-full top-0 object-cover" alt={video.title} />
+                                </picture>
                                 <div className="container text-white relative">
                                     <div className="w-[100%] max-w-[450px]">
                                         <h4 className="md:text-3xl text-lg">
