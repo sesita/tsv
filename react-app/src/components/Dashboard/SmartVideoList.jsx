@@ -74,7 +74,7 @@ const SmartVideosList = ({ userRole = 'user' }) => {
         }
 
         try {
-            await axios.post(`/Dashboard/Admin/videoStatus`, formData, {
+            await axios.post(`/Dashboard/VideoModeration`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
@@ -223,10 +223,10 @@ const SmartVideosList = ({ userRole = 'user' }) => {
                                                         </button>
                                                     )}
                                                     <div className="flex gap-2">
-                                                        <button className="mr-2 py-2 px-4 flex items-center gap-2 text-lg bg-yellow-500 text-white rounded-2xl">
+                                                        <Link to={`${video.id}`} className="mr-2 py-2 px-4 flex items-center gap-2 text-lg bg-yellow-500 text-white rounded-2xl">
                                                             <CiEdit className="text-xl" />
                                                             Edit
-                                                        </button>
+                                                        </Link>
                                                         <button
                                                             onClick={() => videoStatus(video.id, 'delete')}
                                                             className="mr-2 py-2 px-4 flex items-center gap-2 text-lg bg-primary text-white rounded-2xl"
@@ -314,7 +314,7 @@ const SmartVideosList = ({ userRole = 'user' }) => {
                                                             Cancel
                                                         </button>
                                                         <button
-                                                            onClick={() => handleVideoSubmission(video.id, "APPROVED")}
+                                                            onClick={() => handleVideoSubmission(video.id, "PUBLISHED")}
                                                             className="mt-4 py-2 px-4 flex items-center gap-2 text-lg bg-green-500 text-white rounded-2xl"
                                                         >
                                                             <FaCheck className="text-xl" />

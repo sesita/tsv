@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Main;
 
+use App\Enums\Video\Status;
 use App\Models\Transaction;
+use App\Models\Video;
 use Illuminate\Http\Request;
 use Laravel\Cashier\Cashier;
 use Illuminate\Support\Facades\Auth;
@@ -10,7 +12,7 @@ use App\Http\Controllers\Controller;
 
 class PaymentController extends Controller
 {
-    public function Success(Request $request)
+    public function success(Request $request)
     {
         $sessionId = $request->get('session_id');
 
@@ -24,12 +26,12 @@ class PaymentController extends Controller
             return;
         }
 
-        $orderId = $session['metadata']['transaction_id'] ?? null;
-
-        $order = Transaction::findOrFail($orderId);
+        $order = Transaction::where('transaction_id', $sessionId)->first();
 
         $order->update(['status' => 'completed']);
 
-        return redirect('/');
+        Video::withTrashed()->find($order->video_id)->restore();
+
+        return redirect('/User/Videos');
     }
 }

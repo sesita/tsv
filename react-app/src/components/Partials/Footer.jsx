@@ -1,6 +1,7 @@
 import { FaFacebook } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa";
 import { usePrimary } from "../../context/PrimaryContext";
+import { imageUrl } from "../../helper";
 
 export const Footer = () => {
 
@@ -11,22 +12,22 @@ export const Footer = () => {
             <div className="container mx-auto">
                 <div className="md:grid grid-cols-12 gap-12 mb-12 flex flex-col text-center md:text-start">
                     <div className="col-span-4">
-                        <img src={state.settings.logo} alt="Logo" width="200" height="100" className="w-44 block mb-4 mx-auto md:mx-0" />
+                        <img src={imageUrl(state.settings.logo)} alt="Logo" width="200" height="100" className="w-44 block mb-4 mx-auto md:mx-0" />
                         <p className="text-dark-gray mb-8 capitalize">
-                            Meet your town specialists <br />
+                            {state.settings.business_slogan} <br />
                             <span className="text-xs flex md:w-3/4 mt-1">Expanding from the Chicagoland area to a nationwide reach, we aim to simplify and enhance the way people find services and businesses in their local communities, fostering closer connections between businesses and residents.</span>
                         </p>
                         <ul className="text-sm text-dark-gray flex flex-col gap-2">
                             <li>
                                 <span>E-mail: </span>
-                                <a href="mailto:info@mytsv.com" className="font-normal hover:text-primary-dark dark:hover:text-yellow transition-all">
-                                    info@mytsv.com
+                                <a href={`mailto:${state.settings.contact_email}`} className="font-normal hover:text-primary-dark dark:hover:text-yellow transition-all">
+                                    {state.settings.contact_email}
                                 </a>
                             </li>
                             <li>
                                 <span>Number: </span>
-                                <a href="tel:18479439634" className="font-normal hover:text-primary-dark dark:hover:text-yellow transition-all">
-                                    +1 847-943-9634
+                                <a href={`tel:${state.settings.support_phone}`} className="font-normal hover:text-primary-dark dark:hover:text-yellow transition-all">
+                                    +{state.settings.support_phone}
                                 </a>
                             </li>
                         </ul>
@@ -75,7 +76,7 @@ export const Footer = () => {
                 </div>
                 <div className="col-lg-12 mb-6 relative lg:flex flex-col">
                     <p className="text-center text-dark-gray">
-                        <span>© MyTSV.com - Meet Your Town Specialists</span>
+                        <span>© {state.settings.website_name} - {state.settings.business_slogan}</span>
                     </p>
                 </div>
             </div>

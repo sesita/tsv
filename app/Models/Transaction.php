@@ -15,7 +15,7 @@ class Transaction extends Model
 
     protected $fillable = ['transaction_id', 'video_id', 'price', 'status'];
 
-    public function createOrder($package)
+    public function createOrder($package, $videoId)
     {
         $price_ids = [];
 
@@ -39,7 +39,8 @@ class Transaction extends Model
 
         $this->create([
             'status' => 'created',
-            'price' => $price_ids > 2 ? 199 : 99,
+            'video_id' => $videoId,
+            'price' => count($price_ids) > 1 ? 199 : 99,
             'transaction_id' => $checkoutSession->id,
         ]);
 

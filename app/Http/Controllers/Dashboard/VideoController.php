@@ -54,7 +54,7 @@ class VideoController extends Controller
         $status = Status::WAITING;
         $package = Package::FREE;
 
-        if ($request->promoted === true) {
+        if ($request->promoted == 'true') {
             $package = Package::PROMOTED;
         }
 
@@ -106,9 +106,10 @@ class VideoController extends Controller
         ]);
 
         if ($package !== Package::FREE) {
+            $video->delete();
             $transaction = new Transaction();
-            $res = $transaction->createOrder($package);
-            return response()->json($res);
+            $res = $transaction->createOrder($package, $video->id);
+            return response()->json(['url' => $res->url]);
         }
 
         return response()->json($video);
@@ -117,5 +118,32 @@ class VideoController extends Controller
     {
         $views = View::getViewsForPeriod($id, $request->period);
         return response($views);
+    }
+    public function moderation(Request $request)
+    {
+        if (!Auth::user()->admin)
+            return;
+
+        $video = Video::find($request->id)->first();
+
+        if (!$video)
+            return;
+
+        if ($request->status == 'delete') {
+            Video::find($request->id)->delete();
+            return response()->json(['status' => 'success']);
+        }
+
+        if ($request->file('video')) {
+            $videoName = 'videos/' . $video->slug . '.mp4';
+            $request->video->move(public_path('storage/videos'), $videoName);
+        } else {
+            $videoName = $request->video;
+        }
+        $video = Video::find($video->id)->update([
+            'video' => $videoName,
+            'status' => Status::fromName($request->status),
+        ]);
+        return response()->json(['status' => 'success']);
     }
 }

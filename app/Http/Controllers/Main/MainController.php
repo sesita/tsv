@@ -44,8 +44,8 @@ class MainController extends Controller
             'recommended' => $video->getVideos($request),
         ];
         $data['settings'] = Setting::all()->pluck('value', 'name');
-        $data['settings']['logo'] = asset('storage/' . $data['settings']['logo']);
-        $data['settings']['favicon'] = asset('storage/' . $data['settings']['favicon']);
+        // $data['settings']['logo'] = asset('storage/' . $data['settings']['logo'] ?? null);
+        // $data['settings']['favicon'] = asset('storage/' . $data['settings']['favicon'] ?? null);
 
         return response($data);
     }

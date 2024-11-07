@@ -56,6 +56,8 @@ Route::prefix('Video')->group(function () {
 Route::group(['middleware' => 'auth:api', 'prefix' => 'Dashboard'], function ($router) {
     Route::apiResource('Videos', VideoController::class);
     Route::get('VideoViews/{id}', [VideoController::class, 'views']);
+    Route::post('VideoModeration', [VideoController::class, 'moderation']);
+
     Route::post('Settings', [ProfileController::class, 'Settings']);
 
     Route::prefix('Admin')->group(function () {

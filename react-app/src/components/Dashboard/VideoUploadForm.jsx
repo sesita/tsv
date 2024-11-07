@@ -180,9 +180,11 @@ const VideoUploadForm = ({ videoId, mode = 'user' }) => {
                 }
             });
 
-            if (res.data.status == 'success') {
-                toast.success("Video uploaded successfully");
+            if (res.data.url) {
+                window.open(res.data.url, "_self");
+            } else {
                 navigate('/User/Videos');
+                toast.success("Video uploaded successfully");
             }
 
         } catch (error) {
