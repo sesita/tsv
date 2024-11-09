@@ -19,37 +19,32 @@ class MainController extends Controller
 {
     public function primary(Request $request)
     {
-        $data['user'] = Auth::user() ?? null;
-
-        $location = Location::location('184.154.83.119');
-      
+        $data['user'] = Auth::user() ?? null;    
 
         $video = new Video();
 
-        $sliderParams[] = $request->all();
-        $sliderParams['orderBy'] = 'slider';
-        $popularParams[] = $request->all();
-        $popularParams['orderBy'] = 'popular';
+        $sliderParams['order'] = 'slider';
+        $popularParams['order'] = 'popular';
 
         $data['user'] = Auth::user();
-        $data['location'] = $location;
+        $data['location'] = $this->resolveLocation($request->ip());
         $data['locations'] = $this->getLocations();
         $data['categories'] = $this->getCategories();
         $data['videos'] = [
-            'slider' => $video->getVideos($sliderParams),
-            'popular' => $video->getVideos($popularParams),
+            'slider' => $video->getVideos($request, $sliderParams),
+            'popular' => $video->getVideos($request, $popularParams),
             'recommended' => $video->getVideos($request),
         ];
         $data['settings'] = Setting::all()->pluck('value', 'name');
-        // $data['settings']['logo'] = asset('storage/' . $data['settings']['logo'] ?? null);
-        // $data['settings']['favicon'] = asset('storage/' . $data['settings']['favicon'] ?? null);
+        $data['settings']['logo'] = isset($data['settings']['logo']) ? asset('storage/' . $data['settings']['logo']) : null;
+        $data['settings']['favicon'] = isset($data['settings']['favicon']) ? asset('storage/' . $data['settings']['favicon']) : null;        
 
         return response($data);
     }
     public function getVideos(Request $request)
     {
         $video = new Video();
-        $videos = $video->getVideos($request->all());
+        $videos = $video->getVideos($request);
         return response($videos);
     }
     public function getVideo($slug, Request $request)
@@ -88,6 +83,14 @@ class MainController extends Controller
         $res['videos'] = Video::with('user')->withCount('views')->published()->where('user_id', $res['user']->id)->orderBy('views_count', 'desc')->take(3)->get();
         $res['reviews'] = Review::where('user_id', $res['user']->id)->latest()->get();
         return response($res);
+    }
+    public static function resolveLocation($ip){
+        $location = Session::get('location') ? json_decode(Session::get('location')) : Location::location($ip);
+
+        if ($location) {
+            Session::put('location', json_encode($location));
+        }
+        return $location;
     }
     public function getCategories()
     {

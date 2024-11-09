@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use App\Enums\Video\Status;
-use Illuminate\Support\Str;
+use App\Http\Controllers\Main\MainController;
+use Illuminate\Http\Request;
 use Intervention\Image\ImageManager;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Storage;
 
 class Video extends Model
 {
@@ -34,19 +34,29 @@ class Video extends Model
         });
     }
 
-    public function getVideos($params = [])
+    public static function getVideos(Request $request, $params = [])
     {
-        $paginate = $params['paginate'] ?? 8;
-        $orderBy = $params['orderBy'] ?? 'id';
+        $order = $params['order'] ?? 'id';
         $search = $params['search'] ?? null;
         $related = $params['related'] ?? null;
+        $location = $params['location'] ?? false;
 
-        $query = Video::published()->withCount('views');
+        $query = self::published()->withCount('views');
 
-        if ($orderBy == 'popular') {
+        if ($order == 'popular') {
             $query->orderBy('views_count', 'desc');
         } else {
             $query->orderBy('id', 'desc');
+        }
+
+        if ($location) {
+            $locationData = MainController::resolveLocation($request->ip());
+            if ($locationData->city) {
+                $query->where('location_id', $locationData->city);
+                if ($locationData->state) {
+                    $query->orWhere('location_id', $locationData->state);
+                }
+            }
         }
 
         if ($search) {
@@ -54,17 +64,17 @@ class Video extends Model
         }
 
         if ($related) {
-            $relatedVideo = Video::find($related);
+            $relatedVideo = self::find($related);
 
             if ($relatedVideo) {
                 $query->where('category_id', $relatedVideo->category_id)
-                    ->where('id', '!=', $related);
+                      ->where('id', '!=', $related);
             }
         }
-        $list = $query->with(['category', 'user'])->paginate($paginate);
 
-        return $list;
+        return $query->with(['category', 'user'])->paginate(9);
     }
+
     public function generateImage($image, $slug)
     {
         $manager = new ImageManager(new Driver());

@@ -12,23 +12,26 @@ import { BiSearch, BiSortDown, BiSortUp } from "react-icons/bi";
 import { IoLocationSharp } from "react-icons/io5";
 import { usePrimary } from "../context/PrimaryContext";
 import { imageUrl } from "../helper";
+import { MdLocationOff } from "react-icons/md";
 
 const Search = () => {
     const [videos, setVideos] = useState([]);
     const [loading, setLoading] = useState(false);
     const [sliderVideos, setSliderVideos] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
-    const [sortOrder, setSortOrder] = useState("asc");
+    const [sortOrder, setSortOrder] = useState("popular");
+    const [sortLocation, setSortLocation] = useState(true);
 
     const { query } = useParams();
     const { state } = usePrimary();
 
-    const getVideos = async (search, order) => {
+    const getVideos = async () => {
         setLoading(true);
         const res = await axios.get("Main/getVideos", {
             params: {
-                search: search,
-                order: order,
+                search: query,
+                order: sortOrder,
+                location: sortLocation,
             },
         });
         setVideos(res.data);
@@ -42,14 +45,15 @@ const Search = () => {
     };
 
     const toggleSortOrder = () => {
-        setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-        getVideos(searchQuery, sortOrder === "asc" ? "desc" : "asc");
+        setSortOrder(sortOrder === "popular" ? "new" : "popular");
     };
-
+    const toggleSortLocation = () => {
+        setSortLocation(!sortLocation);
+    };
     useEffect(() => {
         setSearchQuery(query)
         getVideos(query, "asc");
-    }, [query]);
+    }, [query, sortOrder, sortLocation]);
 
 
     return (
@@ -112,7 +116,7 @@ const Search = () => {
                                     }`}
                                 onClick={toggleSortOrder}
                             >
-                                {sortOrder === "asc" ? (
+                                {sortOrder === "popular" ? (
                                     <>
                                         Sort Popular
                                         <BiSortUp />
@@ -124,12 +128,21 @@ const Search = () => {
                                     </>
                                 )}
                             </button>
-                            <button className="font-medium text-lg flex items-center gap-2 text-primary">
-                                {state.location ? (
-                                    state.location.state,
-                                    state.location.city
-                                ) : 'USA'}
-                                <IoLocationSharp />
+                            <button onClick={toggleSortLocation} className="font-medium text-lg flex items-center gap-2 text-primary">
+                                {sortLocation ? (
+                                    <>
+                                        {state.location ? (
+                                            state.location.state,
+                                            state.location.city
+                                        ) : 'USA'}
+                                        <IoLocationSharp />
+                                    </>
+                                ) : (
+                                    <>
+                                        All 
+                                        <MdLocationOff />
+                                    </>
+                                )}
                             </button>
                         </div>
                     </div>
