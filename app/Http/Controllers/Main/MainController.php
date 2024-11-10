@@ -23,16 +23,13 @@ class MainController extends Controller
 
         $video = new Video();
 
-        $sliderParams['order'] = 'slider';
-        $popularParams['order'] = 'popular';
-
         $data['user'] = Auth::user();
         $data['location'] = $this->resolveLocation($request->ip());
         $data['locations'] = $this->getLocations();
         $data['categories'] = $this->getCategories();
         $data['videos'] = [
-            'slider' => $video->getVideos($request, $sliderParams),
-            'popular' => $video->getVideos($request, $popularParams),
+            'slider' => $video->getVideos($request),
+            'popular' => $video->getVideos($request),
             'recommended' => $video->getVideos($request),
         ];
         $data['settings'] = Setting::all()->pluck('value', 'name');
@@ -128,6 +125,13 @@ class MainController extends Controller
     }
     public function updateLocation(Request $request)
     {
-        return response();
+        $request->validate([
+            'state' => 'required|string',
+            'city' => 'required|string',
+        ]);
+    
+        // Assuming location update logic here, for example:
+        Session::put('location', json_encode($request->only(['state', 'city'])));
+        return response()->json(['message' => 'Location updated successfully']);
     }
 }

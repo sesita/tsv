@@ -27,12 +27,10 @@ const Search = () => {
 
     const getVideos = async () => {
         setLoading(true);
-        const res = await axios.get("Main/getVideos", {
-            params: {
-                search: query,
-                order: sortOrder,
-                location: sortLocation,
-            },
+        const res = await axios.post("Main/getVideos", {
+            search: query,
+            order: sortOrder,
+            location: sortLocation,
         });
         setVideos(res.data);
         setSliderVideos(res.data);
@@ -139,7 +137,7 @@ const Search = () => {
                                     </>
                                 ) : (
                                     <>
-                                        All 
+                                        All
                                         <MdLocationOff />
                                     </>
                                 )}

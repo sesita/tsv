@@ -14,6 +14,7 @@ class Location extends Model
     public static function location($ip)
     {
         $response = Http::get("http://ip-api.com/json/{$ip}")->json();
+
         if ($response['status'] == 'success') {
             $location = Location::where('title', 'like', $response['city'])->first();
             if (!$location) {
@@ -23,8 +24,13 @@ class Location extends Model
                 }
                 return ['state' => $location->title, 'city' => $location->title];
             }
-            return ['state' => $location->parent()->first()->title, 'city' => $location->title];
+
+            return [
+                'state' => optional($location->parent)->title ?? $location->title,
+                'city' => $location->title,
+            ];
         }
+
         return null;
     }
 

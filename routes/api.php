@@ -39,7 +39,7 @@ Route::prefix('Main')->group(function () {
     Route::get('primary', [MainController::class, 'primary']);
     Route::get('getUser', [MainController::class, 'getUser']);
     Route::get('getTags', [MainController::class, 'getTags']);
-    Route::get('getVideos', [MainController::class, 'getVideos']);
+    Route::post('getVideos', [MainController::class, 'getVideos']);
     Route::get('getCategories', [MainController::class, 'getCategories']);
     Route::get('getLocations/{parent?}', [MainController::class, 'getLocations']);
     Route::post('addReview', [MainController::class, 'addReview']);

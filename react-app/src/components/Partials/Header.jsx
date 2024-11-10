@@ -35,6 +35,7 @@ const Header = ({ states, categories, locator }) => {
     const [width, setWidth] = useState(window.innerWidth);
     const [showDropdown, setShowDropdown] = useState(false);
     const [selectedState, setSelectedState] = useState(null);
+    const [selectedCity, setSelectedCity] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [locationModal, setLocationModal] = useState(false);
     const [showCategories, setShowCategories] = useState(true);
@@ -112,22 +113,6 @@ const Header = ({ states, categories, locator }) => {
         prevScrollY.current = currentScrollY;
     };
 
-    const stateChange = (selectedOption) => {
-        setSelectedState(selectedOption);
-        axios.get(`Main/getLocations/${selectedOption.value}`).then((res) => {
-            setCitiesData(
-                Object.keys(res.data).map((key) => ({
-                    value: key,
-                    label: res.data[key],
-                }))
-            );
-        });
-    };
-
-    const cityChange = (selectedOption) => {
-        console.log(selectedOption);
-    };
-
     const isMobile = width <= 768;
 
     const toggleSidebar = () => {
@@ -139,6 +124,55 @@ const Header = ({ states, categories, locator }) => {
             setIsSidebarOpen(!isSidebarOpen);
         } else {
             setShowDropdown(!showDropdown);
+        }
+    };
+
+
+    useEffect(() => {
+        // Load location when the header loads
+        const loadLocation = async () => {
+            try {
+                const response = await axios.get("/api/get-location"); // Endpoint to fetch saved location
+                if (response.data) {
+                    setSelectedState(response.data.state);
+                    setSelectedCity(response.data.city);
+                    loadCitiesData(response.data.state);
+                }
+            } catch (error) {
+                console.error("Error loading location:", error);
+            }
+        };
+
+        loadLocation();
+    }, []);
+
+    const loadCitiesData = async (stateValue) => {
+        try {
+            const res = await axios.get(`Main/getLocations/${stateValue}`);
+            setCitiesData(Object.keys(res.data).map(key => ({ value: key, label: res.data[key] })));
+        } catch (error) {
+            console.error("Error loading cities:", error);
+        }
+    };
+
+    const stateChange = (selectedOption) => {
+        setSelectedState(selectedOption);
+        loadCitiesData(selectedOption.value);
+    };
+
+    const cityChange = (selectedOption) => {
+        setSelectedCity(selectedOption);
+    };
+
+    const handleSaveLocation = async () => {
+        try {
+            await axios.post('/api/update-location', {
+                state: selectedState?.value,
+                city: selectedCity?.value,
+            });
+            setLocationModal(false);
+        } catch (error) {
+            console.error("Failed to save location:", error);
         }
     };
 
@@ -166,11 +200,12 @@ const Header = ({ states, categories, locator }) => {
                                 <IoClose className="text-3xl cursor-pointer" onClick={() => setLocationModal(false)} />
                             </div>
                             <div className="flex gap-6 w-full mb-10">
-                                <div className="flex-1 h-4">
+                                <div className="flex-1">
                                     <Select
                                         options={states}
                                         isDisabled={!locator}
                                         onChange={stateChange}
+                                        value={selectedState}
                                         placeholder="State"
                                         classNamePrefix="react-select"
                                         styles={{
@@ -178,11 +213,8 @@ const Header = ({ states, categories, locator }) => {
                                                 ...provided,
                                                 borderRadius: "1rem",
                                                 padding: "0.3rem 0.5rem",
-                                                outline: "none",
                                                 fontWeight: "500",
                                                 width: "100%",
-                                                maxMenuHeight: "10px",
-                                                boxSizing: "border-box",
                                             }),
                                             placeholder: (provided) => ({
                                                 ...provided,
@@ -196,6 +228,7 @@ const Header = ({ states, categories, locator }) => {
                                         options={citiesData}
                                         isDisabled={!selectedState}
                                         onChange={cityChange}
+                                        value={selectedCity}
                                         placeholder="City"
                                         classNamePrefix="react-select"
                                         styles={{
@@ -203,10 +236,8 @@ const Header = ({ states, categories, locator }) => {
                                                 ...provided,
                                                 borderRadius: "1rem",
                                                 padding: "0.3rem 0.5rem",
-                                                outline: "none",
                                                 fontWeight: "500",
-                                                width: "100%", // Ensure full width
-                                                boxSizing: "border-box",
+                                                width: "100%",
                                             }),
                                             placeholder: (provided) => ({
                                                 ...provided,
@@ -221,7 +252,7 @@ const Header = ({ states, categories, locator }) => {
                                 <button className="bg-white border rounded-xl px-8 py-2" onClick={() => setLocationModal(false)}>
                                     Close
                                 </button>
-                                <button className="bg-primary text-white rounded-xl px-8 py-2">Save</button>
+                                <button className="bg-primary text-white rounded-xl px-8 py-2" onClick={handleSaveLocation}>Save</button>
                             </div>
                         </div>
                     </div>

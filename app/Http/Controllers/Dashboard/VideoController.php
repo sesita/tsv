@@ -124,13 +124,13 @@ class VideoController extends Controller
         if (!Auth::user()->admin)
             return;
 
-        $video = Video::find($request->id)->first();
+        $video = Video::find($request->id);
 
         if (!$video)
             return;
 
         if ($request->status == 'delete') {
-            Video::find($request->id)->delete();
+            $video->delete();
             return response()->json(['status' => 'success']);
         }
 
@@ -140,7 +140,7 @@ class VideoController extends Controller
         } else {
             $videoName = $request->video;
         }
-        $video = Video::find($video->id)->update([
+        $video = $video->update([
             'video' => $videoName,
             'status' => Status::fromName($request->status),
         ]);

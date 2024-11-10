@@ -36,10 +36,10 @@ class Video extends Model
 
     public static function getVideos(Request $request, $params = [])
     {
-        $order = $params['order'] ?? 'id';
-        $search = $params['search'] ?? null;
-        $related = $params['related'] ?? null;
-        $location = $params['location'] ?? false;
+        $order = $request->get("order");
+        $search = $request->get("search");
+        $related = $request->get("related");
+        $location = $request->get("location");
 
         $query = self::published()->withCount('views');
 
@@ -51,9 +51,9 @@ class Video extends Model
 
         if ($location) {
             $locationData = MainController::resolveLocation($request->ip());
-            if ($locationData->city) {
+            if (isset($locationData->city)) {
                 $query->where('location_id', $locationData->city);
-                if ($locationData->state) {
+                if (isset($locationData->state)) {
                     $query->orWhere('location_id', $locationData->state);
                 }
             }
