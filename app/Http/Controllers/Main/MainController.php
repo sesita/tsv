@@ -24,7 +24,7 @@ class MainController extends Controller
         $video = new Video();
 
         $data['user'] = Auth::user();
-        $data['location'] = $this->resolveLocation('174.216.209.125');
+        $data['location'] = $this->resolveLocation($request->ip());
         $data['locations'] = $this->getLocations();
         $data['categories'] = $this->getCategories();
         $data['videos'] = [
