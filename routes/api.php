@@ -42,6 +42,7 @@ Route::prefix('Main')->group(function () {
     Route::post('getVideos', [MainController::class, 'getVideos']);
     Route::get('getCategories', [MainController::class, 'getCategories']);
     Route::get('getLocations/{parent?}', [MainController::class, 'getLocations']);
+    Route::post('updateLocation', [MainController::class, 'updateLocation']);
     Route::post('addReview', [MainController::class, 'addReview']);
 });
 

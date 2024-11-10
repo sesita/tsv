@@ -183,7 +183,7 @@ const VideoUploadForm = ({ videoId, mode = 'user' }) => {
             if (res.data.url) {
                 window.open(res.data.url, "_self");
             } else {
-                navigate('/User/Videos');
+                navigate(mode == 'user' ? '/User/Videos' : '/Admin/Videos');
                 toast.success("Video uploaded successfully");
             }
 

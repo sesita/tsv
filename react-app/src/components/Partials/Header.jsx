@@ -15,7 +15,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { useState, useRef, useEffect } from "react";
 import { IoClose, IoLocationSharp } from "react-icons/io5";
 import { Tooltip as ReactTooltip } from "react-tooltip";
-import { BsChevronUp, BsGraphUpArrow } from "react-icons/bs";
+import { BsChevronUp, BsGlobeAmericas, BsGraphUpArrow } from "react-icons/bs";
 import { IoMdClose, IoMdNotifications, IoMdNotificationsOutline } from "react-icons/io";
 import { AiFillPlayCircle, AiFillSetting } from "react-icons/ai";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
@@ -128,24 +128,6 @@ const Header = ({ states, categories, locator }) => {
     };
 
 
-    useEffect(() => {
-        // Load location when the header loads
-        const loadLocation = async () => {
-            try {
-                const response = await axios.get("/api/get-location"); // Endpoint to fetch saved location
-                if (response.data) {
-                    setSelectedState(response.data.state);
-                    setSelectedCity(response.data.city);
-                    loadCitiesData(response.data.state);
-                }
-            } catch (error) {
-                console.error("Error loading location:", error);
-            }
-        };
-
-        loadLocation();
-    }, []);
-
     const loadCitiesData = async (stateValue) => {
         try {
             const res = await axios.get(`Main/getLocations/${stateValue}`);
@@ -166,7 +148,7 @@ const Header = ({ states, categories, locator }) => {
 
     const handleSaveLocation = async () => {
         try {
-            await axios.post('/api/update-location', {
+            await axios.post('Main/updateLocation', {
                 state: selectedState?.value,
                 city: selectedCity?.value,
             });
@@ -189,7 +171,7 @@ const Header = ({ states, categories, locator }) => {
                 <div ref={locationRef} className="bg-white lg:w-1/3 md:mt-32 p-6 rounded-3xl border mx-4 border-gray-200 shadow-[0px_0px_100px_1px_rgba(0,0,0,1)]">
                     <div className="flex flex-col text-center text-2xl">
                         <div className="sm:px-6 px-2">
-                            <div className="flex justify-between items-center mb-10">
+                            <div className="flex justify-between items-center mb-5">
                                 <span className="font-medium flex items-center gap-2 md:text-2xl">
                                     <IoLocationSharp className="text-primary text-4xl" />
                                     <div className="flex flex-col items-start">
@@ -199,7 +181,13 @@ const Header = ({ states, categories, locator }) => {
                                 </span>
                                 <IoClose className="text-3xl cursor-pointer" onClick={() => setLocationModal(false)} />
                             </div>
-                            <div className="flex gap-6 w-full mb-10">
+                            {locator && (
+                                <h2 className='font-medium text-gray-700 text-2xl flex items-center justify-center gap-2'>
+                                    {state.location?.city}
+                                    <BsGlobeAmericas className='mt-1' />
+                                </h2>
+                            )}
+                            <div className="flex gap-6 w-full mb-10 mt-5">
                                 <div className="flex-1">
                                     <Select
                                         options={states}

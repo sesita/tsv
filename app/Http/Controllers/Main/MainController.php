@@ -24,7 +24,7 @@ class MainController extends Controller
         $video = new Video();
 
         $data['user'] = Auth::user();
-        $data['location'] = $this->resolveLocation($request->ip());
+        $data['location'] = $this->resolveLocation('174.216.209.125');
         $data['locations'] = $this->getLocations();
         $data['categories'] = $this->getCategories();
         $data['videos'] = [
@@ -130,7 +130,6 @@ class MainController extends Controller
             'city' => 'required|string',
         ]);
     
-        // Assuming location update logic here, for example:
         Session::put('location', json_encode($request->only(['state', 'city'])));
         return response()->json(['message' => 'Location updated successfully']);
     }
