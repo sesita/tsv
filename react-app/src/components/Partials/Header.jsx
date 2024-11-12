@@ -10,7 +10,7 @@ import { CgProfile } from "react-icons/cg";
 import { VscSignOut } from "react-icons/vsc";
 import { FaInfoCircle } from "react-icons/fa";
 import Skeleton from "react-loading-skeleton";
-import { BiSolidVideoPlus } from "react-icons/bi";
+import { BiNews, BiSolidVideoPlus } from "react-icons/bi";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useState, useRef, useEffect } from "react";
 import { IoClose, IoLocationSharp } from "react-icons/io5";
@@ -385,6 +385,9 @@ const Header = ({ states, categories, locator }) => {
                         {state.user?.id ? (
                             <div className="flex gap-4 items-center relative">
                                 <div className="hidden md:flex gap-4 items-center relative">
+                                    <Link to={"/blogs"}>
+                                        <BiNews className="md:text-3xl text-xl" />
+                                    </Link>
                                     <IoLocationSharp className="md:text-3xl text-xl cursor-pointer mr-0 xl:mr-2" onClick={() => setLocationModal(!locationModal)} />
                                     <Link to={`/User/Upload`}>
                                         <BiSolidVideoPlus className="md:text-3xl text-xl cursor-pointer xl:mr-2" />
@@ -482,9 +485,9 @@ const Header = ({ states, categories, locator }) => {
                         <Link to="/User/Upload">
                             <BiSolidVideoPlus className="text-primary" />
                         </Link>
-                        <button type="button" onClick={() => setLocationModal(true)}>
-                            <IoLocationSharp className="text-primary" />
-                        </button>
+                        <Link to={"/blogs"}>
+                            <BiNews className="text-primary" />
+                        </Link>
                         <Link to="/User/Profile" className="relative">
                             <span className="absolute border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-primary text-white text-[11px] -top-1.5 -right-1.5">0</span>
                             <IoMdNotificationsOutline className="text-primary" />
