@@ -28,7 +28,7 @@ const Header = ({ states, categories, locator }) => {
     const location = useLocation();
 
     const prevScrollY = useRef(0);
-    const { state, dispatch } = usePrimary();
+    const { state } = usePrimary();
     const [searchText, setSearchText] = useState("");
     const [citiesData, setCitiesData] = useState([]);
     const [width, setWidth] = useState(window.innerWidth);
@@ -160,7 +160,7 @@ const Header = ({ states, categories, locator }) => {
     const Logout = async () => {
         await axios.post("Auth/Logout");
         localStorage.setItem("accessToken", null);
-        dispatch({ type: "SET_USER", payload: {} });
+        window.location.reload();
     };
 
     return (

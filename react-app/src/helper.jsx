@@ -1,4 +1,4 @@
-const domain = 'https://mytsv.com/api/';
+const domain = 'https://tsv.test/api/';
 
 export const storage = () => {
     const storage = domain.replace('api', 'storage/');
@@ -7,7 +7,7 @@ export const storage = () => {
 
 export const imageUrl = (url) => {
     if (url == null) {
-        return '/_Assets/not_found.jpg';
+        return '/assets/img/not-found.png';
     } else if (url.startsWith('http:') || url.startsWith('https:') || url.startsWith('blob:')) {
         return url;
     } else {

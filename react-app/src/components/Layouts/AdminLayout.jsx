@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Outlet, Link } from "react-router-dom";
-import { BiSolidCategory } from "react-icons/bi";
+import { BiNews, BiSolidCategory } from "react-icons/bi";
 import { FaCog, FaUserCog } from "react-icons/fa";
 import { MdOutlineVideoSettings } from "react-icons/md";
 import { HiMenu } from "react-icons/hi";
@@ -16,6 +16,7 @@ const AdminLayout = () => {
         { to: "/Admin/Videos", text: "Videos", icon: MdOutlineVideoSettings },
         { to: "/Admin/Users", text: "Users", icon: FaUserCog },
         { to: "/Admin/Categories", text: "Categories", icon: BiSolidCategory },
+        { to: "/Admin/Blogs", text: "Blogs", icon: BiNews },
         { to: "/Admin/Settings", text: "Settings", icon: FaCog },
     ];
 

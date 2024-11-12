@@ -508,21 +508,23 @@ const VideoUploadForm = ({ videoId, mode = 'user' }) => {
                     {isPayable && (
                         <span className="text-gray-700 font-bold text-3xl">${price}</span>
                     )}
-                    <button
-                        type="button"
-                        onClick={handleDelete}
-                        disabled={formState.isLoading}
-                        className="bg-primary py-4 px-12 text-white font-medium text-lg rounded-2xl disabled:opacity-50"
-                    >
-                        {formState.isLoading
-                            ? "Processing..."
-                            : "Delete"
-                        }
-                    </button>
+                    {mode !== 'create' && (
+                        <button
+                            type="button"
+                            onClick={handleDelete}
+                            disabled={formState.isLoading}
+                            className="bg-yellow-500 py-4 px-12 text-white font-medium text-lg rounded-2xl disabled:opacity-50"
+                        >
+                            {formState.isLoading
+                                ? "Processing..."
+                                : "Delete"
+                            }
+                        </button>
+                    )}
                     <button
                         type="submit"
                         disabled={formState.isLoading}
-                        className="bg-yellow-500 py-4 px-12 text-white font-medium text-lg rounded-2xl disabled:opacity-50"
+                        className="bg-primary py-4 px-12 text-white font-medium text-lg rounded-2xl disabled:opacity-50"
                     >
                         {formState.isLoading
                             ? "Processing..."

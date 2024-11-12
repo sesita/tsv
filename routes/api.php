@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\BlogController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Main\MainController;
@@ -44,6 +45,8 @@ Route::prefix('Main')->group(function () {
     Route::get('getLocations/{parent?}', [MainController::class, 'getLocations']);
     Route::post('updateLocation', [MainController::class, 'updateLocation']);
     Route::post('addReview', [MainController::class, 'addReview']);
+    Route::get('getBlogs', [MainController::class, 'getBlogs']);
+    Route::get('getBlog/{slug}', [MainController::class, 'getBlog']);
 });
 
 Route::prefix('Video')->group(function () {
@@ -64,6 +67,7 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'Dashboard'], function ($r
     Route::prefix('Admin')->group(function () {
         Route::apiResource('Users', UserController::class);
         Route::apiResource('Categories', CategoryController::class);
+        Route::apiResource('Blogs', BlogController::class);
         Route::get('getStats', [AdminController::class, 'getStats']);
         Route::get('Settings', [SettingController::class, 'index']);
         Route::post('Settings', [SettingController::class, 'updateSetting']);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Main;
 
+use App\Models\Blog;
 use App\Models\User;
 use App\Models\View;
 use App\Models\Video;
@@ -130,5 +131,13 @@ class MainController extends Controller
     
         Session::put('location', json_encode($request->only(['state', 'city'])));
         return response()->json(['message' => 'Location updated successfully']);
+    }
+    public function getBlogs(Request $request){
+        $blogs = Blog::latest()->paginate(9);
+        return response()->json($blogs);
+    }
+    public function getBlog($slug){
+        $blog = Blog::where('slug', $slug)->first();
+        return response()->json($blog);
     }
 }
