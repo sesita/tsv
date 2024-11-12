@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { CiSearch } from "react-icons/ci";
 import {
-    FaCog, FaGlobe, FaPalette, FaImage, FaSave, FaPhone,
-    FaMapMarkerAlt, FaEnvelope, FaUpload, FaTrash, FaCheck,
+    FaCog, FaGlobe, FaPalette, FaSave, FaPhone,
+    FaMapMarkerAlt, FaEnvelope, FaCheck,
     FaDesktop, FaMobile, FaTabletAlt, FaSpinner
 } from "react-icons/fa";
 import { toast } from 'react-toastify';
@@ -22,16 +22,13 @@ export default function Settings() {
         meta_title: '',
         meta_description: '',
         meta_keywords: '',
-        primary_color: '#DC2626',
-        logo: null,
-        favicon: null
+        primary_color: '#DC2626'
     });
     const [previewDevice, setPreviewDevice] = useState('desktop');
 
     const tabs = [
         { id: 'general', icon: FaGlobe, label: 'General' },
-        { id: 'appearance', icon: FaPalette, label: 'Appearance' },
-        { id: 'media', icon: FaImage, label: 'Media' }
+        { id: 'appearance', icon: FaPalette, label: 'Appearance' }
     ];
 
     const presetColors = [
@@ -66,33 +63,6 @@ export default function Settings() {
         setIsDirty(true);
     };
 
-    const handleMediaUpload = async (event, type) => {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('type', type);
-
-        try {
-            setIsLoading(true);
-            const response = await axios.post('/Dashboard/Admin/Settings/Upload-media', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
-
-            setSettings(prev => ({
-                ...prev,
-                [type]: response.data.url
-            }));
-            setIsDirty(true);
-            toast.success('File uploaded successfully');
-        } catch (error) {
-            toast.error('Failed to upload file');
-            console.error('Error uploading file:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     const handleSave = async () => {
         try {
@@ -114,14 +84,6 @@ export default function Settings() {
             setIsLoading(false);
         }
     };
-
-    const imageUrl = (url) => {
-        if (url == null) {
-            return '/assets/img/not-found.png';
-        } else {
-            return '/storage/' + url;
-        }
-    }
 
     return (
         <>
@@ -378,93 +340,6 @@ export default function Settings() {
                                             <div className="text-center text-gray-500">
                                                 Preview not available in demo
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Media Settings */}
-                            {activeTab === 'media' && (
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                    {/* Logo Upload */}
-                                    <div className="space-y-6">
-                                        <h2 className="text-2xl font-medium text-gray-800 mb-6">Logo</h2>
-                                        <div className="border-2 border-dashed rounded-xl p-8 text-center space-y-4">
-                                            {settings.logo ? (
-                                                <div className="relative">
-                                                    <img
-                                                        src={imageUrl(settings.logo)}
-                                                        alt="Logo preview"
-                                                        className="max-h-48 mx-auto"
-                                                    />
-                                                    <button
-                                                        onClick={() => handleSettingChange('logo', null)}
-                                                        className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600"
-                                                    >
-                                                        <FaTrash className="text-sm" />
-                                                    </button>
-                                                </div>
-                                            ) : (
-                                                <>
-                                                    <FaImage className="text-4xl text-gray-400 mx-auto" />
-                                                    <div className="space-y-2">
-                                                        <p className="text-gray-600">Upload your website logo</p>
-                                                        <p className="text-sm text-gray-500">Recommended size: 200x60px</p>
-                                                    </div>
-                                                </>
-                                            )}
-                                            <label className="inline-flex items-center gap-2 px-6 py-3 rounded-xl cursor-pointer transition-all text-white"
-                                                style={{ backgroundColor: settings.primary_color }}>
-                                                <FaUpload />
-                                                Choose Logo
-                                                <input
-                                                    type="file"
-                                                    className="hidden"
-                                                    accept="image/*"
-                                                    onChange={(e) => handleMediaUpload(e, 'logo')}
-                                                />
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    {/* Favicon Upload */}
-                                    <div className="space-y-6">
-                                        <h2 className="text-2xl font-medium text-gray-800 mb-6">Favicon</h2>
-                                        <div className="border-2 border-dashed rounded-xl p-8 text-center space-y-4">
-                                            {settings.favicon ? (
-                                                <div className="relative">
-                                                    <img
-                                                        src={imageUrl(settings.favicon)}
-                                                        alt="Favicon preview"
-                                                        className="max-h-32 mx-auto"
-                                                    />
-                                                    <button
-                                                        onClick={() => handleSettingChange('favicon', null)}
-                                                        className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600"
-                                                    >
-                                                        <FaTrash className="text-sm" />
-                                                    </button>
-                                                </div>
-                                            ) : (
-                                                <>
-                                                    <FaImage className="text-4xl text-gray-400 mx-auto" />
-                                                    <div className="space-y-2">
-                                                        <p className="text-gray-600">Upload your favicon</p>
-                                                        <p className="text-sm text-gray-500">Recommended size: 32x32px</p>
-                                                    </div>
-                                                </>
-                                            )}
-                                            <label className="inline-flex items-center gap-2 px-6 py-3 rounded-xl cursor-pointer transition-all text-white"
-                                                style={{ backgroundColor: settings.primary_color }}>
-                                                <FaUpload />
-                                                Choose Favicon
-                                                <input
-                                                    type="file"
-                                                    className="hidden"
-                                                    accept="image/*"
-                                                    onChange={(e) => handleMediaUpload(e, 'favicon')}
-                                                />
-                                            </label>
                                         </div>
                                     </div>
                                 </div>

@@ -55,7 +55,7 @@ const Signup = () => {
             {/* Left side - Signup Form */}
             <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-8 bg-white">
                 <Link to="/" className="mb-8">
-                    <img src={state.settings.logo} alt="Logo" className="w-40 h-auto" />
+                    <img src="/assets/logo.png" alt="Logo" className="w-40 h-auto" />
                 </Link>
 
                 <h2 className="text-4xl font-bold text-primary mb-6">Create an Account</h2>

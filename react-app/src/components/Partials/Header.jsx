@@ -21,7 +21,6 @@ import { AiFillPlayCircle, AiFillSetting } from "react-icons/ai";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDetectClickOutside } from "react-detect-click-outside";
 import { usePrimary } from "../../context/PrimaryContext";
-import { imageUrl } from "../../helper";
 
 const Header = ({ states, categories, locator }) => {
     const { query } = useParams();
@@ -251,7 +250,7 @@ const Header = ({ states, categories, locator }) => {
             <div className={`fixed top-0 left-0 w-full h-full bg-white z-30 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:hidden`}>
                 <div className="flex justify-between items-center p-4 border-b">
                     <Link to={"/"}>
-                        <img src={imageUrl(state.settings.logo)} alt="Logo" className="max-w-[120px]" />
+                        <img src="/assets/logo.png" alt="Logo" className="max-w-[120px]" />
                     </Link>
                     <button onClick={toggleSidebar} className="text-red-700 text-2xl">
                         <IoMdClose className="text-3xl" />
@@ -367,21 +366,10 @@ const Header = ({ states, categories, locator }) => {
                 <div className={`bg-white transition-all duration-300 ${!showCategories && "shadow-[0px_5px_10px_0px_rgba(0,0,0,0.1)]"}`}>
                     <header className="container flex justify-between items-center py-5">
                         {/* Logo Section */}
-                        {state.settings?.logo ? (
-                            <Link to="/">
-                                <img src={imageUrl(state.settings.logo)} alt="Logo" className="w-full hidden md:inline max-w-[150px]" />
-                                <img src={imageUrl(state.settings.favicon)} alt="Logo" className="w-full md:hidden max-w-[50px]" />
-                            </Link>
-                        ) : (
-                            <>
-                                <div className="hidden md:inline">
-                                    <Skeleton borderRadius={150} width={150} height={30} />
-                                </div>
-                                <div className="md:hidden">
-                                    <Skeleton borderRadius={150} width={30} height={30} />
-                                </div>
-                            </>
-                        )}
+                        <Link to="/">
+                            <img src="/assets/logo.png" alt="Logo" className="w-full hidden md:inline max-w-[150px]" />
+                            <img src="/assets/short-logo.png" alt="Logo" className="w-full md:hidden max-w-[50px]" />
+                        </Link>
 
                         {/* Search Bar Section */}
                         <div className="w-2/3 md:w-1/2 px-4">

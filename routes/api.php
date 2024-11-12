@@ -67,6 +67,5 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'Dashboard'], function ($r
         Route::get('getStats', [AdminController::class, 'getStats']);
         Route::get('Settings', [SettingController::class, 'index']);
         Route::post('Settings', [SettingController::class, 'updateSetting']);
-        Route::post('Settings/Upload-media', [SettingController::class, 'uploadMedia']);
     });
 });

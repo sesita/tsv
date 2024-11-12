@@ -146,4 +146,8 @@ class VideoController extends Controller
         ]);
         return response()->json(['status' => 'success']);
     }
+    public function destroy($id){
+        $video = Video::find($id)->delete();
+        return response()->json(['status'=> $video ? 'success' : 'error']);
+    }
 }

@@ -43,24 +43,4 @@ class SettingController extends Controller
         return response()->json(['message' => 'Settings updated successfully']);
     }
 
-    public function uploadMedia(Request $request)
-    {
-        $request->validate([
-            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'type' => 'required|in:logo,favicon'
-        ]);
-
-        $fileName = 'primary/' . $request->file->getClientOriginalName();
-        $request->file->move(public_path('storage/primary'), $fileName);
-
-        $setting = Setting::updateOrCreate(
-            ['name' => $request->type],
-            ['value' => $fileName]
-        );
-
-        return response()->json([
-            'url' => $fileName,
-            'message' => 'Image uploaded successfully'
-        ]);
-    }
 }

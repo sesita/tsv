@@ -247,6 +247,21 @@ const VideoUploadForm = ({ videoId, mode = 'user' }) => {
         );
     };
 
+    const handleDelete = async () => {
+        setFormState(prev => ({ ...prev, isLoading: true }));
+        const res = await axios.delete(`/Dashboard/Videos/${videoId}`, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        if (res.data.status === 'success') {
+            navigate(mode == 'user' ? '/User/Videos' : '/Admin/Videos');
+            toast.success("Video deleted successfully");
+        } else {
+            toast.error("Deleting video failed");
+        }
+    }
+
     return (
         <form onSubmit={handleSubmit}>
             {mode !== 'create' && (
@@ -494,15 +509,26 @@ const VideoUploadForm = ({ videoId, mode = 'user' }) => {
                         <span className="text-gray-700 font-bold text-3xl">${price}</span>
                     )}
                     <button
-                        type="submit"
+                        type="button"
+                        onClick={handleDelete}
                         disabled={formState.isLoading}
                         className="bg-primary py-4 px-12 text-white font-medium text-lg rounded-2xl disabled:opacity-50"
                     >
                         {formState.isLoading
                             ? "Processing..."
+                            : "Delete"
+                        }
+                    </button>
+                    <button
+                        type="submit"
+                        disabled={formState.isLoading}
+                        className="bg-yellow-500 py-4 px-12 text-white font-medium text-lg rounded-2xl disabled:opacity-50"
+                    >
+                        {formState.isLoading
+                            ? "Processing..."
                             : mode === 'create'
                                 ? (price > 0 ? "Pay Now" : "Publish Video")
-                                : "Update Video"
+                                : "Update"
                         }
                     </button>
                 </div>
