@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { FaFacebook, FaTwitter, FaLinkedin } from 'react-icons/fa';
 import axios from 'axios';
 import { imageUrl } from '../../helper';
 

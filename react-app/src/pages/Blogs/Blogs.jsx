@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import { FaFacebook, FaYoutube } from 'react-icons/fa';
 import Pagination from '../../components/Common/Pagination';
 import { imageUrl } from '../../helper';
 import { Link } from 'react-router-dom';
