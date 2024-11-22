@@ -6,6 +6,7 @@ import NumberFormatter from "../components/Common/FormatNumber";
 import { usePrimary } from "../context/PrimaryContext";
 import { Rating } from 'react-simple-star-rating';
 import VideoBox from "../components/Common/VideoBox";
+import { imageUrl } from "../helper";
 
 const Profile = () => {
     const [userInfo, setUserInfo] = useState();
@@ -62,9 +63,17 @@ const Profile = () => {
             <div className="sm:container -mt-28 mb-14">
                 <div className="shadow-lg rounded-2xl py-10 px-12 bg-white">
                     <div className="flex items-center gap-8 mb-6">
-                        <img className="w-40 h-40 rounded-full border-4 border-primary object-cover" src={userInfo?.avatar} alt="" />
+                        <picture>
+                            <source media="(max-width: 767px)" srcSet={imageUrl(userInfo.avatar?.mobile)} />
+                            <source media="(max-width: 1023px)" srcSet={imageUrl(userInfo.avatar?.tablet)} />
+                            <img
+                                src={imageUrl(userInfo.avatar?.default)}
+                                className="w-40 h-40 rounded-full border-4 border-primary object-cover"
+                                alt={userInfo?.name}
+                            />
+                        </picture>
                         <div>
-                            <h2 className="text-3xl font-semibold">{userInfo?.name}</h2>
+                            <h1 className="text-3xl font-semibold">{userInfo?.name}</h1>
                             <p className="text-sm font-medium mb-2">Content Creator</p>
                             <div className="flex items-center gap-4 -ml-1.5">
                                 <Rating SVGclassName="inline" readonly={true} allowFraction={true} initialValue={userInfo?.rating} />

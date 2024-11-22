@@ -47,18 +47,17 @@ class UserController extends Controller
             return response()->json(['status' => 'error', 'errors' => $validator->errors()], 400);
         }
 
+        $user = User::find($request->id);
+
         if ($request->hasFile('avatar')) {
             $request->validate([
                 'avatar' => 'mimes:jpg,hpeg,png,webp,gif|max:2048',
             ]);
-            $name = 'avatars/' . Str::random() . time() . '.webp';
-            $request->avatar->move(public_path('storage/avatars'), $name);
-            $avatar = $name;
+            $avatar = $user->generateAvatar($request->file('avatar'));
         } else {
-            $avatar = $request->avatar ?? null;
+            $avatar = $user->avatar ?? null;
         }
 
-        $user = User::find($request->id);
         if ($user) {
             $user->update([
                 'name' => $request->name,
@@ -66,7 +65,7 @@ class UserController extends Controller
                 'email' => $request->email,
                 'phone_number' => $request->phone_number,
                 'additional_info' => json_encode($request->additional_info),
-                'avatar' => $avatar,
+                'avatar' => json_encode($avatar),
             ]);
             return response()->json($user);
         }

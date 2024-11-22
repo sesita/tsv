@@ -5,6 +5,7 @@ import { useOutletContext, useParams } from "react-router-dom";
 import NumberFormatter from "../../components/Common/FormatNumber";
 import { usePrimary } from "../../context/PrimaryContext";
 import { Rating } from "react-simple-star-rating";
+import { imageUrl } from "../../helper";
 
 const ProfilePage = () => {
     const { setPageTitle } = useOutletContext();
@@ -41,7 +42,15 @@ const ProfilePage = () => {
     return (
         <div className="">
             <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 mb-6">
-                <img className="w-32 h-32 sm:w-40 sm:h-40 rounded-full border-4 border-primary object-cover" src={userInfo?.avatar} alt="" />
+                <picture>
+                    <source media="(max-width: 767px)" srcSet={imageUrl(userInfo.avatar?.mobile)} />
+                    <source media="(max-width: 1023px)" srcSet={imageUrl(userInfo.avatar?.tablet)} />
+                    <img
+                        src={imageUrl(userInfo.avatar?.default)}
+                        className="w-32 h-32 sm:w-40 sm:h-40 rounded-full border-4 border-primary object-cover"
+                        alt={userInfo?.name}
+                    />
+                </picture>
                 <div className="text-center sm:text-left">
                     <h2 className="text-2xl sm:text-3xl font-semibold">{userInfo?.name}</h2>
                     <p className="text-sm font-medium mb-2">Content Creator</p>

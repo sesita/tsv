@@ -6,6 +6,7 @@ import Pagination from "../../../../components/Common/Pagination";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FaUser } from "react-icons/fa";
+import { imageUrl } from "../../../../helper";
 
 const Users = () => {
     const [users, setUsers] = useState([]);
@@ -88,11 +89,15 @@ const Users = () => {
                                     <tr key={user.id} className="hover:bg-gray-50">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-4">
-                                                <img
-                                                    src={user.avatar}
-                                                    alt={user.name}
-                                                    className="w-10 h-10 rounded-full object-cover"
-                                                />
+                                                <picture>
+                                                    <source media="(max-width: 767px)" srcSet={imageUrl(user.avatar?.mobile)} />
+                                                    <source media="(max-width: 1023px)" srcSet={imageUrl(user.avatar?.tablet)} />
+                                                    <img
+                                                        src={imageUrl(user.avatar?.default)}
+                                                        className="w-10 h-10 rounded-full object-cover"
+                                                        alt={user?.name}
+                                                    />
+                                                </picture>
                                                 <span className="font-medium text-gray-900">{user.name}</span>
                                             </div>
                                         </td>

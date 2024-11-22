@@ -199,11 +199,15 @@ const SmartVideosList = ({ userRole = 'user' }) => {
                                             </th>
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-4">
-                                                    <img
-                                                        src={video?.user?.avatar}
-                                                        alt={video?.user?.name}
-                                                        className="w-10 h-10 rounded-full objdyj bfnjmdfymnjmhy yjrty65je5ke653mpo0nlk ect-cover"
-                                                    />
+                                                    <picture>
+                                                        <source media="(max-width: 767px)" srcSet={imageUrl(video.user?.avatar?.mobile)} />
+                                                        <source media="(max-width: 1023px)" srcSet={imageUrl(video.user?.avatar?.tablet)} />
+                                                        <img
+                                                            src={imageUrl(video.user?.avatar?.default)}
+                                                            className="w-10 h-10 rounded-full object-cover"
+                                                            alt={video.user?.name}
+                                                        />
+                                                    </picture>
                                                     <span className="font-medium text-gray-900">{video?.user?.name}</span>
                                                 </div>
                                             </td>

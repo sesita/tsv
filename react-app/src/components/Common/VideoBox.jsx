@@ -44,7 +44,17 @@ const VideoBox = ({ info }) => {
 
                 {/* Video Info */}
                 <div className="flex items-center gap-3 mx-2 sm:mx-0 relative">
-                    <img src={info.user?.avatar} className="rounded-full w-10 h-10 object-cover" alt="Avatar" />
+                    <picture>
+                        <source media="(max-width: 767px)" srcSet={imageUrl(info.user?.avatar?.mobile)} />
+                        <source media="(max-width: 1023px)" srcSet={imageUrl(info.user?.avatar?.tablet)} />
+                        <img
+                            src={imageUrl(info.user?.avatar?.default)}
+                            width={400}
+                            height={250}
+                            className="rounded-full w-10 h-10 object-cover"
+                            alt={info.user?.name}
+                        />
+                    </picture>
                     <div className="flex flex-col gap-0.5">
                         <h2 className="text-md text-[#232323] font-semibold line-clamp-2">
                             <Link to={`/${info.slug}`}>{info.title}</Link>

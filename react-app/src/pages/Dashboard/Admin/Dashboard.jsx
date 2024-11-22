@@ -24,6 +24,7 @@ import {
     FaExternalLinkSquareAlt
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { imageUrl } from '../../../helper';
 
 ChartJS.register(
     CategoryScale,
@@ -245,11 +246,15 @@ const Dashboard = () => {
                         <div key={index} className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg">
                             <div className="flex items-center space-x-4">
                                 {activity.user.avatar ? (
-                                    <img
-                                        src={activity.user.avatar}
-                                        alt={activity.user.name}
-                                        className="w-10 h-10 rounded-full"
-                                    />
+                                    <picture>
+                                        <source media="(max-width: 767px)" srcSet={imageUrl(activity.user?.avatar?.mobile)} />
+                                        <source media="(max-width: 1023px)" srcSet={imageUrl(activity.user?.avatar?.tablet)} />
+                                        <img
+                                            src={imageUrl(activity.user?.avatar?.default)}
+                                            className="w-10 h-10 rounded-full"
+                                            alt={activity.user?.name}
+                                        />
+                                    </picture>
                                 ) : (
                                     <FaUserCircle size={40} className="text-gray-400" />
                                 )}

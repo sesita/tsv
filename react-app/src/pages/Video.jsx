@@ -87,7 +87,15 @@ const Video = () => {
         return comments.map((comment, key) => (
             <div className="mt-5" key={key}>
                 <div className="flex items-center gap-3">
-                    <img src={comment.user.avatar} className="w-[50px] h-[50px] rounded-full" alt="User Avatar" />
+                    <picture>
+                        <source media="(max-width: 767px)" srcSet={imageUrl(comment.user?.avatar?.mobile)} />
+                        <source media="(max-width: 1023px)" srcSet={imageUrl(comment.user?.avatar?.tablet)} />
+                        <img
+                            src={imageUrl(video.user?.avatar?.default)}
+                            className="w-[50px] h-[50px] rounded-full"
+                            alt={comment.user?.name}
+                        />
+                    </picture>
                     <div>
                         <h3 className="flex items-center gap-2 font-bold">
                             {comment.user.name}
@@ -224,7 +232,15 @@ const Video = () => {
                             </div>
 
                             <Link to={`/Profile/${data?.user?.id}`} className="flex items-center gap-3 mb-8 mx-2 md:mx-0">
-                                <img src={data?.user?.avatar} alt="Avatar" className="w-[55px] h-[55px] rounded-full object-cover border-2 border-primary" />
+                                <picture>
+                                    <source media="(max-width: 767px)" srcSet={imageUrl(data.user?.avatar?.mobile)} />
+                                    <source media="(max-width: 1023px)" srcSet={imageUrl(data.user?.avatar?.tablet)} />
+                                    <img
+                                        src={imageUrl(data.user?.avatar?.default)}
+                                        className="w-[55px] h-[55px] rounded-full object-cover border-2 border-primary"
+                                        alt={data.user?.name}
+                                    />
+                                </picture>
                                 <div className="flex flex-col">
                                     <Rating SVGclassName="inline" size={17} readonly={true} initialValue={data?.user?.rating} />
                                     <h4 className="text-xl text-[#8B8B8B]">{data?.user?.name}</h4>

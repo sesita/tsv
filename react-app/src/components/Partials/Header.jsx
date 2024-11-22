@@ -21,6 +21,7 @@ import { AiFillPlayCircle, AiFillSetting } from "react-icons/ai";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDetectClickOutside } from "react-detect-click-outside";
 import { usePrimary } from "../../context/PrimaryContext";
+import { imageUrl } from "../../helper";
 
 const Header = ({ states, categories, locator }) => {
     const { query } = useParams();
@@ -261,7 +262,15 @@ const Header = ({ states, categories, locator }) => {
                         {state.user && (
                             <div className="flex justify-between items-center border-b mb-2 pb-4">
                                 <div className="flex">
-                                    <img src={state.user?.avatar} className="w-12 h-12 rounded-full mr-3 object-cover" />
+                                    <picture>
+                                        <source media="(max-width: 767px)" srcSet={imageUrl(state.user?.avatar?.mobile)} />
+                                        <source media="(max-width: 1023px)" srcSet={imageUrl(state.user?.avatar?.tablet)} />
+                                        <img
+                                            src={imageUrl(state.user?.avatar?.default)}
+                                            className="w-12 h-12 rounded-full mr-3 object-cover"
+                                            alt={state.user?.name}
+                                        />
+                                    </picture>
                                     <div className="block text-dark-white">
                                         <p className="text-sm text-gray-700"> Welcome, Back </p>
                                         <p className="text-lg font-medium">{state.user?.name}</p>

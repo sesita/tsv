@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FaUpload, FaTrash, FaCamera, FaSpinner } from 'react-icons/fa';
+import { imageUrl } from '../../helper';
 
 const AvatarUpload = ({ user, onAvatarChange, onAvatarDelete }) => {
     const [previewUrl, setPreviewUrl] = useState(null);
@@ -7,7 +8,7 @@ const AvatarUpload = ({ user, onAvatarChange, onAvatarDelete }) => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        setPreviewUrl(user.avatar)
+        setPreviewUrl(user.avatar?.default)
     }, [user]);
 
     const handleFileChange = async (event) => {
@@ -48,7 +49,7 @@ const AvatarUpload = ({ user, onAvatarChange, onAvatarDelete }) => {
         try {
             setIsUploading(true);
             const res = await onAvatarDelete();
-            setPreviewUrl(res.data?.avatar);
+            setPreviewUrl(res.data?.avatar?.default);
         } catch (err) {
             setError('Failed to delete image. Please try again.');
         } finally {
@@ -67,7 +68,7 @@ const AvatarUpload = ({ user, onAvatarChange, onAvatarDelete }) => {
                             }`}>
                             {previewUrl ? (
                                 <img
-                                    src={previewUrl}
+                                    src={imageUrl(previewUrl)}
                                     alt="User Avatar"
                                     className="w-full h-full object-cover"
                                 />

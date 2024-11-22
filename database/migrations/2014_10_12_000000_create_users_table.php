@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('phone_number')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->text('avatar')->nullable();
+            $table->json('avatar')->nullable();
             $table->json('additional_info')->nullable();
             $table->boolean('admin')->default(0);
             $table->softDeletes();
