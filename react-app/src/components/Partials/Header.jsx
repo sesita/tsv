@@ -416,7 +416,15 @@ const Header = ({ states, categories, locator }) => {
                                 <div ref={userRef}>
                                     <div className="md:flex items-center cursor-pointer hidden" onClick={showUserDropdown}>
                                         <span className="absolute md:hidden border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-primary text-white text-[11px] -top-1.5 -right-1">0</span>
-                                        <img src={state.user.avatar} className="rounded-full w-8 h-8 mr-2" alt={state.user.name} />
+                                        <picture>
+                                            <source media="(max-width: 767px)" srcSet={imageUrl(state.user?.avatar?.mobile)} />
+                                            <source media="(max-width: 1023px)" srcSet={imageUrl(state.user?.avatar?.tablet)} />
+                                            <img
+                                                src={imageUrl(state.user?.avatar?.default)}
+                                                className="rounded-full w-8 h-8 mr-2"
+                                                alt={state.user?.name}
+                                            />
+                                        </picture>
                                         <BsChevronUp className={!showDropdown && "rotate-180 hidden md:block"} />
                                     </div>
                                     <div className={`animate__animated animate__fadeIn shadow-[0px_0px_14px_0px_rgba(0,0,0,0.2)] rounded-xl py-4 px-5 absolute right-0 top-12 w-48 z-20 bg-white ${!showDropdown && "hidden"} `}>
@@ -510,7 +518,15 @@ const Header = ({ states, categories, locator }) => {
                             </Link>
                         ) : (
                             <button type="button" onClick={showUserDropdown}>
-                                <img src={state.user.avatar} className="rounded-full w-8 h-8" alt={state.user.name} />
+                                <picture>
+                                    <source media="(max-width: 767px)" srcSet={imageUrl(state.user?.avatar?.mobile)} />
+                                    <source media="(max-width: 1023px)" srcSet={imageUrl(state.user?.avatar?.tablet)} />
+                                    <img
+                                        src={imageUrl(state.user?.avatar?.default)}
+                                        className="rounded-full w-8 h-8"
+                                        alt={state.user?.name}
+                                    />
+                                </picture>
                             </button>
                         )}
                     </div>

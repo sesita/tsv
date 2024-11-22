@@ -85,7 +85,7 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
             'mobile' => [100, 100],
         ];
 
-        $folder = 'avatars/'.Str::slug($this->name.$this->id);
+        $folder = 'avatars/' . Str::slug($this->name . $this->id);
         $image->storeAs($folder, 'original.webp', 'public');
 
         $generatedImages = [];
@@ -111,6 +111,13 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     }
     public function getAvatarAttribute($value)
     {
+        if ($value == null) {
+            return [
+                'default' => "https://ui-avatars.com/api/?background=random&name={$this->name}&bold=true",
+                'tablet' => "https://ui-avatars.com/api/?background=random&name={$this->name}&bold=true",
+                'mobile' => 'https://ui-avatars.com/api/?background=random&name={$this->name}&bold=true'
+            ];
+        }
         return json_decode($value);
     }
     public function getLikesAttribute($value)
