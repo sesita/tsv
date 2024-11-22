@@ -46,7 +46,7 @@ const Blogs = () => {
                             </Link>
                             <p className="text-gray-600 mb-4">{blog.description || 'No description available.'}</p>
                             <div className="flex items-center justify-between">
-                                <Link to={`/blog/${blog.slug}`} className="text-primary hover:text-primary-dark transition-colors duration-300">
+                                <Link to={`/blogs/${blog.slug}`} className="text-primary hover:text-primary-dark transition-colors duration-300">
                                     Read More
                                 </Link>
                             </div>

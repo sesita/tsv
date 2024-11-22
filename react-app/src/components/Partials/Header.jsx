@@ -250,7 +250,7 @@ const Header = ({ states, categories, locator }) => {
             <div className={`fixed top-0 left-0 w-full h-full bg-white z-30 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:hidden`}>
                 <div className="flex justify-between items-center p-4 border-b">
                     <Link to={"/"}>
-                        <img src="/assets/logo.png" alt="Logo" className="max-w-[120px]" />
+                        <img src="/assets/logo.webp" width={120} height={50} alt="Logo" className="max-w-[120px]" />
                     </Link>
                     <button onClick={toggleSidebar} className="text-red-700 text-2xl">
                         <IoMdClose className="text-3xl" />
@@ -367,8 +367,8 @@ const Header = ({ states, categories, locator }) => {
                     <header className="container flex justify-between items-center py-5">
                         {/* Logo Section */}
                         <Link to="/">
-                            <img src="/assets/logo.png" alt="Logo" className="w-full hidden md:inline max-w-[150px]" />
-                            <img src="/assets/short-logo.png" alt="Logo" className="w-full md:hidden max-w-[50px]" />
+                            <img src="/assets/logo.webp" alt="Logo" width={120} height={50} className="w-full hidden md:inline max-w-[150px]" />
+                            <img src="/assets/short-logo.webp" alt="Logo" width={50} height={50} className="w-full md:hidden max-w-[50px]" />
                         </Link>
 
                         {/* Search Bar Section */}

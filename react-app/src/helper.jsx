@@ -7,7 +7,7 @@ export const storage = () => {
 
 export const imageUrl = (url) => {
     if (url == null) {
-        return '/assets/img/not-found.png';
+        return '/assets/img/not-found.webp';
     } else if (url.startsWith('http:') || url.startsWith('https:') || url.startsWith('blob:')) {
         return url;
     } else {

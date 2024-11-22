@@ -82,7 +82,7 @@ const Search = () => {
                                         </h4>
                                         <h1 className="md:text-5xl text-2xl font-semibold md:font-bold my-3 md:leading-tight opacity-95 text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] line-clamp-2">{video.title}</h1>
                                         <Link to={`/${video?.slug}`}>
-                                            <img src={"/assets/img/PlayIcon.png"} alt="Play Icon" className="inline w-full md:max-w-[100px] max-w-[45px]" />
+                                            <img src={"/assets/img/PlayIcon.webp"} alt="Play Icon" className="inline w-full md:max-w-[100px] max-w-[45px]" />
                                         </Link>
                                     </div>
                                 </div>

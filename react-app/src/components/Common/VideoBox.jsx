@@ -27,6 +27,8 @@ const VideoBox = ({ info }) => {
                             <source media="(max-width: 1023px)" srcSet={imageUrl(info.thumbnail?.tablet)} />
                             <img
                                 src={imageUrl(info.thumbnail?.default)}
+                                width={400}
+                                height={250}
                                 className="object-cover w-full h-full group-hover:opacity-40 transition-all duration-200"
                             />
                         </picture>

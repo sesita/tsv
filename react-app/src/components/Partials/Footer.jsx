@@ -11,7 +11,7 @@ export const Footer = () => {
             <div className="container mx-auto">
                 <div className="md:grid grid-cols-12 gap-12 mb-12 flex flex-col text-center md:text-start">
                     <div className="col-span-4">
-                        <img src="/assets/logo.png" alt="Logo" width="200" height="100" className="w-44 block mb-4 mx-auto md:mx-0" />
+                        <img src="/assets/logo.webp" alt="Logo" width="200" height="100" className="w-44 block mb-4 mx-auto md:mx-0" />
                         <p className="text-dark-gray mb-8 capitalize">
                             {state.settings.business_slogan} <br />
                             <span className="text-xs flex md:w-3/4 mt-1">Expanding from the Chicagoland area to a nationwide reach, we aim to simplify and enhance the way people find services and businesses in their local communities, fostering closer connections between businesses and residents.</span>
