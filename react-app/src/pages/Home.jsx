@@ -72,10 +72,10 @@ const Home = () => {
                                         className="absolute w-full h-full top-0 object-cover" alt={video.title} />
                                 </picture>
                                 <div className="container text-white relative">
-                                    <div className="w-[100%] max-w-[450px]">
-                                        <h4 className="md:text-3xl text-lg">
+                                    <div className="w-[100%] max-w-[450px] p-2 backdrop-saturate-200 backdrop-blur-md backdrop-brightness-75">
+                                        <h4 className="md:text-3xl text-lg flex items-center">
                                             <span className="drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">{video?.category?.title}</span>
-                                            <span className="text-[12px] bg-[#c70b0d] font-italic rounded-[4px] py-[4px] px-[12px] ml-5 font-semibold shadow-lg">Ads</span>{" "}
+                                            <span className="text-xs bg-[#c70b0d] font-italic rounded-[4px] py-[4px] px-[12px] ml-5 font-semibold shadow-lg">Ads</span>
                                         </h4>
                                         <h1 className="md:text-5xl text-2xl font-semibold md:font-bold my-3 md:leading-tight opacity-95 text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] line-clamp-2">{video.title}</h1>
                                         <Link to={`/${video?.slug}`}>

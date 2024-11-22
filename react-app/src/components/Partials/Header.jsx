@@ -384,15 +384,15 @@ const Header = ({ states, categories, locator }) => {
                         {/* User & Notification Section */}
                         {state.user?.id ? (
                             <div className="flex gap-4 items-center relative">
-                                <div className="hidden md:flex gap-4 items-center relative">
+                                <div className="hidden md:flex xl:gap-6 gap-3 items-center relative">
                                     <Link to={"/blogs"}>
                                         <BiNews className="md:text-3xl text-xl" />
                                     </Link>
-                                    <IoLocationSharp className="md:text-3xl text-xl cursor-pointer mr-0 xl:mr-2" onClick={() => setLocationModal(!locationModal)} />
+                                    <IoLocationSharp className="md:text-3xl text-xl cursor-pointer" onClick={() => setLocationModal(!locationModal)} />
                                     <Link to={`/User/Upload`}>
-                                        <BiSolidVideoPlus className="md:text-3xl text-xl cursor-pointer xl:mr-2" />
+                                        <BiSolidVideoPlus className="md:text-3xl text-xl cursor-pointer" />
                                     </Link>
-                                    <div className="relative cursor-pointer xl:mr-4" ref={notificationRef} onClick={() => setNotificationDropdown(!notificationDropdown)}>
+                                    <div className="relative cursor-pointer xl:mr-3" ref={notificationRef} onClick={() => setNotificationDropdown(!notificationDropdown)}>
                                         <span className="absolute border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-primary text-white text-[11px] -top-1.5 -right-1.5">0</span>
                                         <IoMdNotifications className="md:text-3xl text-xl " />
                                         {notificationDropdown && (
@@ -457,10 +457,13 @@ const Header = ({ states, categories, locator }) => {
                                         <Skeleton borderRadius={150} width={150} height={30} />
                                     </div>
                                 ) : (
-                                    <div className="md:gap-4 gap-1 items-center md:flex hidden">
-                                        <IoLocationSharp className="md:text-3xl text-xl cursor-pointer mr-0 xl:mr-4" onClick={() => setLocationModal(!locationModal)} />
+                                    <div className="xl:gap-6 gap-3 items-center md:flex hidden">
+                                        <Link to={"/blogs"}>
+                                            <BiNews className="md:text-3xl text-xl" />
+                                        </Link>
+                                        <IoLocationSharp className="md:text-3xl text-xl cursor-pointer" onClick={() => setLocationModal(!locationModal)} />
                                         <Link to={`/Auth/Login`} className="md:block hidden">
-                                            <BiSolidVideoPlus className="md:text-3xl text-xl cursor-pointer mr-6" />
+                                            <BiSolidVideoPlus className="md:text-3xl text-xl cursor-pointer mr-3" />
                                         </Link>
                                         <div className="md:flex gap-4 hidden">
                                             <Link to="/Auth/Register" className="bg-primary text-white md:text-sm text-xs md:px-7 px-4 md:py-2 py-1 rounded-full">

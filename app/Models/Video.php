@@ -171,14 +171,6 @@ class Video extends Model
 
     public function getThumbnailAttribute($value)
     {
-        if(!is_object(json_decode($value))) {
-            $value = [
-                'mobile' => $value,
-                'tablet' => $value,
-                'default' => $value,
-            ];
-            $value = json_encode($value);
-        }
         return json_decode($value);
     }
 
