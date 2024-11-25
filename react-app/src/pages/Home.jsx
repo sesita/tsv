@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 const Home = () => {
     const [sliderVideos, setSliderVideos] = useState([]);
     const [PopularVideos, setPopularVideos] = useState([]);
-    const [RecommendedVideos, setRecommendedVideos] = useState({});
+    const [recommendedVideos, setRecommendedVideos] = useState({ data: [], total: 0 });
 
     const fetchPopular = async () => {
         try {
@@ -33,26 +33,26 @@ const Home = () => {
         }
     };
 
-    const fetchRecommended = async (page) => {
-        const recommendedTags = JSON.parse(localStorage.getItem("recommendedTags"));
+    const fetchRecommended = async (page = 1) => {
+        const recommendedTags = JSON.parse(localStorage.getItem("recommendedTags")) || [];
         try {
             const response = await axios.get("Main/getVideos", {
-                params: {
-                    tag: recommendedTags ?? [],
-                    paginate: 4,
-                    page,
-                },
+                params: { tag: recommendedTags, paginate: 4, page },
             });
-            setRecommendedVideos(response.data);
+
+            setRecommendedVideos((prevState) => ({
+                data: [...prevState.data, ...(response.data?.data || [])],
+                total: response.data?.total || prevState.total,
+            }));
         } catch (error) {
-            toast.error('Caught Error')
+            toast.error("Failed to fetch recommended videos.");
         }
     };
 
     const fetchNextData = async () => {
-        const nextPage = Math.ceil(RecommendedVideos.data.length / 4) + 1;
+        const nextPage = Math.ceil(recommendedVideos.data.length / 4) + 1;
         await fetchRecommended(nextPage);
-        return RecommendedVideos;
+        return recommendedVideos;
     };
 
     useEffect(() => {
@@ -77,7 +77,9 @@ const Home = () => {
                                 <picture>
                                     <source media="(max-width: 767px)" srcSet={imageUrl(video.thumbnail?.mobile)} />
                                     <source media="(max-width: 1023px)" srcSet={imageUrl(video.thumbnail?.tablet)} />
-                                    <img src={imageUrl(video.thumbnail?.default)}
+                                    <img
+                                        loading="lazy"
+                                        src={imageUrl(video.thumbnail?.default)}
                                         className="absolute w-full h-full top-0 object-cover" alt={video.title} />
                                 </picture>
                                 <div className="container text-white relative">
@@ -157,12 +159,12 @@ const Home = () => {
                             View All Videos
                         </Link>
                     </h2>
-                    {RecommendedVideos?.data?.length > 0 ? (
+                    {recommendedVideos?.data?.length > 0 ? (
                         <>
                             <InfiniteScroll
-                                dataLength={RecommendedVideos.data.length}
+                                dataLength={recommendedVideos.data.length}
                                 next={fetchNextData}
-                                hasMore={RecommendedVideos.total > RecommendedVideos.data.length}
+                                hasMore={recommendedVideos.total > recommendedVideos.data.length}
                                 loader={Array(4)
                                     .fill()
                                     .map((_, key) => (
@@ -174,7 +176,7 @@ const Home = () => {
                                 refreshFunction={fetchRecommended}
                                 className="grid gap-6 xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 mb-16"
                             >
-                                {RecommendedVideos?.data?.map((video, key) => (
+                                {recommendedVideos?.data?.map((video, key) => (
                                     <VideoBox info={video} key={key} />
                                 ))}
                             </InfiniteScroll>

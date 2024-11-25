@@ -26,6 +26,7 @@ const VideoBox = ({ info }) => {
                             <source media="(max-width: 767px)" srcSet={imageUrl(info.thumbnail?.mobile)} />
                             <source media="(max-width: 1023px)" srcSet={imageUrl(info.thumbnail?.tablet)} />
                             <img
+                                loading="lazy"
                                 src={imageUrl(info.thumbnail?.default)}
                                 width={400}
                                 height={250}
@@ -48,6 +49,7 @@ const VideoBox = ({ info }) => {
                         <source media="(max-width: 767px)" srcSet={imageUrl(info.user?.avatar?.mobile)} />
                         <source media="(max-width: 1023px)" srcSet={imageUrl(info.user?.avatar?.tablet)} />
                         <img
+                            loading="lazy"
                             src={imageUrl(info.user?.avatar?.default)}
                             width={400}
                             height={250}

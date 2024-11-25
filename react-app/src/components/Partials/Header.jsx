@@ -46,7 +46,7 @@ const Header = ({ states, categories, locator }) => {
 
     const getUser = async () => {
         const user = await axios.get("Auth/Me");
-        setUser(user.data);
+        setUser(user.data)
     }
 
     const getLocation = async () => {
@@ -271,7 +271,7 @@ const Header = ({ states, categories, locator }) => {
                 </div>
                 <div className="p-4">
                     <div className="flex flex-col gap-2 mb-4">
-                        {user && (
+                        {user?.id && (
                             <div className="flex justify-between items-center border-b mb-2 pb-4">
                                 <div className="flex">
                                     <picture>
@@ -349,7 +349,7 @@ const Header = ({ states, categories, locator }) => {
                             </div>
                         </div>
                     </div>
-                    {user && (
+                    {user.id && (
                         <div className="flex flex-col p-2 gap-6 text-2xl font-medium text-gray-600 border-t mt-6 pt-6">
                             <Link to={"/User/Profile"} className="flex items-center gap-3">
                                 <CgProfile className="text-primary" />
@@ -481,7 +481,7 @@ const Header = ({ states, categories, locator }) => {
                             </div>
                         ) : (
                             <>
-                                {user ? (
+                                {user.id ? (
                                     <div className="md:block hidden">
                                         <Skeleton borderRadius={150} width={150} height={30} />
                                     </div>
@@ -524,7 +524,7 @@ const Header = ({ states, categories, locator }) => {
                             <span className="absolute border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-primary text-white text-[11px] -top-1.5 -right-1.5">0</span>
                             <IoMdNotificationsOutline className="text-primary" />
                         </Link>
-                        {!user ? (
+                        {!user.id ? (
                             <Link to={"/Auth/Login"}>
                                 <LuLogIn className="text-primary" />
                             </Link>
