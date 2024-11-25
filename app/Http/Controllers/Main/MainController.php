@@ -20,19 +20,8 @@ class MainController extends Controller
 {
     public function primary(Request $request)
     {
-        $data['user'] = Auth::user() ?? null;    
-
-        $video = new Video();
-
-        $data['user'] = Auth::user();
-        $data['location'] = $this->resolveLocation($request->ip());
         $data['locations'] = $this->getLocations();
         $data['categories'] = $this->getCategories();
-        $data['videos'] = [
-            'slider' => $video->getVideos($request),
-            'popular' => $video->getVideos($request),
-            'recommended' => $video->getVideos($request),
-        ];
         $data['settings'] = Setting::all()->pluck('value', 'name');
 
         return response($data);
@@ -80,8 +69,8 @@ class MainController extends Controller
         $res['reviews'] = Review::where('user_id', $res['user']->id)->latest()->get();
         return response($res);
     }
-    public static function resolveLocation($ip){
-        $location = Session::get('location') ? json_decode(Session::get('location')) : Location::location($ip);
+    public static function resolveLocation(Request $request){
+        $location = Session::get('location') ? json_decode(Session::get('location')) : Location::location($request->ip());
 
         if ($location) {
             Session::put('location', json_encode($location));

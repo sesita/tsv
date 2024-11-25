@@ -177,12 +177,15 @@ const Video = () => {
                     <div className="max-h-[800px] md:h-[500px] h-[220px] w-full flex justify-center items-center relative">
                         {loading ? (
                             <>
-                                <picture>
-                                    <source media="(max-width: 767px)" srcSet={imageUrl(video.thumbnail?.mobile)} />
-                                    <source media="(max-width: 1023px)" srcSet={imageUrl(video.thumbnail?.tablet)} />
-                                    <img src={imageUrl(video.thumbnail?.default)}
-                                        className="w-full h-full object-cover md:rounded-2xl" alt={video.title} />
-                                </picture>
+                                {video.thumbnail && (
+
+                                    <picture>
+                                        <source media="(max-width: 767px)" srcSet={imageUrl(video.thumbnail?.mobile)} />
+                                        <source media="(max-width: 1023px)" srcSet={imageUrl(video.thumbnail?.tablet)} />
+                                        <img src={imageUrl(video.thumbnail?.default)}
+                                            className="w-full h-full object-cover md:rounded-2xl" alt={video.title} />
+                                    </picture>
+                                )}
                                 <button className="absolute bg-primary text-white text-[65px] p-5 rounded-full">{loading ? <AiOutlineLoading className="animate-spin" /> : <IoMdPlay className="pl-2" />}</button>
                             </>
                         ) : (

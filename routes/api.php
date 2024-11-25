@@ -33,15 +33,15 @@ Route::group(['middleware' => 'api', 'prefix' => 'Auth'], function ($router) {
     Route::post('Login', [AuthController::class, 'login']);
     Route::post('Register', [AuthController::class, 'register']);
     Route::post('Logout', [AuthController::class, 'logout']);
-    Route::post('Me', [AuthController::class, 'me']);
+    Route::get('Me', [AuthController::class, 'me']);
 });
 
 Route::prefix('Main')->group(function () {
     Route::get('primary', [MainController::class, 'primary']);
     Route::get('getUser', [MainController::class, 'getUser']);
-    Route::get('getTags', [MainController::class, 'getTags']);
-    Route::post('getVideos', [MainController::class, 'getVideos']);
+    Route::get('getVideos', [MainController::class, 'getVideos']);
     Route::get('getCategories', [MainController::class, 'getCategories']);
+    Route::get('getLocation', [MainController::class, 'resolveLocation']);
     Route::get('getLocations/{parent?}', [MainController::class, 'getLocations']);
     Route::post('updateLocation', [MainController::class, 'updateLocation']);
     Route::post('addReview', [MainController::class, 'addReview']);

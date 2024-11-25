@@ -6,19 +6,32 @@ import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 import { Link } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import VideoBox from "../components/Common/VideoBox";
 import { Autoplay, EffectFade, Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { PrimaryContext } from "../context/PrimaryContext";
 import { imageUrl } from "../helper";
+import { toast } from "react-toastify";
 
 const Home = () => {
-    const { state } = useContext(PrimaryContext);
     const [sliderVideos, setSliderVideos] = useState([]);
     const [PopularVideos, setPopularVideos] = useState([]);
     const [RecommendedVideos, setRecommendedVideos] = useState({});
+
+    const fetchPopular = async () => {
+        try {
+            const response = await axios.get("Main/getVideos", {
+                params: {
+                    order: 'popular'
+                },
+            });
+            setPopularVideos(response.data);
+            setSliderVideos(response.data);
+        } catch (error) {
+            toast.error('Caught Error')
+        }
+    };
 
     const fetchRecommended = async (page) => {
         const recommendedTags = JSON.parse(localStorage.getItem("recommendedTags"));
@@ -30,12 +43,9 @@ const Home = () => {
                     page,
                 },
             });
-            setRecommendedVideos((RecommendedVideos) => ({
-                data: [...RecommendedVideos.data, ...(response.data?.data || [])],
-                total: response.data?.total || 0,
-            }));
+            setRecommendedVideos(response.data);
         } catch (error) {
-            console.error("Error fetching data:", error);
+            toast.error('Caught Error')
         }
     };
 
@@ -46,10 +56,9 @@ const Home = () => {
     };
 
     useEffect(() => {
-        setSliderVideos(state.videos?.slider);
-        setPopularVideos(state.videos?.popular);
-        setRecommendedVideos(state.videos?.recommended);
-    }, [state]);
+        fetchPopular();
+        fetchRecommended(1);
+    }, []);
 
     return (
         <>

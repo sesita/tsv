@@ -50,7 +50,7 @@ class Video extends Model
         }
 
         if ($location) {
-            $locationData = MainController::resolveLocation($request->ip());
+            $locationData = MainController::resolveLocation($request);
             if (isset($locationData->city)) {
                 $query->where('location_id', $locationData->city);
                 if (isset($locationData->state)) {

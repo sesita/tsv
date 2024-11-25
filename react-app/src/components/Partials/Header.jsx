@@ -20,16 +20,16 @@ import { IoMdClose, IoMdNotifications, IoMdNotificationsOutline } from "react-ic
 import { AiFillPlayCircle, AiFillSetting } from "react-icons/ai";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDetectClickOutside } from "react-detect-click-outside";
-import { usePrimary } from "../../context/PrimaryContext";
 import { imageUrl } from "../../helper";
 
 const Header = ({ states, categories, locator }) => {
     const { query } = useParams();
     const navigate = useNavigate();
-    const location = useLocation();
+    const url = useLocation();
 
     const prevScrollY = useRef(0);
-    const { state } = usePrimary();
+    const [user, setUser] = useState({});
+    const [location, setLocation] = useState({});
     const [searchText, setSearchText] = useState("");
     const [citiesData, setCitiesData] = useState([]);
     const [width, setWidth] = useState(window.innerWidth);
@@ -44,7 +44,19 @@ const Header = ({ states, categories, locator }) => {
     const notificationRef = useDetectClickOutside({ onTriggered: () => setNotificationDropdown(false) });
     const locationRef = useRef(null);
 
+    const getUser = async () => {
+        const user = await axios.get("Auth/Me");
+        setUser(user.data);
+    }
+
+    const getLocation = async () => {
+        const location = await axios.get("Main/getLocation");
+        setLocation(location.data);
+    }
+
     useEffect(() => {
+        getUser();
+        getLocation();
         window.addEventListener("scroll", handleScroll);
         window.addEventListener("resize", handleWindowSizeChange);
         document.addEventListener("mousedown", handleClickOutside);
@@ -56,7 +68,7 @@ const Header = ({ states, categories, locator }) => {
 
     useEffect(() => {
         setIsSidebarOpen(false);
-    }, [location]);
+    }, [url]);
 
     const handleWindowSizeChange = () => {
         setWidth(window.innerWidth);
@@ -183,7 +195,7 @@ const Header = ({ states, categories, locator }) => {
                             </div>
                             {locator && (
                                 <h2 className='font-medium text-gray-700 text-2xl flex items-center justify-center gap-2'>
-                                    {state.location?.city}
+                                    {location?.city}
                                     <BsGlobeAmericas className='mt-1' />
                                 </h2>
                             )}
@@ -259,21 +271,21 @@ const Header = ({ states, categories, locator }) => {
                 </div>
                 <div className="p-4">
                     <div className="flex flex-col gap-2 mb-4">
-                        {state.user && (
+                        {user && (
                             <div className="flex justify-between items-center border-b mb-2 pb-4">
                                 <div className="flex">
                                     <picture>
-                                        <source media="(max-width: 767px)" srcSet={imageUrl(state.user?.avatar?.mobile)} />
-                                        <source media="(max-width: 1023px)" srcSet={imageUrl(state.user?.avatar?.tablet)} />
+                                        <source media="(max-width: 767px)" srcSet={imageUrl(user?.avatar?.mobile)} />
+                                        <source media="(max-width: 1023px)" srcSet={imageUrl(user?.avatar?.tablet)} />
                                         <img
-                                            src={imageUrl(state.user?.avatar?.default)}
+                                            src={imageUrl(user?.avatar?.default)}
                                             className="w-12 h-12 rounded-full mr-3 object-cover"
-                                            alt={state.user?.name}
+                                            alt={user?.name}
                                         />
                                     </picture>
                                     <div className="block text-dark-white">
                                         <p className="text-sm text-gray-700"> Welcome, Back </p>
-                                        <p className="text-lg font-medium">{state.user?.name}</p>
+                                        <p className="text-lg font-medium">{user?.name}</p>
                                     </div>
                                 </div>
                                 <Link to={"/User/Profile"} className="h-full text-2xl">
@@ -337,7 +349,7 @@ const Header = ({ states, categories, locator }) => {
                             </div>
                         </div>
                     </div>
-                    {state.user && (
+                    {user && (
                         <div className="flex flex-col p-2 gap-6 text-2xl font-medium text-gray-600 border-t mt-6 pt-6">
                             <Link to={"/User/Profile"} className="flex items-center gap-3">
                                 <CgProfile className="text-primary" />
@@ -391,7 +403,7 @@ const Header = ({ states, categories, locator }) => {
                         </div>
 
                         {/* User & Notification Section */}
-                        {state.user?.id ? (
+                        {user?.id ? (
                             <div className="flex gap-4 items-center relative">
                                 <div className="hidden md:flex xl:gap-6 gap-3 items-center relative">
                                     <Link to={"/blogs"}>
@@ -417,18 +429,18 @@ const Header = ({ states, categories, locator }) => {
                                     <div className="md:flex items-center cursor-pointer hidden" onClick={showUserDropdown}>
                                         <span className="absolute md:hidden border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-primary text-white text-[11px] -top-1.5 -right-1">0</span>
                                         <picture>
-                                            <source media="(max-width: 767px)" srcSet={imageUrl(state.user?.avatar?.mobile)} />
-                                            <source media="(max-width: 1023px)" srcSet={imageUrl(state.user?.avatar?.tablet)} />
+                                            <source media="(max-width: 767px)" srcSet={imageUrl(user?.avatar?.mobile)} />
+                                            <source media="(max-width: 1023px)" srcSet={imageUrl(user?.avatar?.tablet)} />
                                             <img
-                                                src={imageUrl(state.user?.avatar?.default)}
+                                                src={imageUrl(user?.avatar?.default)}
                                                 className="rounded-full w-8 h-8 mr-2"
-                                                alt={state.user?.name}
+                                                alt={user?.name}
                                             />
                                         </picture>
                                         <BsChevronUp className={!showDropdown && "rotate-180 hidden md:block"} />
                                     </div>
                                     <div className={`animate__animated animate__fadeIn shadow-[0px_0px_14px_0px_rgba(0,0,0,0.2)] rounded-xl py-4 px-5 absolute right-0 top-12 w-48 z-20 bg-white ${!showDropdown && "hidden"} `}>
-                                        <span className="font-medium text-xl text-primary-dark capitalize">{state.user.name}</span>
+                                        <span className="font-medium text-xl text-primary-dark capitalize">{user.name}</span>
                                         <hr className="my-2.5" />
                                         <Link to={`/User/Profile`} className="flex items-center gap-3 text-blue-900 text-sm mb-2">
                                             <CgProfile className="text-primary text-lg" />
@@ -455,7 +467,7 @@ const Header = ({ states, categories, locator }) => {
                                             <AiFillSetting className="text-primary text-lg" />
                                             Settings
                                         </Link>
-                                        {state.user?.admin === 1 && (
+                                        {user?.admin === 1 && (
                                             <>
                                                 <hr className="my-3" />
                                                 <Link to={`/Admin`} className="flex items-center gap-3 text-blue-900 text-sm mb-1">
@@ -469,7 +481,7 @@ const Header = ({ states, categories, locator }) => {
                             </div>
                         ) : (
                             <>
-                                {state.user ? (
+                                {user ? (
                                     <div className="md:block hidden">
                                         <Skeleton borderRadius={150} width={150} height={30} />
                                     </div>
@@ -512,19 +524,19 @@ const Header = ({ states, categories, locator }) => {
                             <span className="absolute border-[2px] border-white rounded-full w-5 h-5 flex justify-center items-center bg-primary text-white text-[11px] -top-1.5 -right-1.5">0</span>
                             <IoMdNotificationsOutline className="text-primary" />
                         </Link>
-                        {!state.user ? (
+                        {!user ? (
                             <Link to={"/Auth/Login"}>
                                 <LuLogIn className="text-primary" />
                             </Link>
                         ) : (
                             <button type="button" onClick={showUserDropdown}>
                                 <picture>
-                                    <source media="(max-width: 767px)" srcSet={imageUrl(state.user?.avatar?.mobile)} />
-                                    <source media="(max-width: 1023px)" srcSet={imageUrl(state.user?.avatar?.tablet)} />
+                                    <source media="(max-width: 767px)" srcSet={imageUrl(user?.avatar?.mobile)} />
+                                    <source media="(max-width: 1023px)" srcSet={imageUrl(user?.avatar?.tablet)} />
                                     <img
-                                        src={imageUrl(state.user?.avatar?.default)}
+                                        src={imageUrl(user?.avatar?.default)}
                                         className="rounded-full w-8 h-8"
-                                        alt={state.user?.name}
+                                        alt={user?.name}
                                     />
                                 </picture>
                             </button>
