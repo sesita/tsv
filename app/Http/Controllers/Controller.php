@@ -19,9 +19,9 @@ class Controller extends BaseController
         if (!is_file($this->templateFile)) return '<h1>Something Went Wrong...</h1>';
         $template = file_get_contents($this->templateFile);
 
-        $title = 'MyTSV';
-        $description = 'Videos';
-        $keywords = 'videos';
+        $title = 'Meet Your Town Specialists - MyTSV';
+        $description = 'Search for your local specialists in various fields, read reviews and specialists an appointment online.';
+        $keywords = 'videos, specialists, local, town, search, reviews, appointment, online, mytsv, meet your town specialists';
         $image = 'mytsv.com';
 
         $placeHolders = '
