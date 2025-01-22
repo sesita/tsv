@@ -70,28 +70,28 @@ const Signup = () => {
 
                 <form onSubmit={handleSignup} className="w-full max-w-md">
                     <div className="mb-4 relative">
-                        <input type="text" name="channelName" required className="w-full px-3 py-2 border-b-2 border-gray-300 focus:border-primary outline-none transition-all peer placeholder-transparent" placeholder="Channel Name" />
-                        <label className="absolute left-3 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Channel Name</label>
+                        <input type="text" name="channelName" required className="w-full px-3 py-2 border-b-2 border-gray-300 focus:border-primary outline-none transition-all peer placeholder-transparent" />
+                        <label className="absolute left-3 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5">Channel Name</label>
                     </div>
 
                     <div className="mb-4 relative">
-                        <input type="text" name="name" required className="w-full px-3 py-2 border-b-2 border-gray-300 focus:border-primary outline-none transition-all peer placeholder-transparent" placeholder="Full Name" />
-                        <label className="absolute left-3 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Full Name</label>
+                        <input type="text" name="name" required className="w-full px-3 py-2 border-b-2 border-gray-300 focus:border-primary outline-none transition-all peer placeholder-transparent" />
+                        <label className="absolute left-3 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5">Name</label>
                     </div>
 
                     <div className="mb-4 relative">
-                        <input type="email" name="email" required className="w-full px-3 py-2 border-b-2 border-gray-300 focus:border-primary outline-none transition-all peer placeholder-transparent" placeholder="Email" autoComplete="off" autoFocus="off" />
-                        <label className="absolute left-3 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Email</label>
+                        <input type="email" name="email" required className="w-full px-3 py-2 border-b-2 border-gray-300 focus:border-primary outline-none transition-all peer placeholder-transparent" />
+                        <label className="absolute left-3 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5">Email</label>
                     </div>
 
                     <div className="mb-4 relative">
-                        <input type="password" name="password" required className="w-full px-3 py-2 border-b-2 border-gray-300 focus:border-primary outline-none transition-all peer placeholder-transparent" placeholder="Password" />
-                        <label className="absolute left-3 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Password</label>
+                        <input type="password" name="password" required className="w-full px-3 py-2 border-b-2 border-gray-300 focus:border-primary outline-none transition-all peer placeholder-transparent" />
+                        <label className="absolute left-3 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5">Password</label>
                     </div>
 
                     <div className="mb-6 relative">
-                        <input type="password" name="confirmPassword" required className="w-full px-3 py-2 border-b-2 border-gray-300 focus:border-primary outline-none transition-all peer placeholder-transparent" placeholder="Confirm Password" />
-                        <label className="absolute left-3 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Confirm Password</label>
+                        <input type="password" name="confirmPassword" required className="w-full px-3 py-2 border-b-2 border-gray-300 focus:border-primary outline-none transition-all peer placeholder-transparent" />
+                        <label className="absolute left-3 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5">Confirm Password</label>
                     </div>
 
                     <div className="flex items-center mb-6">

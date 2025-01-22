@@ -1,5 +1,4 @@
 import "swiper/css";
-import axios from "axios";
 import "swiper/css/scrollbar";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -11,25 +10,24 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import VideoBox from "../components/Common/VideoBox";
 import { Autoplay, EffectFade, Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 import InfiniteScroll from "react-infinite-scroll-component";
+import axios from "axios";
 import { imageUrl } from "../helper";
 import { toast } from "react-toastify";
 
 const Home = () => {
     const [sliderVideos, setSliderVideos] = useState([]);
-    const [PopularVideos, setPopularVideos] = useState([]);
+    const [popularVideos, setPopularVideos] = useState([]);
     const [recommendedVideos, setRecommendedVideos] = useState({ data: [], total: 0 });
 
     const fetchPopular = async () => {
         try {
             const response = await axios.get("Main/getVideos", {
-                params: {
-                    order: 'popular'
-                },
+                params: { order: 'popular' },
             });
             setPopularVideos(response.data);
             setSliderVideos(response.data);
         } catch (error) {
-            toast.error('Caught Error')
+            toast.error('Caught Error');
         }
     };
 
@@ -39,7 +37,6 @@ const Home = () => {
             const response = await axios.get("Main/getVideos", {
                 params: { tag: recommendedTags, paginate: 4, page },
             });
-
             setRecommendedVideos((prevState) => ({
                 data: [...prevState.data, ...(response.data?.data || [])],
                 total: response.data?.total || prevState.total,
@@ -63,34 +60,35 @@ const Home = () => {
     return (
         <>
             <Swiper
-                autoplay={{
-                    delay: 1500,
-                    disableOnInteraction: false,
-                }}
-                effect={"fade"}
+                autoplay={{ delay: 1500, disableOnInteraction: false }}
+                effect="fade"
                 modules={[Autoplay, EffectFade]}
             >
                 {sliderVideos?.data ? (
                     sliderVideos.data?.map((video) => (
                         <SwiperSlide key={video.id}>
-                            <section className="md:pt-16 pt-8 md:pb-32 pb-28">
+                            <section className="relative pt-8 pb-28 md:pt-16 md:pb-32">
                                 <picture>
                                     <source media="(max-width: 767px)" srcSet={imageUrl(video.thumbnail?.mobile)} />
                                     <source media="(max-width: 1023px)" srcSet={imageUrl(video.thumbnail?.tablet)} />
                                     <img
                                         loading="lazy"
                                         src={imageUrl(video.thumbnail?.default)}
-                                        className="absolute w-full h-full top-0 object-cover" alt={video.title} />
+                                        className="absolute top-0 w-full h-full object-cover"
+                                        alt={video.title}
+                                    />
                                 </picture>
-                                <div className="container text-white relative">
-                                    <div className="w-[100%] max-w-[450px] p-2">
-                                        <h4 className="md:text-3xl text-lg flex items-center">
+                                <div className="relative text-white container">
+                                    <div className="w-full max-w-[450px] p-2">
+                                        <h4 className="flex items-center text-lg md:text-3xl">
                                             <span className="drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">{video?.category?.title}</span>
-                                            <span className="text-xs bg-[#c70b0d] font-italic rounded-[4px] py-[4px] px-[12px] ml-5 font-semibold shadow-lg">Ads</span>
+                                            <span className="ml-5 py-[4px] px-[12px] text-xs font-semibold rounded-[4px] bg-[#c70b0d] shadow-lg">Ads</span>
                                         </h4>
-                                        <h1 className="md:text-5xl text-2xl font-semibold md:font-bold my-3 md:leading-tight opacity-95 text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] line-clamp-2">{video.title}</h1>
+                                        <h1 className="my-3 text-2xl font-semibold md:font-bold md:text-5xl md:leading-tight text-white opacity-95 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
+                                            {video.title}
+                                        </h1>
                                         <Link to={`/${video?.slug}`}>
-                                            <img src={"/assets/img/PlayIcon.webp"} width={50} height={50} alt="Play Icon" className="inline w-full md:max-w-[100px] max-w-[45px]" />
+                                            <img src={"/assets/img/PlayIcon.webp"} width={50} height={50} alt="Play Icon" className="w-full inline md:max-w-[100px] max-w-[45px]" />
                                         </Link>
                                     </div>
                                 </div>
@@ -101,96 +99,74 @@ const Home = () => {
                     <Skeleton className="rounded-2xl sm:h-[30rem] h-[19rem] -top-2" />
                 )}
             </Swiper>
+
             <div className="sm:container">
-                <div className="relative shadow-[0px_0px_14px_0px_rgba(0,0,0,0.25)] sm:pt-8 pt-6 sm:rounded-3xl sm:px-10 -mt-24 mb-16 z-10 bg-white pb-10">
-                    <h2 className="sm:text-4xl sm:font-normal font-medium text-lg sm:mb-8 mb-6 px-4 sm:px-0 flex justify-between items-center sm:block">
+                <div className="relative z-10 mb-16 pb-10 shadow-[0px_0px_14px_0px_rgba(0,0,0,0.25)] bg-white -mt-24 sm:rounded-3xl sm:pt-8 sm:px-10">
+                    <h2 className="flex items-center justify-between px-4 mb-6 text-lg font-medium sm:mb-8 sm:block sm:px-0 sm:text-4xl sm:font-normal">
                         Most Popular
-                        <Link to={""} className="text-sm ml-4 font-normal text-primary">
-                            View All Videos
-                        </Link>
+                        <Link to={""} className="ml-4 text-sm font-normal text-primary">View All Videos</Link>
                     </h2>
 
                     <div className="mb-5">
                         <Swiper
                             breakpoints={{
-                                640: {
-                                    slidesPerView: 2,
-                                    spaceBetween: 20,
-                                },
-                                1024: {
-                                    slidesPerView: 3,
-                                    spaceBetween: 20,
-                                },
-                                1280: {
-                                    slidesPerView: 4,
-                                    spaceBetween: 20,
-                                },
+                                640: { slidesPerView: 2, spaceBetween: 20 },
+                                1024: { slidesPerView: 3, spaceBetween: 20 },
+                                1280: { slidesPerView: 4, spaceBetween: 20 },
                             }}
-                            pagination={{
-                                el: ".swip-pagination",
-                            }}
+                            pagination={{ el: ".swip-pagination" }}
                             modules={[Navigation, Pagination, Scrollbar, A11y]}
                         >
-                            {PopularVideos?.data?.length > 0 ? (
-                                PopularVideos?.data?.map((video) => (
+                            {popularVideos?.data?.length > 0 ? (
+                                popularVideos.data.map((video) => (
                                     <SwiperSlide key={video.id}>
                                         <VideoBox info={video} />
                                     </SwiperSlide>
                                 ))
                             ) : (
-                                <div className="grid gap-6 xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 mb-16">
-                                    {Array(4)
-                                        .fill()
-                                        .map((_, key) => (
-                                            <div className="flex flex-col gap-2" key={key}>
-                                                <Skeleton height={200} borderRadius={15} className="rounded-2xl" />
-                                                <Skeleton height={40} borderRadius={15} className="rounded-2xl" />
-                                            </div>
-                                        ))}
-                                </div>
-                            )}
-                        </Swiper>
-                        <span className="swip-pagination flex justify-center mt-6 fill-primary"></span>
-                    </div>
-
-                    <h2 className="sm:text-4xl sm:font-normal font-medium text-lg sm:mb-8 mb-6 px-4 sm:px-0 flex justify-between items-center sm:block">
-                        Recommended
-                        <Link to={""} className="text-sm ml-4 font-normal text-primary">
-                            View All Videos
-                        </Link>
-                    </h2>
-                    {recommendedVideos?.data?.length > 0 ? (
-                        <>
-                            <InfiniteScroll
-                                dataLength={recommendedVideos.data.length}
-                                next={fetchNextData}
-                                hasMore={recommendedVideos.total > recommendedVideos.data.length}
-                                loader={Array(4)
-                                    .fill()
-                                    .map((_, key) => (
+                                <div className="grid gap-6 mb-16 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                                    {Array(4).fill().map((_, key) => (
                                         <div className="flex flex-col gap-2" key={key}>
                                             <Skeleton height={200} borderRadius={15} className="rounded-2xl" />
                                             <Skeleton height={40} borderRadius={15} className="rounded-2xl" />
                                         </div>
                                     ))}
-                                refreshFunction={fetchRecommended}
-                                className="grid gap-6 xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 mb-16"
-                            >
-                                {recommendedVideos?.data?.map((video, key) => (
-                                    <VideoBox info={video} key={key} />
-                                ))}
-                            </InfiniteScroll>
-                        </>
+                                </div>
+                            )}
+                        </Swiper>
+                        <span className="flex justify-center mt-6 swip-pagination fill-primary"></span>
+                    </div>
+
+                    <h2 className="flex items-center justify-between px-4 mb-6 text-lg font-medium sm:mb-8 sm:block sm:px-0 sm:text-4xl sm:font-normal">
+                        Recommended
+                        <Link to={""} className="ml-4 text-sm font-normal text-primary">View All Videos</Link>
+                    </h2>
+                    {recommendedVideos?.data?.length > 0 ? (
+                        <InfiniteScroll
+                            dataLength={recommendedVideos.data.length}
+                            next={fetchNextData}
+                            hasMore={recommendedVideos.total > recommendedVideos.data.length}
+                            loader={Array(4).fill().map((_, key) => (
+                                <div className="flex flex-col gap-2" key={key}>
+                                    <Skeleton height={200} borderRadius={15} className="rounded-2xl" />
+                                    <Skeleton height={40} borderRadius={15} className="rounded-2xl" />
+                                </div>
+                            ))}
+                            refreshFunction={fetchRecommended}
+                            className="grid gap-6 mb-16 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                        >
+                            {recommendedVideos.data.map((video, key) => (
+                                <VideoBox info={video} key={key} />
+                            ))}
+                        </InfiniteScroll>
                     ) : (
-                        <div className="grid gap-6 xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 mb-16">
-                            {Array(8)
-                                .fill()
-                                .map((_, key) => (
-                                    <div className="flex flex-col gap-2" key={key}>
-                                        <Skeleton height={200} borderRadius={15} className="rounded-2xl" />
-                                        <Skeleton height={40} borderRadius={15} className="rounded-2xl" />
-                                    </div>
-                                ))}
+                        <div className="grid gap-6 mb-16 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                            {Array(8).fill().map((_, key) => (
+                                <div className="flex flex-col gap-2" key={key}>
+                                    <Skeleton height={200} borderRadius={15} className="rounded-2xl" />
+                                    <Skeleton height={40} borderRadius={15} className="rounded-2xl" />
+                                </div>
+                            ))}
                         </div>
                     )}
                 </div>

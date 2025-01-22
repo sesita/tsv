@@ -9,7 +9,6 @@ const Signin = () => {
     const navigate = useNavigate();
     const params = useParams();
     const location = useLocation();
-
     const { state, dispatch } = usePrimary();
 
     useEffect(() => {
@@ -59,33 +58,24 @@ const Signin = () => {
                 <Link to="/" className="mb-8">
                     <img src="/assets/logo.webp" alt="Logo" className="w-40 h-auto" />
                 </Link>
-
                 <h2 className="text-4xl font-bold text-primary mb-6">Welcome Back</h2>
-
                 <div className="flex gap-4 mb-6">
                     <a href="https://mytsv.com/api/Auth/Social/Google/Redirect" className="p-3 bg-primary text-white rounded-full hover:bg-opacity-90 transition-all">
                         <FaGoogle />
                     </a>
                 </div>
-
                 <p className="text-gray-600 mb-6">or use your email to sign in</p>
-
                 <form onSubmit={handleLogin} className="w-full max-w-md">
                     <div className="mb-6 relative">
-                        <input type="email" name="email" required className="w-full px-3 py-2 border-b-2 border-gray-300 focus:border-primary outline-none transition-all peer placeholder-transparent" placeholder="Email" />
-                        <label className="absolute left-3 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Email</label>
+                        <input type="email" name="email" required className="w-full px-3 py-2 border-b-2 border-gray-300 focus:border-primary outline-none transition-all peer placeholder-transparent" />
+                        <label className="absolute left-3 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5">Email</label>
                     </div>
-
                     <div className="mb-6 relative">
-                        <input type="password" name="password" required className="w-full px-3 py-2 border-b-2 border-gray-300 focus:border-primary outline-none transition-all peer placeholder-transparent" placeholder="Password" />
-                        <label className="absolute left-3 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-2 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Password</label>
+                        <input type="password" name="password" required className="w-full px-3 py-2 border-b-2 border-gray-300 focus:border-primary outline-none transition-all peer placeholder-transparent" />
+                        <label className="absolute left-3 -top-3.5 text-gray-600 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3.5">Password</label>
                     </div>
-
-                    <button type="submit" className="w-full py-3 bg-primary text-white rounded-full hover:bg-opacity-90 transition-all text-lg font-semibold">
-                        Sign In
-                    </button>
+                    <button type="submit" className="w-full py-3 bg-primary text-white rounded-full hover:bg-opacity-90 transition-all text-lg font-semibold">Sign In</button>
                 </form>
-
                 <p className="mt-6 text-gray-600">
                     Need an account?{" "}
                     <Link to="/Auth/Register" className="font-semibold">
@@ -93,7 +83,6 @@ const Signin = () => {
                     </Link>
                 </p>
             </div>
-
             <div className="hidden lg:flex w-1/2 bg-red-900 pattern justify-center items-center p-8">
                 <div className="text-white text-center">
                     <h3 className="text-4xl font-bold mb-4">MyTSV</h3>
